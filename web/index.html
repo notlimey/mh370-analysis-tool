@@ -149,7 +149,7 @@
     <div id="app">
       <div class="topbar">
         <div class="banner"><strong>Read-only snapshot.</strong> This is a read-only snapshot of the analysis. Download the full tool to adjust model parameters.</div>
-        <a id="repo-link" class="repo-link" href="#" target="_blank" rel="noreferrer">GitHub Repo</a>
+        <a id="repo-link" class="repo-link" href="https://github.com/notlimey/mh370-analysis-tool" target="_blank" rel="noopener noreferrer">github.com/notlimey/mh370-analysis-tool</a>
       </div>
       <aside>
         <h1>MH370 Analysis Tool</h1>
@@ -201,9 +201,6 @@
 
     <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
     <script type="module">
-      const GITHUB_REPO_URL = 'https://github.com/notlimey/mh370-analysis-tool';
-      document.getElementById('repo-link').href = GITHUB_REPO_URL;
-
       const FAMILY_COLORS = {
         slow: '#f59e0b',
         perpendicular: '#3b82f6',
@@ -254,6 +251,11 @@
       });
       map.addControl(new maplibregl.NavigationControl(), 'top-right');
       map.addControl(new maplibregl.ScaleControl(), 'bottom-right');
+
+      document.getElementById('repo-link').addEventListener('click', (event) => {
+        event.preventDefault();
+        window.open('https://github.com/notlimey/mh370-analysis-tool', '_blank', 'noopener,noreferrer');
+      });
 
       const [arcRings, paths, heatmap, anomalies, debrisPoints, debrisDrift, airspaces, holidays] = await Promise.all([
         fetch('./public/data/arc_rings.geojson').then(r => r.json()),
