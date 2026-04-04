@@ -2,7 +2,7 @@ use std::fs;
 
 use serde::{Deserialize, Serialize};
 
-pub const DEFAULT_DATASET_PATH: &str = "/Users/entropy/Downloads/mh370_data.json";
+pub const DEFAULT_DATASET_PATH: &str = "mh370_data.json";
 pub const ANALYSIS_EPOCH_HOUR_UTC: u32 = 16;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -21,7 +21,7 @@ pub struct AnalysisConfig {
     pub satellite_nominal_lon_deg: f64,
     pub satellite_nominal_lat_deg: f64,
     pub satellite_drift_start_lat_offset_deg: f64,
-    pub satellite_drift_end_lat_offset_deg: f64,
+    pub satellite_drift_amplitude_deg: f64,
     pub satellite_drift_end_time_utc: String,
     pub fuel_remaining_at_arc1_kg: f64,
     pub fuel_baseline_kg_per_hr: f64,
@@ -57,7 +57,7 @@ impl Default for AnalysisConfig {
             satellite_nominal_lon_deg: 64.5,
             satellite_nominal_lat_deg: 0.0,
             satellite_drift_start_lat_offset_deg: 0.0,
-            satellite_drift_end_lat_offset_deg: -1.6,
+            satellite_drift_amplitude_deg: 1.6,
             satellite_drift_end_time_utc: "00:19:29.416".to_string(),
             fuel_remaining_at_arc1_kg: 33_500.0,
             fuel_baseline_kg_per_hr: 6_500.0,

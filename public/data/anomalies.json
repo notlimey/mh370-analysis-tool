@@ -1,0 +1,93 @@
+[
+  {
+    "id": "java_anomaly",
+    "category": "acoustic",
+    "lat": -8.36,
+    "lon": 107.92,
+    "title": "Java Anomaly — Uncataloged Hydroacoustic Event",
+    "date": "2014-03-08T01:15:18Z",
+    "confidence": "medium",
+    "summary": "A strong acoustic event detected at the Diego Garcia H08 hydrophone array from the direction of Java, stronger than nearby cataloged quakes and never formally resolved.",
+    "detail": "Triangulated origin was reported at 8.36S 107.92E directly on the 7th arc, with timing roughly 55 minutes after expected impact. If genuine, it is more consistent with an underwater implosion or later sinking event than immediate impact.",
+    "source": "370location.org — Ed Anderson",
+    "source_url": null,
+    "implication": "Would place the crash site near Java and far north of the searched southern Indian Ocean corridors.",
+    "status": "unexplored",
+    "conflicts_with": [],
+    "supports": [
+      "thermal_plume_aqua_modis"
+    ]
+  },
+  {
+    "id": "barnacle_large_specimens",
+    "category": "biological",
+    "lat": -20.9,
+    "lon": 55.5,
+    "title": "Largest Barnacles on Flaperon — Withheld from Analysis",
+    "date": "2015-07-29",
+    "confidence": "high",
+    "summary": "The largest flaperon barnacles may preserve the earliest temperature history after impact, but they have not been released for independent analysis.",
+    "detail": "Published isotope work on smaller specimens points to warm-water drift histories. If the largest and likely earliest-attached specimens were analyzed, they could narrow the origin corridor substantially.",
+    "source": "Al-Qattan et al. (2023), AGU Advances",
+    "source_url": "https://doi.org/10.1029/2023AV000915",
+    "implication": "A warm-water origin would sit uneasily with the colder far-south search assumption.",
+    "status": "unexplored",
+    "conflicts_with": [],
+    "supports": []
+  },
+  {
+    "id": "thermal_plume_aqua_modis",
+    "category": "satellite_image",
+    "lat": -39.47,
+    "lon": 90.45,
+    "title": "Hydrocarbon Plume — NASA MODIS Thermal Imagery",
+    "date": "2014-03-08T04:46:30Z",
+    "confidence": "low",
+    "summary": "An isolated dark cloud feature in MODIS thermal imagery was interpreted as a possible hydrocarbon plume a few hours after expected impact.",
+    "detail": "A second weaker detection was claimed in a later pass, with the motion attributed to high-altitude winds. The interpretation is speculative but geographically overlaps the southern end of the ATSB corridor.",
+    "source": "370location.org independent analysis",
+    "source_url": null,
+    "implication": "If real, it supports a southern origin near the lower ATSB search band.",
+    "status": "unexplored",
+    "conflicts_with": [
+      "barnacle_large_specimens"
+    ],
+    "supports": []
+  },
+  {
+    "id": "cloud_trail_modis",
+    "category": "satellite_image",
+    "lat": -33,
+    "lon": 100,
+    "title": "300km Cloud Trail Anomaly in MODIS Imagery",
+    "date": "2014-03-08T03:07:00Z",
+    "confidence": "low",
+    "summary": "A long cloud anomaly visible across multiple MODIS images has been proposed as a wake-like trail from a late controlled flight path.",
+    "detail": "The claim remains speculative, but the archive is public and well-suited to more systematic modern image analysis.",
+    "source": "Lyne (2024), ResearchGate",
+    "source_url": null,
+    "implication": "If real, it would suggest a controlled late path east of the main searched zones.",
+    "status": "unexplored",
+    "conflicts_with": [],
+    "supports": []
+  },
+  {
+    "id": "cocos_island_seismometer",
+    "category": "acoustic",
+    "lat": -12.188,
+    "lon": 96.829,
+    "title": "Cocos Keeling Seismometer — Possible Flyby Signal",
+    "date": "2014-03-08T00:50:00Z",
+    "confidence": "medium",
+    "summary": "A public Cocos Keeling seismometer anomaly has been interpreted as a possible aircraft flyby near the island.",
+    "detail": "If the signal were confirmed as MH370, it would sharply constrain the route and strongly favor a much more northerly continuation than the official southern search.",
+    "source": "370location.org — Ed Anderson",
+    "source_url": null,
+    "implication": "Could anchor a specific waypoint route and rule out many southern arc 7 crossings.",
+    "status": "unexplored",
+    "conflicts_with": [],
+    "supports": [
+      "java_anomaly"
+    ]
+  }
+]

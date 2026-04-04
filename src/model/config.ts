@@ -13,7 +13,7 @@ export interface AnalysisConfig {
   satellite_nominal_lon_deg: number;
   satellite_nominal_lat_deg: number;
   satellite_drift_start_lat_offset_deg: number;
-  satellite_drift_end_lat_offset_deg: number;
+  satellite_drift_amplitude_deg: number;
   satellite_drift_end_time_utc: string;
   fuel_remaining_at_arc1_kg: number;
   fuel_baseline_kg_per_hr: number;
@@ -33,7 +33,7 @@ export interface AnalysisConfig {
 }
 
 export const defaultAnalysisConfig: AnalysisConfig = {
-  dataset_path: "/Users/entropy/Downloads/mh370_data.json",
+  dataset_path: "mh370_data.json",
   satellite_ephemeris_path: "",
   ring_points: 360,
   min_speed_kts: 350,
@@ -47,7 +47,7 @@ export const defaultAnalysisConfig: AnalysisConfig = {
   satellite_nominal_lon_deg: 64.5,
   satellite_nominal_lat_deg: 0,
   satellite_drift_start_lat_offset_deg: 0,
-  satellite_drift_end_lat_offset_deg: -1.6,
+  satellite_drift_amplitude_deg: 1.6,
   satellite_drift_end_time_utc: "00:19:29.416",
   fuel_remaining_at_arc1_kg: 33500,
   fuel_baseline_kg_per_hr: 6500,

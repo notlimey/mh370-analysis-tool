@@ -124,6 +124,9 @@ fn slugify(value: &str) -> String {
         .join("-")
 }
 
+/// Approximate days elapsed since 2014-03-08.
+/// Uses 30-day months — error of up to ±3 days over a 2-year span,
+/// which at ~17 km/day drift speed corresponds to ~51 km position error.
 fn approx_days_since_2014_03_08(date: &str) -> f64 {
     let mut parts = date.split('-');
     let year = parts.next().and_then(|value| value.parse::<i32>().ok()).unwrap_or(2014);

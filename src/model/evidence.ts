@@ -1,4 +1,4 @@
-import { invoke } from "@tauri-apps/api/core";
+import { getAnomalies as loadAnomalies } from "../lib/backend";
 
 export interface Anomaly {
   id: string;
@@ -24,7 +24,7 @@ export async function getAnomalies(): Promise<Anomaly[]> {
   if (anomalyCache) {
     return anomalyCache;
   }
-  anomalyCache = await invoke<Anomaly[]>("get_anomalies");
+  anomalyCache = await loadAnomalies() as Anomaly[];
   return anomalyCache;
 }
 

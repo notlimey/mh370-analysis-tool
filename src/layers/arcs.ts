@@ -1,19 +1,9 @@
-import { invoke } from "@tauri-apps/api/core";
 import type { Map as MapboxMap } from "mapbox-gl";
-import { getAnalysisConfig } from "../model/config";
-
-interface ArcRing {
-  arc: number;
-  time_utc: string;
-  range_km: number;
-  points: [number, number][];
-}
+import { getArcRings, type BackendArcRing } from "../lib/backend";
 
 /** Draw BTO arc rings on the map */
 export async function loadArcsLayer(map: MapboxMap): Promise<void> {
-  const rings: ArcRing[] = await invoke("get_arc_rings", {
-    config: getAnalysisConfig(),
-  });
+  const rings: BackendArcRing[] = await getArcRings();
 
   map.addSource("arcs-source", {
     type: "geojson",

@@ -38,7 +38,7 @@ const MILITARY_RADAR_WAYPOINTS: Waypoint[] = [
 // Based on 3 min gap (18:22→18:25) and Arc 1 BTO distance constraint
 const PROBABLE_WAYPOINTS: Waypoint[] = [
   { name: "Last radar contact", coordinates: [97.7, 6.8], time_utc: "18:22" },
-  { name: "SDU reboot (Arc 1)", coordinates: [96.5, 6.3], time_utc: "18:25" },
+  { name: "SDU reboot (Arc 1)", coordinates: [97.3, 6.5], time_utc: "18:25" },
   { name: "Probable initial turn S", coordinates: [95.0, 4.5], time_utc: "~18:40" },
   { name: "Heading south", coordinates: [93.5, 2.0], time_utc: "~19:00" },
 ];

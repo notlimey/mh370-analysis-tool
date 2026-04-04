@@ -1,23 +1,12 @@
-import { invoke } from "@tauri-apps/api/core";
-import { getAnalysisConfig } from "../model/config";
+import { getHandshakes, type BackendHandshake } from "../lib/backend";
 
-interface HandshakeInfo {
-  time_utc: string;
-  bto: number | null;
-  bfo: number | null;
-  arc: number;
-  note: string;
-}
-
-let handshakes: HandshakeInfo[] = [];
+let handshakes: BackendHandshake[] = [];
 
 /** Initialize the timeline scrubber */
 export async function initTimeline(
   onTimeChange: (index: number, arcNum: number) => void
 ): Promise<void> {
-  handshakes = await invoke("get_handshakes", {
-    config: getAnalysisConfig(),
-  });
+  handshakes = await getHandshakes();
 
   const container = document.getElementById("timeline");
   if (!container) return;

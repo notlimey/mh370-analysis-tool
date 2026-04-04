@@ -1,5 +1,5 @@
-import { invoke } from "@tauri-apps/api/core";
 import { getMap, toggleLayer, layerVisibility } from "../map";
+import { exportPathsGeojson, exportProbabilityGeojson } from "../lib/backend";
 import { SONAR_SOURCES, setSonarGroupOpacity, setSonarLayerVisible } from "../layers/sonar";
 import {
   defaultAnalysisConfig,
@@ -45,7 +45,7 @@ const NUMERIC_FIELDS = [
   { key: "max_speed_kts", label: "Max speed", step: 5 },
   { key: "beam_width", label: "Beam width", step: 1 },
   { key: "ring_sample_step", label: "Ring sample step", step: 1 },
-  { key: "satellite_drift_end_lat_offset_deg", label: "Sat drift end lat", step: 0.1 },
+  { key: "satellite_drift_amplitude_deg", label: "Sat drift amplitude", step: 0.1 },
   { key: "fuel_remaining_at_arc1_kg", label: "Fuel at arc 1", step: 100 },
   { key: "fuel_baseline_kg_per_hr", label: "Fuel burn baseline", step: 100 },
   { key: "max_post_arc7_minutes", label: "Post-arc 7 mins", step: 1 },
@@ -93,6 +93,7 @@ export function initSidebar({ onRunModel, onConfigChange }: SidebarCallbacks): v
           <span class="value" id="family-spread-value">—</span>
         </div>
       </div>
+      <div class="tauri-only">
       <div class="model-controls" id="model-controls"></div>
       <div class="button-row">
         <button id="reset-model-btn" class="btn-secondary">Reset</button>
@@ -101,6 +102,7 @@ export function initSidebar({ onRunModel, onConfigChange }: SidebarCallbacks): v
       <div class="button-row export-row">
         <button id="export-probability-btn" class="btn-secondary">Export Heatmap</button>
         <button id="export-paths-btn" class="btn-secondary">Export Paths</button>
+      </div>
       </div>
     </div>
 
@@ -281,11 +283,8 @@ async function exportProbability(): Promise<void> {
   const path = window.prompt("Export probability GeoJSON to:", `${defaultAnalysisConfig.dataset_path.replace("mh370_data.json", "mh370_probability.geojson")}`);
   if (!path) return;
   try {
-    const result = await invoke<string>("export_probability_geojson", {
-      path,
-      config: getAnalysisConfig(),
-    });
-    window.alert(result);
+    const result = await exportProbabilityGeojson(path);
+    if (result) window.alert(String(result));
   } catch (err) {
     console.error("Failed to export probability GeoJSON:", err);
   }
@@ -295,12 +294,8 @@ async function exportPaths(): Promise<void> {
   const path = window.prompt("Export candidate paths GeoJSON to:", `${defaultAnalysisConfig.dataset_path.replace("mh370_data.json", "mh370_paths.geojson")}`);
   if (!path) return;
   try {
-    const result = await invoke<string>("export_paths_geojson", {
-      path,
-      n: 200,
-      config: getAnalysisConfig(),
-    });
-    window.alert(result);
+    const result = await exportPathsGeojson(path);
+    if (result) window.alert(String(result));
   } catch (err) {
     console.error("Failed to export path GeoJSON:", err);
   }
