@@ -1,0 +1,114 @@
+use serde_json::json;
+
+use super::data::{load_dataset, resolve_config, AnalysisConfig};
+use super::paths::{sample_candidate_paths_from_dataset, FlightPath};
+use super::probability::{generate_probability_heatmap_from_dataset, ProbPoint};
+
+pub fn export_probability_geojson(path: String, config: Option<AnalysisConfig>) -> Result<String, String> {
+    let config = resolve_config(config);
+    let dataset = load_dataset(&config)?;
+    let points = generate_probability_heatmap_from_dataset(&dataset, &config)?;
+    let geojson = probability_to_geojson(&points);
+    let serialized = serde_json::to_string_pretty(&geojson)
+        .map_err(|err| format!("serialization failed: {err}"))?;
+    std::fs::write(&path, serialized).map_err(|err| format!("write failed: {err}"))?;
+    Ok(format!("Exported {} probability points to {}", points.len(), path))
+}
+
+pub fn export_paths_geojson(
+    path: String,
+    n: usize,
+    config: Option<AnalysisConfig>,
+) -> Result<String, String> {
+    let config = resolve_config(config);
+    let dataset = load_dataset(&config)?;
+    let paths = sample_candidate_paths_from_dataset(&dataset, n, &config)?;
+    let geojson = paths_to_geojson(&paths);
+    let serialized = serde_json::to_string_pretty(&geojson)
+        .map_err(|err| format!("serialization failed: {err}"))?;
+    std::fs::write(&path, serialized).map_err(|err| format!("write failed: {err}"))?;
+    Ok(format!("Exported {} candidate paths to {}", paths.len(), path))
+}
+
+pub fn probability_to_geojson(points: &[ProbPoint]) -> serde_json::Value {
+    json!({
+        "type": "FeatureCollection",
+        "features": points.iter().map(|point| {
+            json!({
+                "type": "Feature",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": point.position,
+                },
+                "properties": {
+                    "probability": point.probability,
+                    "probability_pct": point.probability * 100.0,
+                    "path_density": point.path_density,
+                    "fuel_weight": point.fuel_weight,
+                    "debris_weight": point.debris_weight,
+                }
+            })
+        }).collect::<Vec<_>>(),
+        "metadata": {
+            "total_points": points.len(),
+            "sum_check": points.iter().map(|point| point.probability).sum::<f64>(),
+        }
+    })
+}
+
+pub fn paths_to_geojson(paths: &[FlightPath]) -> serde_json::Value {
+    json!({
+        "type": "FeatureCollection",
+        "features": paths.iter().enumerate().map(|(index, path)| {
+            let average_speed_kts = if path.speeds_kts.is_empty() {
+                0.0
+            } else {
+                path.speeds_kts.iter().sum::<f64>() / path.speeds_kts.len() as f64
+            };
+            json!({
+                "type": "Feature",
+                "geometry": {
+                    "type": "LineString",
+                    "coordinates": path.points,
+                },
+                "properties": {
+                    "id": index,
+                    "score": path.score,
+                    "family": path.family,
+                    "fuel_feasible": path.fuel_feasible,
+                    "fuel_remaining_at_arc7_kg": path.fuel_remaining_at_arc7_kg,
+                    "estimated_speed_kts": average_speed_kts,
+                }
+            })
+        }).collect::<Vec<_>>()
+    })
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn geojson_export_valid_structure() {
+        let points = vec![
+            ProbPoint {
+                position: [92.0, -35.0],
+                probability: 0.05,
+                path_density: 1.0,
+                fuel_weight: 0.5,
+                debris_weight: 0.25,
+            },
+            ProbPoint {
+                position: [93.0, -36.0],
+                probability: 0.03,
+                path_density: 0.8,
+                fuel_weight: 0.4,
+                debris_weight: 0.2,
+            },
+        ];
+        let json = probability_to_geojson(&points);
+        assert_eq!(json["type"], "FeatureCollection");
+        assert_eq!(json["features"].as_array().unwrap().len(), 2);
+        assert!(json["features"][0]["properties"]["probability"].is_number());
+    }
+}
