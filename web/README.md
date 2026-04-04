@@ -2,10 +2,12 @@
 
 ## GitHub Pages (recommended)
 
+This repo includes a GitHub Actions workflow that deploys the `web/` folder directly to Pages.
+
 1. Go to your repo Settings → Pages
-2. Set Source to "Deploy from a branch"
-3. Set Branch to `main` and folder to `/web`
-4. Save — your site will be live at:
+2. Set Source to `GitHub Actions`
+3. Push to `main` or run the `Deploy Web Snapshot` workflow manually
+4. Your site will be live at:
    https://notlimey.github.io/mh370-analysis-tool
 
 ## Vercel
