@@ -1,0 +1,4325 @@
+{
+  "features": [
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            64.50000000000001,
+            -43.32708988847184
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "slow",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 0,
+        "score": 0.000330357937451991
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            65.45153214991981,
+            -43.31878610427324
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "perpendicular",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 1,
+        "score": 0.0003329045537364933
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            63.54846785008019,
+            -43.31878610427324
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "mixed",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 2,
+        "score": 0.0003329045537364933
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            66.40225714985804,
+            -43.29388408533194
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "other",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 3,
+        "score": 0.00034064420560045645
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            62.597742850141934,
+            -43.29388408533194
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "slow",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 4,
+        "score": 0.00034064420560045645
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            67.35137121478354,
+            -43.25241178321337
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "perpendicular",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 5,
+        "score": 0.0003538812803497891
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            61.64862878521647,
+            -43.25241178321337
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "mixed",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 6,
+        "score": 0.0003538812803497891
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            60.70192274676609,
+            -43.194415619819644
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "other",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 7,
+        "score": 0.0003731398632390044
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            68.29807725323396,
+            -43.19441561981963
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "slow",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 8,
+        "score": 0.00037313986323900906
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            69.24158812399757,
+            -43.119960243486325
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "perpendicular",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 9,
+        "score": 0.00039918950817745096
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            59.758411876002455,
+            -43.119960243486325
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "mixed",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 10,
+        "score": 0.00039918950817745096
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            70.18112978668485,
+            -43.02912819178251
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "other",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 11,
+        "score": 0.00043308248105594627
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            58.81887021331517,
+            -43.02912819178251
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "slow",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 12,
+        "score": 0.00043308248105594627
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            71.11594431410546,
+            -42.92201946516402
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "perpendicular",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 13,
+        "score": 0.000476203488227904
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            57.88405568589451,
+            -42.92201946516402
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "mixed",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 14,
+        "score": 0.000476203488227904
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            72.0452927370489,
+            -42.79875101665713
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "other",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 15,
+        "score": 0.00053033293079332
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            56.954707262951096,
+            -42.79875101665713
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "slow",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 16,
+        "score": 0.00053033293079332
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            72.96845769525864,
+            -42.6594561636646
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "perpendicular",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 17,
+        "score": 0.0005977244777519751
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            56.031542304741365,
+            -42.6594561636646
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "mixed",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 18,
+        "score": 0.0005977244777519751
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            73.88474587199632,
+            -42.50428392877351
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "other",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 19,
+        "score": 0.0006811970749879817
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            55.11525412800368,
+            -42.50428392877351
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "slow",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 20,
+        "score": 0.0006811970749879817
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            54.20650980649419,
+            -42.333398317089475
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "perpendicular",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 21,
+        "score": 0.000784240194623511
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            74.79349019350583,
+            -42.33339831708946
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "mixed",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 22,
+        "score": 0.0007842401946235201
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            75.69405177880041,
+            -42.146977538119174
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "other",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 23,
+        "score": 0.000911128915125665
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            53.305948221199586,
+            -42.146977538119174
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "slow",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 24,
+        "score": 0.000911128915125665
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            76.5858216293958,
+            -41.945213180566185
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "perpendicular",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 25,
+        "score": 0.0010670419946470023
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            52.414178370604176,
+            -41.945213180566185
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "mixed",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 26,
+        "score": 0.0010670419946470023
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            77.46822205279224,
+            -41.72830934859682
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "other",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 27,
+        "score": 0.0012581711352952672
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            51.531777947207765,
+            -41.72830934859682
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "slow",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 28,
+        "score": 0.0012581711352952672
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            50.659292182429624,
+            -41.49648176817568
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "perpendicular",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 29,
+        "score": 0.0014918028745077704
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            78.3407078175704,
+            -41.49648176817565
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "mixed",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 30,
+        "score": 0.001491802874507801
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            49.79723295818096,
+            -41.24995687197547
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "other",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 31,
+        "score": 0.0017763459142007545
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            79.20276704181904,
+            -41.24995687197546
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "slow",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 32,
+        "score": 0.0017763459142007625
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            80.05392182018082,
+            -40.98897087114097
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "perpendicular",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 33,
+        "score": 0.002121266531441211
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            48.946078179819196,
+            -40.98897087114097
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "mixed",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 34,
+        "score": 0.002121266531441211
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            80.89372859802538,
+            -40.71376882184865
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "other",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 35,
+        "score": 0.0025368839840874836
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            48.1062714019746,
+            -40.71376882184865
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "slow",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 36,
+        "score": 0.0025368839840874836
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            81.72177830408866,
+            -40.42460369416724
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "perpendicular",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 37,
+        "score": 0.0030339684725477767
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            47.27822169591134,
+            -40.42460369416724
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "mixed",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 38,
+        "score": 0.0030339684725477767
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            46.46230374467646,
+            -40.121735450204234
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "other",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 39,
+        "score": 0.003623079427757136
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            82.53769625532355,
+            -40.12173545020423
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "slow",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 40,
+        "score": 0.003623079427757151
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            83.34114184967378,
+            -39.80543013794077
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "perpendicular",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 41,
+        "score": 0.004313586205524653
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            45.6588581503262,
+            -39.80543013794077
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "mixed",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 42,
+        "score": 0.004313586205524653
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            44.868191935992684,
+            -39.47595900652518
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "other",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 43,
+        "score": 0.0051123323232216316
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            84.13180806400733,
+            -39.475959006525166
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "slow",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 44,
+        "score": 0.005112332323221668
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            44.09057922446119,
+            -39.1335976481335
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "perpendicular",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 45,
+        "score": 0.006021944059853376
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            84.90942077553883,
+            -39.133597648133474
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "mixed",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 46,
+        "score": 0.006021944059853453
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            43.32626207424714,
+            -38.778625170827965
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "other",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 47,
+        "score": 0.007038848977810781
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            85.67373792575287,
+            -38.77862517082794
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "slow",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 48,
+        "score": 0.007038848977810864
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            42.57545145386057,
+            -38.41132340616501
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "perpendicular",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 49,
+        "score": 0.008151160089083497
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            86.42454854613942,
+            -38.411323406164996
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "mixed",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 50,
+        "score": 0.008151160089083542
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            41.838328334992184,
+            -38.03197615463796
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "other",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 51,
+        "score": 0.009336690131005203
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            87.16167166500782,
+            -38.031976154637945
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "slow",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 52,
+        "score": 0.00933669013100525
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            41.115044885706105,
+            -37.640868471393816
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "perpendicular",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 53,
+        "score": 0.03111887401595562
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            87.88495511429392,
+            -37.6408684713938
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "mixed",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 54,
+        "score": 0.03111887401595562
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            40.40572574533893,
+            -37.23828599405094
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "other",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 55,
+        "score": 0.03111887401595562
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            88.59427425466107,
+            -37.23828599405093
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "slow",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 56,
+        "score": 0.03111887401595562
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            39.71046936363706,
+            -36.82451431386934
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "perpendicular",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 57,
+        "score": 0.03111887401595562
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            89.28953063636295,
+            -36.82451431386933
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "mixed",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 58,
+        "score": 0.03111887401595562
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            89.97065061232784,
+            -36.3998383909943
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "other",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 59,
+        "score": 0.03111887401595562
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            39.02934938767215,
+            -36.39983839099428
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "slow",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 60,
+        "score": 0.03111887401595562
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            90.63758391878265,
+            -35.96454201401228
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "perpendicular",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 61,
+        "score": 0.03111887401595562
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            38.36241608121737,
+            -35.96454201401228
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "mixed",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 62,
+        "score": 0.03111887401595562
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            91.29030223749794,
+            -35.51890730362447
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "other",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 63,
+        "score": 0.03111887401595562
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            37.70969776250207,
+            -35.51890730362447
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "slow",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 64,
+        "score": 0.03111887401595562
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            91.92879775244124,
+            -35.06321425986209
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "perpendicular",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 65,
+        "score": 0.03111887401595562
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            37.071202247558745,
+            -35.06321425986208
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "mixed",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 66,
+        "score": 0.03111887401595562
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            36.4469182876981,
+            -34.59774035193724
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "other",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 67,
+        "score": 0.03111887401595562
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            92.5530817123019,
+            -34.597740351937226
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "slow",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 68,
+        "score": 0.03111887401595562
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            35.83681699096969,
+            -34.122760149540795
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "perpendicular",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 69,
+        "score": 0.03111887401595562
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            93.16318300903033,
+            -34.122760149540774
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "mixed",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 70,
+        "score": 0.03111887401595562
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            35.24085321876393,
+            -33.63854499416562
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "other",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 71,
+        "score": 0.03111887401595562
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            93.75914678123607,
+            -33.63854499416561
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "slow",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 72,
+        "score": 0.03111887401595562
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            94.34103305003511,
+            -33.14536270884391
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "perpendicular",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 73,
+        "score": 0.03111887401595562
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            34.65896694996489,
+            -33.14536270884391
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "mixed",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 74,
+        "score": 0.03111887401595562
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            34.09108460625904,
+            -32.64347734453938
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "other",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 75,
+        "score": 0.03111887401595562
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            94.90891539374097,
+            -32.64347734453936
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "slow",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 76,
+        "score": 0.03111887401595562
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            95.46287966666986,
+            -32.13314896132615
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "perpendicular",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 77,
+        "score": 0.03111887401595562
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            33.53712033333014,
+            -32.13314896132615
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "mixed",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 78,
+        "score": 0.03111887401595562
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            32.996977233716194,
+            -31.614633442410494
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "other",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 79,
+        "score": 0.00823144360273466
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            96.00302276628382,
+            -31.614633442410483
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "slow",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 80,
+        "score": 0.008231443602734626
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            96.52945145193489,
+            -31.088182339006867
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "perpendicular",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 81,
+        "score": 0.006649479566511856
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            32.47054854806511,
+            -31.088182339006856
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "mixed",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 82,
+        "score": 0.006649479566511826
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            31.95771878240118,
+            -30.554042744063363
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "other",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 83,
+        "score": 0.0051889245066666125
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            97.04228121759883,
+            -30.55404274406335
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "slow",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 84,
+        "score": 0.005188924506666576
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            31.45836477979877,
+            -30.012457192836685
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "perpendicular",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 85,
+        "score": 0.0039066900801852855
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            97.54163522020124,
+            -30.012457192836678
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "mixed",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 86,
+        "score": 0.00390669008018527
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            98.0276432644401,
+            -29.463663588343373
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "other",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 87,
+        "score": 0.0028344072819489773
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            30.972356735559885,
+            -29.46366358834337
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "slow",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 88,
+        "score": 0.002834407281948971
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            30.499559155606473,
+            -28.907895149757156
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "perpendicular",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 89,
+        "score": 0.001979398098743571
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            98.50044084439352,
+            -28.907895149757145
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "mixed",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 90,
+        "score": 0.0019793980987435557
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            30.03983175833211,
+            -28.34538038187871
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "other",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 91,
+        "score": 0.001329027152674644
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            98.9601682416679,
+            -28.34538038187869
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "slow",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 92,
+        "score": 0.0013290271526746268
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            29.59303032061654,
+            -27.776343063872407
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "perpendicular",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 93,
+        "score": 0.0008570240442177756
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            99.40696967938347,
+            -27.77634306387238
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "mixed",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 94,
+        "score": 0.0008570240442177558
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            29.15900746909254,
+            -27.2010022555409
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "other",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 95,
+        "score": 0.0005302195577837608
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            99.84099253090746,
+            -27.201002255540885
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "slow",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 96,
+        "score": 0.0005302195577837541
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            100.26238658192284,
+            -26.619572319491887
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "perpendicular",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 97,
+        "score": 0.0003144008711174023
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            28.737613418077153,
+            -26.619572319491887
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "mixed",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 98,
+        "score": 0.0003144008711174023
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            28.32869665584045,
+            -26.032262957638267
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "other",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 99,
+        "score": 0.0001785069873048646
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            100.67130334415954,
+            -26.032262957638263
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "slow",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 100,
+        "score": 0.0001785069873048638
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            101.06789541890625,
+            -25.439279260564035
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "perpendicular",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 101,
+        "score": 0.00009695381960041421
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            27.932104581093732,
+            -25.439279260564025
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "mixed",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 102,
+        "score": 0.000096953819600413
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            101.45231590826187,
+            -24.840821768379364
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "other",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 103,
+        "score": 0.00005032966713877687
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            27.547684091738127,
+            -24.84082176837936
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "slow",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 104,
+        "score": 0.00005032966713877669
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            101.82471787196857,
+            -24.23708654178037
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "perpendicular",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 105,
+        "score": 0.000024949406976875842
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            27.175282128031412,
+            -24.237086541780368
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "mixed",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 106,
+        "score": 0.000024949406976875758
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            26.814746172410675,
+            -23.628265242120168
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "other",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 107,
+        "score": 0.00001180095983872476
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            102.18525382758932,
+            -23.62826524212016
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "slow",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 108,
+        "score": 0.000011800959838724644
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            26.46592470825377,
+            -23.014545219386605
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "perpendicular",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 109,
+        "score": 5.321762190902056e-6
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            102.53407529174625,
+            -23.014545219386576
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "mixed",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 110,
+        "score": 5.321762190901853e-6
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            26.12866763988163,
+            -22.396109607068844
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "other",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 111,
+        "score": 2.2863924455915948e-6
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            102.87133236011837,
+            -22.396109607068823
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "slow",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 112,
+        "score": 2.2863924455915257e-6
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            103.19717332390265,
+            -21.773137422978944
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "perpendicular",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 113,
+        "score": 9.351803131415553e-7
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            25.802826676097347,
+            -21.773137422978934
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "mixed",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 114,
+        "score": 9.351803131415404e-7
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            25.488255679531942,
+            -21.14580367517439
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "other",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 115,
+        "score": 3.639125831319983e-7
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            103.51174432046807,
+            -21.145803675174378
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "slow",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 116,
+        "score": 3.639125831319925e-7
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            25.18481098402392,
+            -20.514279472204297
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "perpendicular",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 117,
+        "score": 1.3464165298298002e-7
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            103.81518901597607,
+            -20.514279472204294
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "mixed",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 118,
+        "score": 1.346416529829793e-7
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            97.7,
+            6.8
+          ],
+          [
+            96.5,
+            6.3
+          ],
+          [
+            95.0,
+            4.5
+          ],
+          [
+            93.5,
+            2.0
+          ],
+          [
+            24.892351682203923,
+            -19.87873213697483
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "estimated_speed_kts": 430.0,
+        "family": "other",
+        "fuel_feasible": true,
+        "fuel_remaining_at_arc7_kg": 0.0,
+        "id": 119,
+        "score": 4.7334896586674236e-8
+      },
+      "type": "Feature"
+    }
+  ],
+  "type": "FeatureCollection"
+}

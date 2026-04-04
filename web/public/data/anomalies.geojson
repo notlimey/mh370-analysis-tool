@@ -1,0 +1,136 @@
+{
+  "features": [
+    {
+      "geometry": {
+        "coordinates": [
+          107.92,
+          -8.36
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "category": "acoustic",
+        "confidence": "medium",
+        "conflicts_with": [],
+        "date": "2014-03-08T01:15:18Z",
+        "detail": "Triangulated origin was reported at 8.36S 107.92E directly on the 7th arc, with timing roughly 55 minutes after expected impact. If genuine, it is more consistent with an underwater implosion or later sinking event than immediate impact.",
+        "id": "java_anomaly",
+        "implication": "Would place the crash site near Java and far north of the searched southern Indian Ocean corridors.",
+        "source": "370location.org — Ed Anderson",
+        "source_url": null,
+        "status": "unexplored",
+        "summary": "A strong acoustic event detected at the Diego Garcia H08 hydrophone array from the direction of Java, stronger than nearby cataloged quakes and never formally resolved.",
+        "supports": [
+          "thermal_plume_aqua_modis"
+        ],
+        "title": "Java Anomaly — Uncataloged Hydroacoustic Event"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          55.5,
+          -20.9
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "category": "biological",
+        "confidence": "high",
+        "conflicts_with": [],
+        "date": "2015-07-29",
+        "detail": "Published isotope work on smaller specimens points to warm-water drift histories. If the largest and likely earliest-attached specimens were analyzed, they could narrow the origin corridor substantially.",
+        "id": "barnacle_large_specimens",
+        "implication": "A warm-water origin would sit uneasily with the colder far-south search assumption.",
+        "source": "Al-Qattan et al. (2023), AGU Advances",
+        "source_url": "https://doi.org/10.1029/2023AV000915",
+        "status": "unexplored",
+        "summary": "The largest flaperon barnacles may preserve the earliest temperature history after impact, but they have not been released for independent analysis.",
+        "supports": [],
+        "title": "Largest Barnacles on Flaperon — Withheld from Analysis"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          90.45,
+          -39.47
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "category": "satellite_image",
+        "confidence": "low",
+        "conflicts_with": [
+          "barnacle_large_specimens"
+        ],
+        "date": "2014-03-08T04:46:30Z",
+        "detail": "A second weaker detection was claimed in a later pass, with the motion attributed to high-altitude winds. The interpretation is speculative but geographically overlaps the southern end of the ATSB corridor.",
+        "id": "thermal_plume_aqua_modis",
+        "implication": "If real, it supports a southern origin near the lower ATSB search band.",
+        "source": "370location.org independent analysis",
+        "source_url": null,
+        "status": "unexplored",
+        "summary": "An isolated dark cloud feature in MODIS thermal imagery was interpreted as a possible hydrocarbon plume a few hours after expected impact.",
+        "supports": [],
+        "title": "Hydrocarbon Plume — NASA MODIS Thermal Imagery"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          100.0,
+          -33.0
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "category": "satellite_image",
+        "confidence": "low",
+        "conflicts_with": [],
+        "date": "2014-03-08T03:07:00Z",
+        "detail": "The claim remains speculative, but the archive is public and well-suited to more systematic modern image analysis.",
+        "id": "cloud_trail_modis",
+        "implication": "If real, it would suggest a controlled late path east of the main searched zones.",
+        "source": "Lyne (2024), ResearchGate",
+        "source_url": null,
+        "status": "unexplored",
+        "summary": "A long cloud anomaly visible across multiple MODIS images has been proposed as a wake-like trail from a late controlled flight path.",
+        "supports": [],
+        "title": "300km Cloud Trail Anomaly in MODIS Imagery"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          96.829,
+          -12.188
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "category": "acoustic",
+        "confidence": "medium",
+        "conflicts_with": [],
+        "date": "2014-03-08T00:50:00Z",
+        "detail": "If the signal were confirmed as MH370, it would sharply constrain the route and strongly favor a much more northerly continuation than the official southern search.",
+        "id": "cocos_island_seismometer",
+        "implication": "Could anchor a specific waypoint route and rule out many southern arc 7 crossings.",
+        "source": "370location.org — Ed Anderson",
+        "source_url": null,
+        "status": "unexplored",
+        "summary": "A public Cocos Keeling seismometer anomaly has been interpreted as a possible aircraft flyby near the island.",
+        "supports": [
+          "java_anomaly"
+        ],
+        "title": "Cocos Keeling Seismometer — Possible Flyby Signal"
+      },
+      "type": "Feature"
+    }
+  ],
+  "type": "FeatureCollection"
+}

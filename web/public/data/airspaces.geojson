@@ -1,0 +1,1485 @@
+{
+  "_metadata": {
+    "accuracy": "Simplified from published AIP coordinates. Sufficient for visual display and path-crossing analysis. Not suitable for navigation.",
+    "coordinate_system": "WGS84",
+    "date_valid": "2014-03-08",
+    "description": "Flight Information Region boundaries relevant to MH370, as of March 2014",
+    "note": "These boundaries are frozen at the date of the MH370 disappearance. FIR boundaries change infrequently but do change — do not replace with live data. The analytical value of this layer depends on it representing the world as it was on the night of 7-8 March 2014.",
+    "source": "ICAO AIPs, ATSB MH370 investigation reports, ICAO Doc 7030 Asia/Pacific regional procedures",
+    "winding": "counter-clockwise (GeoJSON standard — exterior rings are CCW)"
+  },
+  "features": [
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            [
+              103.0,
+              1.5
+            ],
+            [
+              104.3,
+              2.0
+            ],
+            [
+              105.0,
+              3.0
+            ],
+            [
+              106.5,
+              4.5
+            ],
+            [
+              108.0,
+              6.0
+            ],
+            [
+              109.0,
+              7.5
+            ],
+            [
+              110.0,
+              8.5
+            ],
+            [
+              111.0,
+              8.0
+            ],
+            [
+              112.0,
+              7.0
+            ],
+            [
+              113.0,
+              6.5
+            ],
+            [
+              116.0,
+              6.0
+            ],
+            [
+              118.0,
+              5.0
+            ],
+            [
+              119.5,
+              4.0
+            ],
+            [
+              119.5,
+              2.0
+            ],
+            [
+              117.0,
+              1.0
+            ],
+            [
+              115.0,
+              0.5
+            ],
+            [
+              112.0,
+              0.0
+            ],
+            [
+              109.0,
+              -1.0
+            ],
+            [
+              107.5,
+              -1.5
+            ],
+            [
+              106.0,
+              -2.5
+            ],
+            [
+              104.0,
+              -3.0
+            ],
+            [
+              103.0,
+              -2.0
+            ],
+            [
+              102.0,
+              0.0
+            ],
+            [
+              101.0,
+              1.0
+            ],
+            [
+              100.5,
+              2.5
+            ],
+            [
+              100.0,
+              4.0
+            ],
+            [
+              100.5,
+              5.5
+            ],
+            [
+              101.0,
+              6.5
+            ],
+            [
+              102.0,
+              6.5
+            ],
+            [
+              103.0,
+              5.5
+            ],
+            [
+              103.5,
+              4.0
+            ],
+            [
+              103.0,
+              2.5
+            ],
+            [
+              103.0,
+              1.5
+            ]
+          ]
+        ],
+        "type": "Polygon"
+      },
+      "properties": {
+        "analytical_importance": "HIGH — the turn-back maneuver was designed to re-enter and then exit this FIR while exploiting the boundary between Malaysian and Thai radar coverage",
+        "color": "#ef4444",
+        "country": "Malaysia",
+        "detection_status": "TRACKED — Malaysian military radar confirmed the U-turn and westward flight across the peninsula",
+        "icao": "WMFC",
+        "id": "kuala_lumpur_fir",
+        "mh370_notes": "MH370 departed this FIR at approximately 17:21 UTC when the transponder was switched off near waypoint IGARI. The handoff to Ho Chi Minh FIR was initiated but MH370 never checked in. Malaysian military radar continued tracking the aircraft as it turned back westward through this FIR.",
+        "mh370_role": "origin",
+        "name": "Kuala Lumpur FIR",
+        "radar_coverage": "Good — Malaysian military primary radar covers peninsula and Malacca Strait",
+        "type": "FIR"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            [
+              103.0,
+              1.5
+            ],
+            [
+              103.0,
+              5.5
+            ],
+            [
+              104.0,
+              8.0
+            ],
+            [
+              106.0,
+              10.0
+            ],
+            [
+              108.0,
+              12.0
+            ],
+            [
+              110.0,
+              14.0
+            ],
+            [
+              112.0,
+              16.0
+            ],
+            [
+              114.0,
+              17.5
+            ],
+            [
+              116.0,
+              18.0
+            ],
+            [
+              118.0,
+              17.0
+            ],
+            [
+              119.0,
+              15.0
+            ],
+            [
+              119.5,
+              12.0
+            ],
+            [
+              119.5,
+              8.0
+            ],
+            [
+              119.5,
+              4.0
+            ],
+            [
+              118.0,
+              5.0
+            ],
+            [
+              116.0,
+              6.0
+            ],
+            [
+              113.0,
+              6.5
+            ],
+            [
+              112.0,
+              7.0
+            ],
+            [
+              111.0,
+              8.0
+            ],
+            [
+              110.0,
+              8.5
+            ],
+            [
+              109.0,
+              7.5
+            ],
+            [
+              108.0,
+              6.0
+            ],
+            [
+              106.5,
+              4.5
+            ],
+            [
+              105.0,
+              3.0
+            ],
+            [
+              104.3,
+              2.0
+            ],
+            [
+              103.0,
+              1.5
+            ]
+          ]
+        ],
+        "type": "Polygon"
+      },
+      "properties": {
+        "analytical_importance": "HIGH — the failure to check in here was the first concrete anomaly that triggered concern",
+        "color": "#f97316",
+        "country": "Vietnam",
+        "detection_status": "PARTIAL — briefly tracked before loss of contact near IGARI",
+        "icao": "VVTS",
+        "id": "ho_chi_minh_fir",
+        "mh370_notes": "MH370 was handed off to this FIR at 17:19 UTC but never established contact. Vietnam ATC noticed the absence and attempted to raise the aircraft. Vietnamese radar tracked MH370 briefly before it disappeared from screens. The deputy minister of transport stated Vietnam noticed MH370 turning back and informed Malaysian authorities twice on the day of disappearance.",
+        "mh370_role": "handoff_destination",
+        "name": "Ho Chi Minh FIR",
+        "radar_coverage": "Moderate — Vietnamese ATC radar covers coastal areas. Limited over Gulf of Thailand and South China Sea.",
+        "type": "FIR"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            [
+              97.5,
+              5.5
+            ],
+            [
+              98.0,
+              8.0
+            ],
+            [
+              98.5,
+              10.0
+            ],
+            [
+              99.0,
+              12.0
+            ],
+            [
+              100.0,
+              14.0
+            ],
+            [
+              101.0,
+              15.5
+            ],
+            [
+              102.0,
+              16.0
+            ],
+            [
+              104.0,
+              16.5
+            ],
+            [
+              106.0,
+              16.0
+            ],
+            [
+              107.0,
+              14.5
+            ],
+            [
+              108.0,
+              12.0
+            ],
+            [
+              106.0,
+              10.0
+            ],
+            [
+              104.0,
+              8.0
+            ],
+            [
+              103.0,
+              5.5
+            ],
+            [
+              102.0,
+              6.5
+            ],
+            [
+              101.0,
+              6.5
+            ],
+            [
+              100.5,
+              5.5
+            ],
+            [
+              100.0,
+              4.0
+            ],
+            [
+              99.0,
+              4.5
+            ],
+            [
+              98.0,
+              5.0
+            ],
+            [
+              97.5,
+              5.5
+            ]
+          ]
+        ],
+        "type": "Polygon"
+      },
+      "properties": {
+        "analytical_importance": "VERY HIGH — confirms active pilot was navigating the radar boundary between this FIR and the Kuala Lumpur FIR deliberately",
+        "color": "#eab308",
+        "country": "Thailand",
+        "detection_status": "TRACKED but NOT REPORTED — Thai military confirmed detection weeks later",
+        "icao": "VTBB",
+        "id": "bangkok_fir",
+        "mh370_notes": "MH370 briefly entered Thai airspace as it flew northwest across the peninsula toward the Malacca Strait. Thai military radar detected MH370 but Thailand did not report this until weeks after the disappearance, stating operators 'did not think much of it' at the time. The pilot's route through this FIR was apparently designed to exploit the gap between Thai and Malaysian radar coverage.",
+        "mh370_role": "border_crossed",
+        "name": "Bangkok FIR",
+        "radar_coverage": "Good over Thailand proper. Thai military radar covers Gulf of Thailand and parts of Andaman Sea.",
+        "type": "FIR"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            [
+              94.0,
+              6.0
+            ],
+            [
+              95.0,
+              5.5
+            ],
+            [
+              97.5,
+              5.5
+            ],
+            [
+              98.0,
+              5.0
+            ],
+            [
+              99.0,
+              4.5
+            ],
+            [
+              100.0,
+              4.0
+            ],
+            [
+              100.5,
+              2.5
+            ],
+            [
+              101.0,
+              1.0
+            ],
+            [
+              102.0,
+              0.0
+            ],
+            [
+              103.0,
+              -2.0
+            ],
+            [
+              104.0,
+              -3.0
+            ],
+            [
+              106.0,
+              -2.5
+            ],
+            [
+              107.5,
+              -1.5
+            ],
+            [
+              109.0,
+              -1.0
+            ],
+            [
+              112.0,
+              0.0
+            ],
+            [
+              115.0,
+              0.5
+            ],
+            [
+              117.0,
+              1.0
+            ],
+            [
+              119.5,
+              2.0
+            ],
+            [
+              119.5,
+              -3.0
+            ],
+            [
+              119.0,
+              -5.0
+            ],
+            [
+              118.0,
+              -7.0
+            ],
+            [
+              116.0,
+              -9.0
+            ],
+            [
+              114.0,
+              -10.0
+            ],
+            [
+              112.0,
+              -10.5
+            ],
+            [
+              109.0,
+              -11.0
+            ],
+            [
+              106.0,
+              -11.0
+            ],
+            [
+              104.0,
+              -10.5
+            ],
+            [
+              102.0,
+              -9.0
+            ],
+            [
+              100.0,
+              -7.0
+            ],
+            [
+              98.0,
+              -6.0
+            ],
+            [
+              96.0,
+              -5.0
+            ],
+            [
+              94.0,
+              -4.0
+            ],
+            [
+              92.0,
+              -3.0
+            ],
+            [
+              90.0,
+              -2.0
+            ],
+            [
+              88.0,
+              -1.0
+            ],
+            [
+              88.0,
+              2.0
+            ],
+            [
+              90.0,
+              3.5
+            ],
+            [
+              92.0,
+              5.0
+            ],
+            [
+              94.0,
+              6.0
+            ]
+          ]
+        ],
+        "type": "Polygon"
+      },
+      "properties": {
+        "analytical_importance": "VERY HIGH — whether MH370 entered this FIR is a key discriminator between flight path hypotheses. The Java Anomaly hydroacoustic candidate (8.4°S 107.9°E) would place the crash inside this FIR.",
+        "color": "#22c55e",
+        "country": "Indonesia",
+        "detection_status": "UNKNOWN — Indonesia has not confirmed or denied military radar detection after the U-turn",
+        "icao": "WIIF",
+        "id": "jakarta_fir",
+        "mh370_notes": "Indonesia stated its ATC radar did not register any aircraft with MH370's transponder code, which is expected since the transponder was off. Indonesian military radar was tracking MH370 earlier (before IGARI) but did not provide information on whether it was detected after the turn. The flight path through the Malacca Strait was carefully routed along the northwestern boundary of this FIR — staying in international airspace and skirting the northern tip of Sumatra without clearly entering Indonesian-monitored space.",
+        "mh370_role": "avoided_or_skirted",
+        "name": "Jakarta FIR",
+        "radar_coverage": "Indonesia has an early-warning radar (JORN equivalent) covering Sumatra and Java. ATC radar covers major airports.",
+        "type": "FIR"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            [
+              72.0,
+              8.0
+            ],
+            [
+              74.0,
+              10.0
+            ],
+            [
+              76.0,
+              12.0
+            ],
+            [
+              78.0,
+              14.0
+            ],
+            [
+              80.0,
+              15.5
+            ],
+            [
+              82.0,
+              16.0
+            ],
+            [
+              84.0,
+              16.0
+            ],
+            [
+              86.0,
+              15.0
+            ],
+            [
+              88.0,
+              14.0
+            ],
+            [
+              90.0,
+              12.0
+            ],
+            [
+              92.0,
+              10.0
+            ],
+            [
+              94.0,
+              8.0
+            ],
+            [
+              94.0,
+              6.0
+            ],
+            [
+              92.0,
+              5.0
+            ],
+            [
+              90.0,
+              3.5
+            ],
+            [
+              88.0,
+              2.0
+            ],
+            [
+              88.0,
+              -1.0
+            ],
+            [
+              86.0,
+              -2.0
+            ],
+            [
+              84.0,
+              -3.0
+            ],
+            [
+              82.0,
+              -4.0
+            ],
+            [
+              80.0,
+              -4.0
+            ],
+            [
+              78.0,
+              -3.0
+            ],
+            [
+              76.0,
+              -2.0
+            ],
+            [
+              74.0,
+              0.0
+            ],
+            [
+              72.0,
+              2.0
+            ],
+            [
+              70.0,
+              4.0
+            ],
+            [
+              70.0,
+              6.0
+            ],
+            [
+              71.0,
+              8.0
+            ],
+            [
+              72.0,
+              8.0
+            ]
+          ]
+        ],
+        "type": "Polygon"
+      },
+      "properties": {
+        "analytical_importance": "HIGH — the aircraft was in this FIR for perhaps 30-60 minutes during the 17:22-18:22 UTC window. The last radar contact at 18:22 UTC (waypoint MEKAR area) is on the western edge of this FIR.",
+        "color": "#06b6d4",
+        "country": "India",
+        "detection_status": "NO DETECTION REPORTED — India did not report tracking MH370 in the Andaman Sea",
+        "icao": "VOMF",
+        "id": "chennai_fir",
+        "mh370_notes": "MH370 almost certainly transited through or near this FIR as it flew northwest through the Andaman Sea after passing waypoint MEKAR. India did not report any radar detection. The Andaman Islands (Indian territory) are within this FIR — had MH370 passed close to them, ground observers or island radar may have had a detection opportunity.",
+        "mh370_role": "transited",
+        "name": "Chennai FIR",
+        "radar_coverage": "Indian military radar covers the Andaman and Nicobar Islands area. Indian ATC radar covers the coasts.",
+        "type": "FIR"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            [
+              72.0,
+              20.0
+            ],
+            [
+              74.0,
+              22.0
+            ],
+            [
+              76.0,
+              24.0
+            ],
+            [
+              78.0,
+              25.0
+            ],
+            [
+              80.0,
+              26.0
+            ],
+            [
+              82.0,
+              27.0
+            ],
+            [
+              84.0,
+              27.5
+            ],
+            [
+              86.0,
+              27.0
+            ],
+            [
+              88.0,
+              26.0
+            ],
+            [
+              90.0,
+              25.0
+            ],
+            [
+              92.0,
+              24.0
+            ],
+            [
+              94.0,
+              22.0
+            ],
+            [
+              95.0,
+              20.0
+            ],
+            [
+              96.0,
+              18.0
+            ],
+            [
+              96.0,
+              16.0
+            ],
+            [
+              94.0,
+              14.0
+            ],
+            [
+              92.0,
+              12.0
+            ],
+            [
+              90.0,
+              12.0
+            ],
+            [
+              88.0,
+              14.0
+            ],
+            [
+              86.0,
+              15.0
+            ],
+            [
+              84.0,
+              16.0
+            ],
+            [
+              82.0,
+              16.0
+            ],
+            [
+              80.0,
+              15.5
+            ],
+            [
+              78.0,
+              14.0
+            ],
+            [
+              76.0,
+              12.0
+            ],
+            [
+              74.0,
+              10.0
+            ],
+            [
+              72.0,
+              8.0
+            ],
+            [
+              71.0,
+              8.0
+            ],
+            [
+              70.0,
+              10.0
+            ],
+            [
+              70.0,
+              14.0
+            ],
+            [
+              71.0,
+              17.0
+            ],
+            [
+              72.0,
+              20.0
+            ]
+          ]
+        ],
+        "type": "Polygon"
+      },
+      "properties": {
+        "analytical_importance": "MEDIUM — relevant mainly for northerly route hypotheses",
+        "color": "#8b5cf6",
+        "country": "India",
+        "detection_status": "NO DETECTION REPORTED",
+        "icao": "VECF",
+        "id": "kolkata_fir",
+        "mh370_notes": "Northern Andaman Sea area. If MH370 flew the northerly route hypothesis, it would have transited through this FIR. No detection reported.",
+        "mh370_role": "possible_transit",
+        "name": "Kolkata FIR",
+        "radar_coverage": "Indian military radar. The Andaman and Nicobar Command (ANC) has dedicated radar on the island chain.",
+        "type": "FIR"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            [
+              72.0,
+              8.0
+            ],
+            [
+              74.0,
+              10.0
+            ],
+            [
+              76.0,
+              12.0
+            ],
+            [
+              74.0,
+              12.0
+            ],
+            [
+              72.0,
+              10.0
+            ],
+            [
+              70.0,
+              8.0
+            ],
+            [
+              70.0,
+              6.0
+            ],
+            [
+              70.0,
+              4.0
+            ],
+            [
+              72.0,
+              2.0
+            ],
+            [
+              74.0,
+              0.0
+            ],
+            [
+              76.0,
+              -2.0
+            ],
+            [
+              78.0,
+              -3.0
+            ],
+            [
+              80.0,
+              -4.0
+            ],
+            [
+              80.0,
+              -8.0
+            ],
+            [
+              76.0,
+              -8.0
+            ],
+            [
+              72.0,
+              -6.0
+            ],
+            [
+              68.0,
+              -4.0
+            ],
+            [
+              66.0,
+              -2.0
+            ],
+            [
+              65.0,
+              2.0
+            ],
+            [
+              66.0,
+              6.0
+            ],
+            [
+              68.0,
+              8.0
+            ],
+            [
+              72.0,
+              8.0
+            ]
+          ]
+        ],
+        "type": "Polygon"
+      },
+      "properties": {
+        "analytical_importance": "LOW — context only",
+        "color": "#ec4899",
+        "country": "Sri Lanka",
+        "detection_status": "NOT APPLICABLE",
+        "icao": "VCCF",
+        "id": "colombo_fir",
+        "mh370_notes": "MH370 did not transit this FIR on any credible flight path. Included for geographic context — it lies between the Andaman Sea corridor and the southern Indian Ocean.",
+        "mh370_role": "not_transited",
+        "name": "Colombo FIR",
+        "radar_coverage": "Sri Lankan ATC and limited military radar.",
+        "type": "FIR"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            [
+              60.0,
+              -10.0
+            ],
+            [
+              70.0,
+              -10.0
+            ],
+            [
+              80.0,
+              -10.0
+            ],
+            [
+              90.0,
+              -10.0
+            ],
+            [
+              100.0,
+              -10.0
+            ],
+            [
+              110.0,
+              -10.0
+            ],
+            [
+              115.0,
+              -15.0
+            ],
+            [
+              120.0,
+              -20.0
+            ],
+            [
+              125.0,
+              -25.0
+            ],
+            [
+              130.0,
+              -30.0
+            ],
+            [
+              135.0,
+              -35.0
+            ],
+            [
+              140.0,
+              -38.0
+            ],
+            [
+              140.0,
+              -55.0
+            ],
+            [
+              120.0,
+              -55.0
+            ],
+            [
+              100.0,
+              -55.0
+            ],
+            [
+              80.0,
+              -55.0
+            ],
+            [
+              60.0,
+              -55.0
+            ],
+            [
+              60.0,
+              -40.0
+            ],
+            [
+              60.0,
+              -25.0
+            ],
+            [
+              60.0,
+              -10.0
+            ]
+          ]
+        ],
+        "type": "Polygon"
+      },
+      "properties": {
+        "analytical_importance": "HIGH — the search zone. The debris drift corridor, all BTO arcs from arc 3 onward, and the probability heatmap all fall within this FIR.",
+        "color": "#f59e0b",
+        "country": "Australia",
+        "detection_status": "NO DETECTION — beyond all radar coverage",
+        "icao": "YMMM",
+        "id": "melbourne_oceanic_fir",
+        "mh370_notes": "The entire MH370 underwater search zone lies within this FIR. Australia assumed responsibility for coordinating the search precisely because this FIR is Australian-administered. The 7th arc from approximately 20°S to 45°S is within this FIR.",
+        "mh370_role": "crash_zone",
+        "name": "Melbourne Oceanic FIR",
+        "radar_coverage": "No radar coverage over the southern Indian Ocean. Australia's radar extends only a few hundred NM from the coast.",
+        "type": "FIR"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            [
+              60.0,
+              8.0
+            ],
+            [
+              62.0,
+              10.0
+            ],
+            [
+              64.0,
+              12.0
+            ],
+            [
+              66.0,
+              14.0
+            ],
+            [
+              68.0,
+              16.0
+            ],
+            [
+              70.0,
+              18.0
+            ],
+            [
+              72.0,
+              20.0
+            ],
+            [
+              71.0,
+              17.0
+            ],
+            [
+              70.0,
+              14.0
+            ],
+            [
+              70.0,
+              10.0
+            ],
+            [
+              71.0,
+              8.0
+            ],
+            [
+              72.0,
+              8.0
+            ],
+            [
+              68.0,
+              8.0
+            ],
+            [
+              66.0,
+              6.0
+            ],
+            [
+              65.0,
+              2.0
+            ],
+            [
+              66.0,
+              -2.0
+            ],
+            [
+              68.0,
+              -4.0
+            ],
+            [
+              66.0,
+              -4.0
+            ],
+            [
+              64.0,
+              -5.0
+            ],
+            [
+              62.0,
+              -6.0
+            ],
+            [
+              60.0,
+              -8.0
+            ],
+            [
+              58.0,
+              -8.0
+            ],
+            [
+              56.0,
+              -6.0
+            ],
+            [
+              54.0,
+              -4.0
+            ],
+            [
+              52.0,
+              -2.0
+            ],
+            [
+              50.0,
+              0.0
+            ],
+            [
+              50.0,
+              4.0
+            ],
+            [
+              52.0,
+              8.0
+            ],
+            [
+              54.0,
+              10.0
+            ],
+            [
+              56.0,
+              12.0
+            ],
+            [
+              58.0,
+              10.0
+            ],
+            [
+              60.0,
+              8.0
+            ]
+          ]
+        ],
+        "type": "Polygon"
+      },
+      "properties": {
+        "analytical_importance": "LOW — context only",
+        "color": "#64748b",
+        "country": "India",
+        "detection_status": "NOT APPLICABLE",
+        "icao": "VABF",
+        "id": "mumbai_fir",
+        "mh370_notes": "MH370 did not transit this FIR. Included for geographic completeness of the Indian Ocean region.",
+        "mh370_role": "not_transited",
+        "name": "Mumbai FIR",
+        "radar_coverage": "Indian ATC and military radar covering western India and adjacent ocean.",
+        "type": "FIR"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            [
+              102.0,
+              0.0
+            ],
+            [
+              103.0,
+              1.5
+            ],
+            [
+              104.3,
+              2.0
+            ],
+            [
+              105.0,
+              3.0
+            ],
+            [
+              106.0,
+              2.5
+            ],
+            [
+              107.0,
+              1.0
+            ],
+            [
+              108.0,
+              -1.0
+            ],
+            [
+              107.5,
+              -1.5
+            ],
+            [
+              106.0,
+              -2.5
+            ],
+            [
+              104.0,
+              -3.0
+            ],
+            [
+              103.0,
+              -2.0
+            ],
+            [
+              102.0,
+              0.0
+            ]
+          ]
+        ],
+        "type": "Polygon"
+      },
+      "properties": {
+        "analytical_importance": "MEDIUM — Singapore was one of the first neighboring FIRs contacted in the confusion following the disappearance",
+        "color": "#10b981",
+        "country": "Singapore",
+        "detection_status": "NO DETECTION REPORTED",
+        "icao": "WSSS",
+        "id": "singapore_fir",
+        "mh370_notes": "Singapore ATC was contacted by Kuala Lumpur at 05:09 UTC (several hours after the disappearance) to ask if they had any information. Singapore did not report detecting MH370. The FIR is small and covers the Strait of Malacca approaches — MH370 passed near but not through it on its westward route.",
+        "mh370_role": "adjacent",
+        "name": "Singapore FIR",
+        "radar_coverage": "Excellent — Singapore operates some of the most advanced ATC and surveillance radar in Southeast Asia.",
+        "type": "FIR"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            [
+              94.0,
+              -8.0
+            ],
+            [
+              98.0,
+              -8.0
+            ],
+            [
+              102.0,
+              -8.0
+            ],
+            [
+              102.0,
+              -14.0
+            ],
+            [
+              98.0,
+              -14.0
+            ],
+            [
+              94.0,
+              -14.0
+            ],
+            [
+              94.0,
+              -8.0
+            ]
+          ]
+        ],
+        "type": "Polygon"
+      },
+      "properties": {
+        "analytical_importance": "HIGH — one of the untapped data sources. The Cocos Keeling infrasound array is a CTBTO IMS station; its data from March 8 2014 should exist but remains restricted.",
+        "color": "#a855f7",
+        "country": "Australia",
+        "detection_status": "POSSIBLE SEISMIC DETECTION — seismometer anomaly identified, infrasound data withheld",
+        "icao": "YNCK_sector",
+        "id": "cocos_keeling_sector",
+        "mh370_notes": "Researcher Ed Anderson (370location.org) identified a possible MH370 flyby signal on the Cocos Keeling seismometer at approximately the right time for a flyby if MH370 followed a waypoint route through Christmas Island. The infrasound array at Cocos Keeling collected data during the flight but the data has never been publicly released. Christmas Island lies on a plausible routing between the Andaman Sea and the Java anomaly site.",
+        "mh370_role": "possible_waypoint",
+        "name": "Cocos Keeling / Christmas Island Sector",
+        "radar_coverage": "No ATC radar. Cocos Keeling Island has a seismometer and infrasound array (CTBTO IMS station). Christmas Island has basic navigation aids.",
+        "type": "SECTOR"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            [
+              68.0,
+              -3.0
+            ],
+            [
+              76.0,
+              -3.0
+            ],
+            [
+              76.0,
+              -12.0
+            ],
+            [
+              68.0,
+              -12.0
+            ],
+            [
+              68.0,
+              -3.0
+            ]
+          ]
+        ],
+        "type": "Polygon"
+      },
+      "properties": {
+        "analytical_importance": "HIGH — the missing H08 data gap is one of the most significant unexplained data absences in the investigation",
+        "color": "#dc2626",
+        "country": "UK/USA (British Indian Ocean Territory)",
+        "detection_status": "OFFICIALLY NO DETECTION — but sensor capabilities make this contested",
+        "icao": "FJDG_sector",
+        "id": "diego_garcia_sector",
+        "mh370_notes": "Diego Garcia is approximately 1,800km from the southern search zone. The CTBTO hydroacoustic station H08 at Diego Garcia had its data missing for 25 minutes around the expected impact time — the exact window that would have enabled triangulation. The US has stated it had no evidence of MH370 approaching the island. Some researchers argue the comprehensive surveillance capabilities at Diego Garcia make it implausible that an unidentified 777 transited the central Indian Ocean without detection.",
+        "mh370_role": "disputed",
+        "name": "Diego Garcia / BIOT Sector",
+        "radar_coverage": "EXCEPTIONAL — Diego Garcia hosts a major US Navy and RAF base with advanced long-range surveillance radar, signals intelligence, and continuous monitoring of the central Indian Ocean.",
+        "type": "SECTOR"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            [
+              94.0,
+              6.0
+            ],
+            [
+              96.0,
+              5.0
+            ],
+            [
+              98.0,
+              4.0
+            ],
+            [
+              99.0,
+              2.0
+            ],
+            [
+              100.5,
+              1.0
+            ],
+            [
+              102.0,
+              0.0
+            ],
+            [
+              103.0,
+              -2.0
+            ],
+            [
+              102.0,
+              -4.0
+            ],
+            [
+              100.0,
+              -5.0
+            ],
+            [
+              98.0,
+              -5.0
+            ],
+            [
+              96.0,
+              -3.0
+            ],
+            [
+              94.0,
+              -1.0
+            ],
+            [
+              92.0,
+              1.0
+            ],
+            [
+              92.0,
+              4.0
+            ],
+            [
+              94.0,
+              6.0
+            ]
+          ]
+        ],
+        "type": "Polygon"
+      },
+      "properties": {
+        "analytical_importance": "VERY HIGH — the ADIZ boundary is more relevant than the civil FIR boundary for understanding detection avoidance",
+        "color": "#f97316",
+        "country": "Indonesia",
+        "detection_status": "UNKNOWN — Indonesian military radar data never independently verified",
+        "icao": "ADIZ_ID_W",
+        "id": "adiz_indonesia_sumatra",
+        "mh370_notes": "The Air Defense Identification Zone is what military radar actually monitors — distinct from civil FIR boundaries. The flight path up the Malacca Strait was carefully routed along the western edge of Indonesian ADIZ coverage. Researcher analysis suggests the pilot may have been flying at low altitude near Penang to remain below Indonesian radar coverage horizon.",
+        "mh370_role": "boundary_navigated",
+        "name": "Indonesian ADIZ — Sumatra / Andaman",
+        "radar_coverage": "Indonesian military radar covers northern Sumatra. JORN-equivalent capability disputed.",
+        "type": "ADIZ"
+      },
+      "type": "Feature"
+    }
+  ],
+  "type": "FeatureCollection"
+}

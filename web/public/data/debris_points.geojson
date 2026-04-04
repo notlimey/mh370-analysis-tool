@@ -1,0 +1,187 @@
+{
+  "features": [
+    {
+      "geometry": {
+        "coordinates": [
+          55.5,
+          -20.9
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "barnacle_analysis_available": false,
+        "barnacle_analysis_done": true,
+        "confirmation": "confirmed",
+        "confirmed_by": "Official investigation",
+        "date": "2015-07-29",
+        "id": "flaperon-wing-component",
+        "initial_water_temp_from_barnacle": 27.0,
+        "location": "Saint-André, Réunion Island",
+        "name": "Flaperon (wing component)",
+        "notes": "First confirmed MH370 debris. Barnacle analysis suggests origin in warm tropical water, not cold southern ocean - disputed by drift modelers.",
+        "oldest_barnacle_age_estimate": "largest specimens withheld",
+        "used_in_drift_models": [
+          "CSIRO corridor weighting"
+        ]
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          36.0,
+          -15.5
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "barnacle_analysis_available": true,
+        "barnacle_analysis_done": false,
+        "confirmation": "confirmed",
+        "confirmed_by": "Official investigation",
+        "date": "2016-03-03",
+        "id": "trailing-edge-flap",
+        "initial_water_temp_from_barnacle": null,
+        "location": "Mozambique coast",
+        "name": "Trailing edge flap",
+        "notes": "",
+        "oldest_barnacle_age_estimate": null,
+        "used_in_drift_models": [
+          "CSIRO corridor weighting"
+        ]
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          36.2,
+          -16.0
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "barnacle_analysis_available": true,
+        "barnacle_analysis_done": false,
+        "confirmation": "confirmed",
+        "confirmed_by": "Official investigation",
+        "date": "2016-02-28",
+        "id": "horizontal-stabilizer-panel-no-step",
+        "initial_water_temp_from_barnacle": null,
+        "location": "Mozambique",
+        "name": "Horizontal stabilizer panel ('No Step')",
+        "notes": "",
+        "oldest_barnacle_age_estimate": null,
+        "used_in_drift_models": [
+          "CSIRO corridor weighting"
+        ]
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          40.0,
+          -8.5
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "barnacle_analysis_available": true,
+        "barnacle_analysis_done": false,
+        "confirmation": "probable",
+        "confirmed_by": null,
+        "date": "2016-06-23",
+        "id": "interior-trim-panel",
+        "initial_water_temp_from_barnacle": null,
+        "location": "Tanzania coast",
+        "name": "Interior trim panel",
+        "notes": "",
+        "oldest_barnacle_age_estimate": null,
+        "used_in_drift_models": [
+          "CSIRO corridor weighting"
+        ]
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          63.4,
+          -19.7
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "barnacle_analysis_available": true,
+        "barnacle_analysis_done": false,
+        "confirmation": "probable",
+        "confirmed_by": null,
+        "date": "2016-06-23",
+        "id": "cabin-window-panel",
+        "initial_water_temp_from_barnacle": null,
+        "location": "Rodrigues Island",
+        "name": "Cabin window panel",
+        "notes": "",
+        "oldest_barnacle_age_estimate": null,
+        "used_in_drift_models": [
+          "CSIRO corridor weighting"
+        ]
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          39.8,
+          -5.1
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "barnacle_analysis_available": true,
+        "barnacle_analysis_done": false,
+        "confirmation": "confirmed",
+        "confirmed_by": "Official investigation",
+        "date": "2016-06-22",
+        "id": "outboard-flap-pemba-island",
+        "initial_water_temp_from_barnacle": null,
+        "location": "Pemba Island, Tanzania",
+        "name": "Outboard flap (Pemba Island)",
+        "notes": "Damage pattern on this flap contradicts flaps-extended ditching hypothesis. ATSB: consistent with high-speed impact, not controlled landing.",
+        "oldest_barnacle_age_estimate": null,
+        "used_in_drift_models": [
+          "CSIRO corridor weighting"
+        ]
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          22.1,
+          -34.0
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "barnacle_analysis_available": true,
+        "barnacle_analysis_done": false,
+        "confirmation": "suspected",
+        "confirmed_by": null,
+        "date": "2015-12-28",
+        "id": "suspected-fuselage-panel",
+        "initial_water_temp_from_barnacle": null,
+        "location": "South Africa (Mossel Bay area)",
+        "name": "Suspected fuselage panel",
+        "notes": "",
+        "oldest_barnacle_age_estimate": null,
+        "used_in_drift_models": [
+          "CSIRO corridor weighting"
+        ]
+      },
+      "type": "Feature"
+    }
+  ],
+  "type": "FeatureCollection"
+}
