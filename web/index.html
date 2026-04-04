@@ -201,8 +201,6 @@
 
     <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
     <script type="module">
-      import { fromUrl } from 'https://cdn.skypack.dev/geotiff';
-
       const GITHUB_REPO_URL = 'https://github.com/notlimey/mh370-analysis-tool';
       document.getElementById('repo-link').href = GITHUB_REPO_URL;
 
@@ -281,7 +279,6 @@
         addAirspaces(airspaces);
         addAnomalies(anomalies);
         addDebris(debrisPoints, debrisDrift);
-        await addMagnetic();
         applyInitialVisibility();
         bindControls();
         updateSummary(paths, heatmap);
@@ -385,41 +382,42 @@
       }
 
       async function addMagnetic() {
+        const { fromUrl } = await import('https://cdn.jsdelivr.net/npm/geotiff@3.0.5/+esm');
         const imageUrl = await renderMagneticOverlay('./public/data/emag2_mh370.tiff');
         map.addSource('magnetic-source', { type: 'image', url: imageUrl, coordinates: [[76,-8],[116,-8],[116,-44],[76,-44]] });
         map.addLayer({ id: 'magnetic-raster', type: 'raster', source: 'magnetic-source', paint: { 'raster-opacity': 0.4, 'raster-resampling': 'linear' } });
         bindMagneticHover();
-      }
 
-      async function renderMagneticOverlay(url) {
-        const tiff = await fromUrl(url);
-        const image = await tiff.getImage();
-        const width = image.getWidth();
-        const height = image.getHeight();
-        const values = await image.readRasters({ interleave: true });
-        const noDataValue = image.getGDALNoData();
-        const noData = noDataValue === null ? null : Number(noDataValue);
-        let min = Infinity, max = -Infinity;
-        for (let i = 0; i < values.length; i++) {
-          const v = values[i];
-          if (!Number.isFinite(v) || (noData !== null && v === noData)) continue;
-          min = Math.min(min, v); max = Math.max(max, v);
+        async function renderMagneticOverlay(url) {
+          const tiff = await fromUrl(url);
+          const image = await tiff.getImage();
+          const width = image.getWidth();
+          const height = image.getHeight();
+          const values = await image.readRasters({ interleave: true });
+          const noDataValue = image.getGDALNoData();
+          const noData = noDataValue === null ? null : Number(noDataValue);
+          let min = Infinity, max = -Infinity;
+          for (let i = 0; i < values.length; i++) {
+            const v = values[i];
+            if (!Number.isFinite(v) || (noData !== null && v === noData)) continue;
+            min = Math.min(min, v); max = Math.max(max, v);
+          }
+          window.__magneticState = { width, height, values, noData };
+          const canvas = document.createElement('canvas');
+          canvas.width = width; canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          const imageData = ctx.createImageData(width, height);
+          for (let i = 0; i < values.length; i++) {
+            const v = values[i];
+            const p = i * 4;
+            if (!Number.isFinite(v) || (noData !== null && v === noData)) { imageData.data[p+3] = 0; continue; }
+            const n = max > min ? (v - min) / (max - min) : 0.5;
+            const [r,g,b] = magneticRamp(n);
+            imageData.data[p] = r; imageData.data[p+1] = g; imageData.data[p+2] = b; imageData.data[p+3] = 255;
+          }
+          ctx.putImageData(imageData, 0, 0);
+          return canvas.toDataURL('image/png');
         }
-        window.__magneticState = { width, height, values, noData };
-        const canvas = document.createElement('canvas');
-        canvas.width = width; canvas.height = height;
-        const ctx = canvas.getContext('2d');
-        const imageData = ctx.createImageData(width, height);
-        for (let i = 0; i < values.length; i++) {
-          const v = values[i];
-          const p = i * 4;
-          if (!Number.isFinite(v) || (noData !== null && v === noData)) { imageData.data[p+3] = 0; continue; }
-          const n = max > min ? (v - min) / (max - min) : 0.5;
-          const [r,g,b] = magneticRamp(n);
-          imageData.data[p] = r; imageData.data[p+1] = g; imageData.data[p+2] = b; imageData.data[p+3] = 255;
-        }
-        ctx.putImageData(imageData, 0, 0);
-        return canvas.toDataURL('image/png');
       }
 
       function magneticRamp(v) {
@@ -470,6 +468,13 @@
               const layerId = key === 'bathymetry' ? 'sonar-bathymetry-raster' : `sonar-${key}-raster`;
               map.setLayoutProperty(layerId, 'visibility', checked ? 'visible' : 'none');
             } else {
+              if (id === 'magnetic' && checked && !map.getSource('magnetic-source')) {
+                addMagnetic().catch((error) => {
+                  console.error('Failed to load magnetic layer:', error);
+                  e.target.checked = false;
+                  layerState.magnetic = false;
+                });
+              }
               setVisibility(id, checked);
             }
             document.getElementById('priority-hint').style.display = layerState.heatmap ? 'none' : 'block';
@@ -511,7 +516,7 @@
         const prefix = prefixes[group];
         if (!prefix) return;
         map.getStyle().layers.forEach((layer) => {
-          if (layer.id.startsWith(prefix)) map.setLayoutProperty(layer.id, 'visibility', visibility);
+          if (layer.id.startsWith(prefix) && map.getLayer(layer.id)) map.setLayoutProperty(layer.id, 'visibility', visibility);
         });
       }
 
