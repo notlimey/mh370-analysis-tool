@@ -30,6 +30,33 @@ html, body {
   font-size: 14px;
 }
 
+body.browser-mode .tauri-only {
+  display: none;
+}
+
+.browser-banner {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: #1a1a2e;
+  color: #a0aec0;
+  font-size: 13px;
+  padding: 8px 16px;
+  text-align: center;
+  border-bottom: 1px solid #2d3748;
+}
+
+.browser-banner a {
+  color: #63b3ed;
+  margin-left: 8px;
+}
+
+body.browser-mode #map {
+  top: 36px;
+}
+
 #app {
   display: grid;
   grid-template-columns: var(--sidebar-width) 1fr var(--panel-width);

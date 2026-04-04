@@ -1,4 +1,4 @@
-pub mod mh370;
+mod mh370;
 
 use mh370::anomalies::{get_anomalies as load_anomalies, Anomaly};
 use mh370::airspaces::get_airspaces_geojson as load_airspaces_geojson;

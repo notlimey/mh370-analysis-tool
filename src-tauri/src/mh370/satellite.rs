@@ -65,7 +65,7 @@ pub fn seconds_to_utc_hours(time_s: f64) -> f64 {
 }
 
 fn sat_position_approx(utc_hours: f64, config: &AnalysisConfig) -> (f64, f64, f64) {
-    let amplitude_deg = config.satellite_drift_end_lat_offset_deg.abs().max(0.1);
+    let amplitude_deg = config.satellite_drift_amplitude_deg.max(0.1);
     let amplitude_km = GEO_RADIUS_KM * amplitude_deg.to_radians().sin();
     let omega = 2.0 * PI / OSCILLATION_PERIOD_HOURS;
     let z_km = amplitude_km * (omega * (utc_hours - DEFAULT_PEAK_UTC_HOURS)).cos();
@@ -76,7 +76,7 @@ fn sat_position_approx(utc_hours: f64, config: &AnalysisConfig) -> (f64, f64, f6
 }
 
 fn sat_velocity_approx(utc_hours: f64, config: &AnalysisConfig) -> (f64, f64, f64) {
-    let amplitude_deg = config.satellite_drift_end_lat_offset_deg.abs().max(0.1);
+    let amplitude_deg = config.satellite_drift_amplitude_deg.max(0.1);
     let amplitude_km = GEO_RADIUS_KM * amplitude_deg.to_radians().sin();
     let omega = 2.0 * PI / OSCILLATION_PERIOD_HOURS;
     let vz_km_per_hour = -amplitude_km * omega * (omega * (utc_hours - DEFAULT_PEAK_UTC_HOURS)).sin();

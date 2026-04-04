@@ -1,17 +1,9 @@
-import { invoke } from "@tauri-apps/api/core";
 import type { Map as MapboxMap } from "mapbox-gl";
-import { getAnalysisConfig } from "../model/config";
-
-interface ProbPoint {
-  position: [number, number];
-  probability: number;
-}
+import { getProbabilityHeatmap, type BackendProbPoint } from "../lib/backend";
 
 /** Draw probability heatmap along the 7th arc */
-export async function loadHeatmapLayer(map: MapboxMap, providedPoints?: ProbPoint[]): Promise<void> {
-  const points: ProbPoint[] = providedPoints ?? await invoke("get_probability_heatmap", {
-    config: getAnalysisConfig(),
-  });
+export async function loadHeatmapLayer(map: MapboxMap, providedPoints?: BackendProbPoint[]): Promise<void> {
+  const points: BackendProbPoint[] = providedPoints ?? await getProbabilityHeatmap();
 
   // Scale probabilities for heatmap intensity
   const maxProb = Math.max(...points.map((p) => p.probability), 0.001);

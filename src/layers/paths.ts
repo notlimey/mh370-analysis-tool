@@ -1,7 +1,6 @@
-import { invoke } from "@tauri-apps/api/core";
 import type { Map as MapboxMap } from "mapbox-gl";
 import { getFIRsForPath } from "../model/airspaces";
-import { getAnalysisConfig } from "../model/config";
+import { getCandidatePaths } from "../lib/backend";
 
 export interface FlightPath {
   points: [number, number][];
@@ -27,10 +26,7 @@ const FAMILY_COLORS: Record<string, string> = {
 const FAMILY_ORDER = ["slow", "perpendicular", "mixed", "other"];
 
 export async function fetchCandidatePaths(n = 120): Promise<FlightPath[]> {
-  return invoke("get_candidate_paths", {
-    n,
-    config: getAnalysisConfig(),
-  });
+  return getCandidatePaths(n) as Promise<FlightPath[]>;
 }
 
 export async function annotatePaths(paths: FlightPath[]): Promise<PathAnnotation[]> {

@@ -1,4 +1,4 @@
-import { invoke } from "@tauri-apps/api/core";
+import { getAirspaces } from "../lib/backend";
 
 interface AirspaceProperties {
   id: string;
@@ -15,7 +15,7 @@ export async function getAirspacesGeoJson(): Promise<GeoJSON.FeatureCollection> 
   if (airspacesCache) {
     return airspacesCache;
   }
-  airspacesCache = await invoke<GeoJSON.FeatureCollection>("get_airspaces");
+  airspacesCache = await getAirspaces() as GeoJSON.FeatureCollection;
   return airspacesCache;
 }
 

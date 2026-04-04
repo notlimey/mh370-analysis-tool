@@ -17,8 +17,7 @@ import { getSelectedAnomalyId, initEvidencePanel, openAnomalyDetail } from "./ui
 import { initTimeline } from "./ui/timeline";
 import { setupPopups } from "./popups";
 import type { Map as MapboxMap } from "mapbox-gl";
-import { invoke } from "@tauri-apps/api/core";
-import { getAnalysisConfig } from "./model/config";
+import { getProbabilityHeatmap, IS_TAURI, type BackendProbPoint } from "./lib/backend";
 import { setSelectedAnomaly } from "./layers/anomalies";
 
 const LAYER_PREFIXES = [
@@ -67,9 +66,9 @@ async function loadAllLayers(map: MapboxMap): Promise<void> {
   loadPointsLayer(map);
 
   const [heatmap, paths] = await Promise.all([
-    invoke("get_probability_heatmap", { config: getAnalysisConfig() }),
+    getProbabilityHeatmap(),
     fetchCandidatePaths(120),
-  ]) as [{ position: [number, number]; probability: number }[], FlightPath[]];
+  ]) as [BackendProbPoint[], FlightPath[]];
   const pathAnnotations = await annotatePaths(paths);
 
   // Async data layers
@@ -185,6 +184,14 @@ function highlightArc(map: MapboxMap, arcNum: number): void {
 }
 
 async function main(): Promise<void> {
+  if (!IS_TAURI) {
+    document.body.classList.add("browser-mode");
+    const banner = document.createElement("div");
+    banner.className = "browser-banner";
+    banner.innerHTML = 'Read-only snapshot — download the desktop app to adjust model parameters and recompute <a href="https://github.com/notlimey/mh370-analysis-tool" target="_blank" rel="noreferrer">GitHub repo</a>';
+    document.body.appendChild(banner);
+  }
+
   const map = initMap();
 
   await initEvidencePanel({

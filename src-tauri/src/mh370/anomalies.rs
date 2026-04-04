@@ -132,7 +132,7 @@ pub fn get_anomalies() -> Vec<Anomaly> {
             date: "2014-03-08T00:50:00Z".to_string(),
             confidence: "medium".to_string(),
             summary: "A public Cocos Keeling seismometer anomaly has been interpreted as a possible aircraft flyby near the island.".to_string(),
-            detail: "If the signal were confirmed as MH370, it would sharply constrain the route and strongly favor a much more northerly continuation than the official southern search.".to_string(),
+            detail: "If the signal were confirmed as MH370, it would sharply constrain the route and strongly favor a much more northerly continuation than the official southern search. Note: the CTBTO IMS infrasound array at the same station also collected data during this window, but that data has never been publicly released — a separate unexplored constraint.".to_string(),
             source: "370location.org — Ed Anderson".to_string(),
             source_url: None,
             implication: "Could anchor a specific waypoint route and rule out many southern arc 7 crossings.".to_string(),

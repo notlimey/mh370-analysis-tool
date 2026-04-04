@@ -1,6 +1,5 @@
-import { invoke } from "@tauri-apps/api/core";
 import type { Map as MapboxMap } from "mapbox-gl";
-import { getAnalysisConfig } from "../model/config";
+import { getDebrisDrift, getDebrisLog } from "../lib/backend";
 
 interface DebrisDriftItem {
   name: string;
@@ -31,8 +30,8 @@ const PROBABLE_SOURCE: [number, number] = [94, -35];
 
 export async function loadDebrisLayer(map: MapboxMap): Promise<void> {
   const [debris, debrisLog] = await Promise.all([
-    invoke("get_debris_drift", { config: getAnalysisConfig() }),
-    invoke("get_debris_log", { config: getAnalysisConfig() }),
+    getDebrisDrift(),
+    getDebrisLog(),
   ]) as [DebrisDriftItem[], DebrisLogItem[]];
 
   map.addSource("debris-drift-source", {
