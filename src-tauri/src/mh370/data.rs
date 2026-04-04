@@ -2,7 +2,8 @@ use std::fs;
 
 use serde::{Deserialize, Serialize};
 
-pub const DEFAULT_DATASET_PATH: &str = "mh370_data.json";
+pub const DEFAULT_DATASET_PATH: &str = "";
+const EMBEDDED_DATASET: &str = include_str!("../../../src/data/mh370_data.json");
 pub const ANALYSIS_EPOCH_HOUR_UTC: u32 = 16;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -176,8 +177,12 @@ pub fn resolve_config(config: Option<AnalysisConfig>) -> AnalysisConfig {
 }
 
 pub fn load_dataset(config: &AnalysisConfig) -> Result<Mh370Dataset, String> {
-    let raw = fs::read_to_string(&config.dataset_path)
-        .map_err(|err| format!("failed to read {}: {err}", config.dataset_path))?;
+    let raw = if config.dataset_path.trim().is_empty() {
+        EMBEDDED_DATASET.to_string()
+    } else {
+        fs::read_to_string(&config.dataset_path)
+            .map_err(|err| format!("failed to read {}: {err}", config.dataset_path))?
+    };
     serde_json::from_str(&raw).map_err(|err| format!("failed to parse dataset JSON: {err}"))
 }
 
@@ -227,7 +232,11 @@ pub fn handshake_views(dataset: &Mh370Dataset) -> Result<Vec<HandshakeView>, Str
         .collect()
 }
 
-pub fn nearest_known_altitude_ft(dataset: &Mh370Dataset, time_s: f64, default_altitude_ft: f64) -> f64 {
+pub fn nearest_known_altitude_ft(
+    dataset: &Mh370Dataset,
+    time_s: f64,
+    default_altitude_ft: f64,
+) -> f64 {
     dataset
         .known_positions
         .iter()

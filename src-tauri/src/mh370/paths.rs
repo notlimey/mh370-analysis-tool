@@ -1,16 +1,17 @@
 use serde::Serialize;
 
-use super::arcs::{
-    bto_to_slant_range_km, build_arc_ring, calibrate_bto_offset_from_dataset,
-};
+use super::arcs::{bto_to_slant_range_km, build_arc_ring, calibrate_bto_offset_from_dataset};
+use super::bfo::BfoModel;
 use super::data::{
     load_dataset, parse_time_utc_seconds, primary_arc_handshakes, resolve_config, AnalysisConfig,
     Mh370Dataset,
 };
 use super::geometry::{bearing, haversine, LatLon};
-use super::satellite::satellite_subpoint;
+use super::satellite::{satellite_subpoint, SatelliteModel};
 
 const KTS_TO_KM_PER_HR: f64 = 1.852;
+const BFO_SIGMA_HZ: f64 = 7.0;
+const BFO_SCORE_WEIGHT: f64 = 1.0;
 
 pub const LAST_RADAR: LatLon = LatLon {
     lat: 6.8,
@@ -73,21 +74,23 @@ pub struct FuelSummary {
 }
 
 pub fn sample_candidate_paths(
+    satellite: &SatelliteModel,
     n: usize,
     config: Option<AnalysisConfig>,
 ) -> Result<Vec<FlightPath>, String> {
     let config = resolve_config(config);
     let dataset = load_dataset(&config)?;
-    sample_candidate_paths_from_dataset(&dataset, n, &config)
+    sample_candidate_paths_from_dataset(satellite, &dataset, n, &config)
 }
 
 pub fn apply_fuel_filter(
+    satellite: &SatelliteModel,
     n: usize,
     config: Option<AnalysisConfig>,
 ) -> Result<FuelSummary, String> {
     let config = resolve_config(config);
     let dataset = load_dataset(&config)?;
-    let all_paths = sample_candidate_paths_from_dataset(&dataset, n, &config)?;
+    let all_paths = sample_candidate_paths_from_dataset(satellite, &dataset, n, &config)?;
     let filtered_paths: Vec<FlightPath> = all_paths
         .iter()
         .filter(|path| path.fuel_feasible)
@@ -114,13 +117,15 @@ pub fn apply_fuel_filter(
 }
 
 pub fn sample_candidate_paths_from_dataset(
+    satellite: &SatelliteModel,
     dataset: &Mh370Dataset,
     n: usize,
     config: &AnalysisConfig,
 ) -> Result<Vec<FlightPath>, String> {
-    let calibration = calibrate_bto_offset_from_dataset(dataset, config)?;
+    let calibration = calibrate_bto_offset_from_dataset(satellite, dataset, config)?;
     let primary_handshakes = primary_arc_handshakes(dataset);
     let last_radar_time_s = parse_time_utc_seconds(LAST_RADAR_TIME_UTC)?;
+    let bfo_model = BfoModel::calibrate(satellite, config)?;
 
     if primary_handshakes.len() < 7 {
         return Err("expected seven primary BTO arcs in dataset".to_string());
@@ -135,7 +140,7 @@ pub fn sample_candidate_paths_from_dataset(
 
     let mut current_time_s = last_radar_time_s;
     for handshake in &primary_handshakes {
-        let ring = build_arc_ring(handshake, calibration.offset_us, config)?;
+        let ring = build_arc_ring(satellite, handshake, calibration.offset_us, config)?;
         let dt_hours = (ring.time_s - current_time_s) / 3600.0;
         if dt_hours <= 0.0 {
             return Err(format!("non-positive leg duration for {}", ring.time_utc));
@@ -171,12 +176,24 @@ pub fn sample_candidate_paths_from_dataset(
                 } else {
                     1.0
                 };
+                let bfo_score = score_bfo_handshake(
+                    &bfo_model,
+                    satellite,
+                    handshake,
+                    candidate,
+                    heading_deg,
+                    speed_kts,
+                    ring.time_s,
+                    config,
+                )?;
 
                 let mut next_state = state.clone();
                 next_state.points.push(candidate);
                 next_state.speeds_kts.push(speed_kts);
                 next_state.headings_deg.push(heading_deg);
-                next_state.log_score += speed_score.ln() + 0.35 * heading_score.ln();
+                next_state.log_score += speed_score.ln()
+                    + 0.35 * heading_score.ln()
+                    + BFO_SCORE_WEIGHT * bfo_score.ln();
                 next_states.push(next_state);
             }
         }
@@ -195,7 +212,7 @@ pub fn sample_candidate_paths_from_dataset(
         .last()
         .ok_or_else(|| "missing arc 7 handshake".to_string())?;
     let arc7_time_s = parse_time_utc_seconds(&arc7_handshake.time_utc)?;
-    let arc7_satellite = satellite_subpoint(arc7_time_s, config)?;
+    let arc7_satellite = satellite_subpoint(satellite, arc7_time_s, config)?;
     let arc7_bto = arc7_handshake
         .bto_us
         .ok_or_else(|| "missing BTO for arc 7 handshake".to_string())?;
@@ -215,7 +232,11 @@ pub fn sample_candidate_paths_from_dataset(
             let family = classify_arc7_family(&state, &arc67_metrics, arc7_slant_range_km, config);
 
             FlightPath {
-                points: state.points.iter().map(|point| [point.lon, point.lat]).collect(),
+                points: state
+                    .points
+                    .iter()
+                    .map(|point| [point.lon, point.lat])
+                    .collect(),
                 score: state.log_score.exp(),
                 initial_heading,
                 speeds_kts: state.speeds_kts.clone(),
@@ -246,7 +267,11 @@ struct FuelEvaluation {
     extra_range_nm: f64,
 }
 
-fn evaluate_fuel(speeds_kts: &[f64], total_distance_km: f64, config: &AnalysisConfig) -> FuelEvaluation {
+fn evaluate_fuel(
+    speeds_kts: &[f64],
+    total_distance_km: f64,
+    config: &AnalysisConfig,
+) -> FuelEvaluation {
     let average_speed_kts = if speeds_kts.is_empty() {
         config.fuel_baseline_speed_kts
     } else {
@@ -259,9 +284,12 @@ fn evaluate_fuel(speeds_kts: &[f64], total_distance_km: f64, config: &AnalysisCo
         0.0
     };
 
-    let speed_factor = (average_speed_kts / config.fuel_baseline_speed_kts).powf(config.fuel_speed_exponent);
-    let altitude_delta_10kft = (config.fuel_baseline_altitude_ft - config.cruise_altitude_ft) / 10_000.0;
-    let altitude_factor = 1.0 + altitude_delta_10kft.max(0.0) * config.fuel_low_altitude_penalty_per_10kft;
+    let speed_factor =
+        (average_speed_kts / config.fuel_baseline_speed_kts).powf(config.fuel_speed_exponent);
+    let altitude_delta_10kft =
+        (config.fuel_baseline_altitude_ft - config.cruise_altitude_ft) / 10_000.0;
+    let altitude_factor =
+        1.0 + altitude_delta_10kft.max(0.0) * config.fuel_low_altitude_penalty_per_10kft;
     let fuel_burn_rate = config.fuel_baseline_kg_per_hr * speed_factor * altitude_factor;
     let fuel_used = flight_hours * fuel_burn_rate;
     let fuel_remaining_at_arc7_kg = config.fuel_remaining_at_arc1_kg - fuel_used;
@@ -327,14 +355,23 @@ fn build_leg_diagnostics(state: &PathState) -> Vec<LegDiagnostic> {
             let speed_residual_kts = if index == 0 {
                 0.0
             } else {
-                speed_kts - state.speeds_kts.get(index - 1).copied().unwrap_or(speed_kts)
+                speed_kts
+                    - state
+                        .speeds_kts
+                        .get(index - 1)
+                        .copied()
+                        .unwrap_or(speed_kts)
             };
             let heading_change_deg = if index == 0 {
                 0.0
             } else {
                 heading_difference_deg(
                     heading_deg,
-                    state.headings_deg.get(index - 1).copied().unwrap_or(heading_deg),
+                    state
+                        .headings_deg
+                        .get(index - 1)
+                        .copied()
+                        .unwrap_or(heading_deg),
                 )
             };
 
@@ -356,10 +393,14 @@ fn compute_arc67_metrics(state: &PathState, satellite: LatLon) -> Arc67Metrics {
     let last_heading_deg = state.headings_deg.last().copied().unwrap_or_default();
     let arc7_point = state.points.last().copied().unwrap_or(LAST_RADAR);
     let bearing_to_satellite_deg = bearing(arc7_point, satellite);
-    let heading_relative_to_satellite_deg = heading_difference_deg(last_heading_deg, bearing_to_satellite_deg);
-    let effective_radial_speed_kts = last_speed_kts * heading_relative_to_satellite_deg.to_radians().cos().abs();
-    let expected_bto_change_km_in_8_5_min = effective_radial_speed_kts * KTS_TO_KM_PER_HR * (8.5 / 60.0);
-    let expected_bto_change_us_in_8_5_min = expected_bto_change_km_in_8_5_min * 2.0 / 299_792.458 * 1_000_000.0;
+    let heading_relative_to_satellite_deg =
+        heading_difference_deg(last_heading_deg, bearing_to_satellite_deg);
+    let effective_radial_speed_kts =
+        last_speed_kts * heading_relative_to_satellite_deg.to_radians().cos().abs();
+    let expected_bto_change_km_in_8_5_min =
+        effective_radial_speed_kts * KTS_TO_KM_PER_HR * (8.5 / 60.0);
+    let expected_bto_change_us_in_8_5_min =
+        expected_bto_change_km_in_8_5_min * 2.0 / 299_792.458 * 1_000_000.0;
 
     Arc67Metrics {
         bearing_to_satellite_deg,
@@ -368,6 +409,38 @@ fn compute_arc67_metrics(state: &PathState, satellite: LatLon) -> Arc67Metrics {
         expected_bto_change_km_in_8_5_min,
         expected_bto_change_us_in_8_5_min,
     }
+}
+
+fn score_bfo_handshake(
+    model: &BfoModel,
+    satellite: &SatelliteModel,
+    handshake: &super::data::InmarsatHandshake,
+    pos: LatLon,
+    heading_deg: f64,
+    speed_kts: f64,
+    time_s: f64,
+    config: &AnalysisConfig,
+) -> Result<f64, String> {
+    let Some(measured_bfo) = handshake.bfo_hz else {
+        return Ok(1.0);
+    };
+
+    if !matches!(handshake.reliability.as_deref(), Some("GOOD")) {
+        return Ok(1.0);
+    }
+
+    let residual = model
+        .residual(
+            satellite,
+            pos,
+            heading_deg,
+            speed_kts,
+            time_s,
+            measured_bfo,
+            config,
+        )?
+        .abs();
+    Ok(gaussian_score(residual, BFO_SIGMA_HZ))
 }
 
 fn sampled_points(points: &[[f64; 2]], sample_step: usize) -> Vec<[f64; 2]> {
@@ -414,6 +487,11 @@ fn normalize_scores(paths: &mut [FlightPath]) {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::mh370::data::InmarsatHandshake;
+
+    fn test_satellite() -> SatelliteModel {
+        SatelliteModel::load().unwrap()
+    }
 
     fn base_state(speed_kts: f64, heading_deg: f64, arc7_point: LatLon) -> PathState {
         PathState {
@@ -460,5 +538,55 @@ mod tests {
         assert!(fuel.extra_endurance_minutes > 0.0);
         assert!(fuel.extra_endurance_minutes <= config.max_post_arc7_minutes);
         assert!(fuel.extra_range_nm > 0.0);
+    }
+
+    #[test]
+    fn bfo_scoring_only_uses_good_handshakes() {
+        let config = AnalysisConfig::default();
+        let satellite = test_satellite();
+        let model = BfoModel::calibrate(&satellite, &config).unwrap();
+        let good = InmarsatHandshake {
+            arc: 2,
+            time_utc: "19:41:02.906".to_string(),
+            bto_us: Some(14_060.0),
+            bfo_hz: Some(182.0),
+            message_type: "Hourly handshake".to_string(),
+            note: None,
+            position_known: false,
+            lat: None,
+            lon: None,
+            reliability: Some("GOOD".to_string()),
+            flag: None,
+        };
+        let uncertain = InmarsatHandshake {
+            reliability: Some("GOOD_BTO_UNCERTAIN_BFO".to_string()),
+            ..good.clone()
+        };
+
+        let weighted = score_bfo_handshake(
+            &model,
+            &satellite,
+            &good,
+            LatLon::new(-35.0, 93.0),
+            180.0,
+            470.0,
+            parse_time_utc_seconds("19:41:02.906").unwrap(),
+            &config,
+        )
+        .unwrap();
+        let skipped = score_bfo_handshake(
+            &model,
+            &satellite,
+            &uncertain,
+            LatLon::new(-35.0, 93.0),
+            180.0,
+            470.0,
+            parse_time_utc_seconds("19:41:02.906").unwrap(),
+            &config,
+        )
+        .unwrap();
+
+        assert!(weighted < 1.0);
+        assert_eq!(skipped, 1.0);
     }
 }

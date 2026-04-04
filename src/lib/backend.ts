@@ -88,6 +88,19 @@ async function fetchSnapshot<T>(filename: string): Promise<T> {
   return res.json();
 }
 
+function headingFromPoints(points: [number, number][]): number {
+  if (points.length < 2) return 0;
+  const [fromLon, fromLat] = points[0];
+  const [toLon, toLat] = points[1];
+  const dLon = (toLon - fromLon) * Math.PI / 180;
+  const fromLatRad = fromLat * Math.PI / 180;
+  const toLatRad = toLat * Math.PI / 180;
+  const y = Math.sin(dLon) * Math.cos(toLatRad);
+  const x = Math.cos(fromLatRad) * Math.sin(toLatRad)
+    - Math.sin(fromLatRad) * Math.cos(toLatRad) * Math.cos(dLon);
+  return (Math.atan2(y, x) * 180 / Math.PI + 360) % 360;
+}
+
 export async function getHandshakes(): Promise<BackendHandshake[]> {
   return IS_TAURI
     ? tauriInvoke("get_handshakes")
@@ -111,7 +124,7 @@ export async function getCandidatePaths(n = 500): Promise<BackendCandidatePath[]
   return geojson.features.map((feature) => ({
     points: (feature.geometry as GeoJSON.LineString).coordinates as [number, number][],
     score: Number(feature.properties?.score ?? 0),
-    initial_heading: 0,
+    initial_heading: Number(feature.properties?.initial_heading ?? headingFromPoints((feature.geometry as GeoJSON.LineString).coordinates as [number, number][])),
     family: String(feature.properties?.family ?? "other"),
     fuel_feasible: Boolean(feature.properties?.fuel_feasible),
     fuel_remaining_at_arc7_kg: Number(feature.properties?.fuel_remaining_at_arc7_kg ?? 0),

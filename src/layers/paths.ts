@@ -30,7 +30,13 @@ export async function fetchCandidatePaths(n = 120): Promise<FlightPath[]> {
 }
 
 export async function annotatePaths(paths: FlightPath[]): Promise<PathAnnotation[]> {
-  const firsPerPath = await Promise.all(paths.map((path) => getFIRsForPath(path.points)));
+  let firsPerPath: string[][];
+  try {
+    firsPerPath = await Promise.all(paths.map((path) => getFIRsForPath(path.points)));
+  } catch (error) {
+    console.error("Failed to annotate candidate paths with FIR crossings:", error);
+    firsPerPath = paths.map(() => []);
+  }
   return paths.map((path, index) => ({ path, firs: firsPerPath[index] }));
 }
 

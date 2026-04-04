@@ -18,7 +18,7 @@ use std::f64::consts::PI;
 
 use super::data::AnalysisConfig;
 use super::geometry::LatLon;
-use super::satellite::sat_state_at_time_s;
+use super::satellite::{sat_state_at_time_s, SatelliteModel};
 
 // ---------------------------------------------------------------------------
 // Physical constants
@@ -99,8 +99,12 @@ fn to_ecef(lat_deg: f64, lon_deg: f64, alt_km: f64) -> Vec3 {
 // ---------------------------------------------------------------------------
 
 /// Get satellite ECEF position and velocity from the shared satellite model.
-fn satellite_ecef(time_s: f64, config: &AnalysisConfig) -> Result<(Vec3, Vec3), String> {
-    let state = sat_state_at_time_s(time_s, config)?;
+fn satellite_ecef(
+    satellite: &SatelliteModel,
+    time_s: f64,
+    config: &AnalysisConfig,
+) -> Result<(Vec3, Vec3), String> {
+    let state = sat_state_at_time_s(satellite, time_s, config)?;
     let pos = to_ecef(state.lat_deg, state.lon_deg, state.alt_km);
     // Velocity from satellite.rs is already ECEF km/s
     let vel = Vec3 {
@@ -164,14 +168,15 @@ impl BfoModel {
     /// Uses the 16:00:13 ground logon (aircraft stationary at gate) to derive
     /// the combined bias. The satellite position comes from the same model used
     /// for BTO arc calculations, ensuring consistency.
-    pub fn calibrate(config: &AnalysisConfig) -> Result<Self, String> {
-        let rr = Self::raw_range_rate(KLIA, 0.0, 0.0, 0.0, config)?;
+    pub fn calibrate(satellite: &SatelliteModel, config: &AnalysisConfig) -> Result<Self, String> {
+        let rr = Self::raw_range_rate(satellite, KLIA, 0.0, 0.0, 0.0, config)?;
         let bias = BFO_GROUND - (F_UPLINK_HZ / C_M_S) * rr;
         Ok(BfoModel { bias })
     }
 
     /// Raw range rate (m/s) for a given aircraft state.
     fn raw_range_rate(
+        satellite: &SatelliteModel,
         pos: LatLon,
         heading_deg: f64,
         speed_kts: f64,
@@ -182,7 +187,7 @@ impl BfoModel {
 
         let ac_pos = to_ecef(pos.lat, pos.lon, AIRCRAFT_ALT_KM);
         let ac_vel = aircraft_velocity_ecef(pos, heading_deg, speed_km_s);
-        let (sat_pos, sat_vel) = satellite_ecef(time_s, config)?;
+        let (sat_pos, sat_vel) = satellite_ecef(satellite, time_s, config)?;
 
         // range_rate in km/s → convert to m/s
         Ok(range_rate(ac_pos, ac_vel, sat_pos, sat_vel) * 1000.0)
@@ -191,19 +196,21 @@ impl BfoModel {
     /// Predict BFO (Hz) for a given aircraft state.
     pub fn predict(
         &self,
+        satellite: &SatelliteModel,
         pos: LatLon,
         heading_deg: f64,
         speed_kts: f64,
         time_s: f64,
         config: &AnalysisConfig,
     ) -> Result<f64, String> {
-        let rr = Self::raw_range_rate(pos, heading_deg, speed_kts, time_s, config)?;
+        let rr = Self::raw_range_rate(satellite, pos, heading_deg, speed_kts, time_s, config)?;
         Ok((F_UPLINK_HZ / C_M_S) * rr + self.bias)
     }
 
     /// BFO residual: predicted - measured (Hz).
     pub fn residual(
         &self,
+        satellite: &SatelliteModel,
         pos: LatLon,
         heading_deg: f64,
         speed_kts: f64,
@@ -211,7 +218,7 @@ impl BfoModel {
         measured_bfo: f64,
         config: &AnalysisConfig,
     ) -> Result<f64, String> {
-        Ok(self.predict(pos, heading_deg, speed_kts, time_s, config)? - measured_bfo)
+        Ok(self.predict(satellite, pos, heading_deg, speed_kts, time_s, config)? - measured_bfo)
     }
 
     /// Score a candidate point on the 7th arc by finding the best-matching heading.
@@ -220,6 +227,7 @@ impl BfoModel {
     /// and returns a score in [0, 1] where 1 = perfect BFO match.
     pub fn score_7th_arc_point(
         &self,
+        satellite: &SatelliteModel,
         pos: LatLon,
         measured_bfo: f64,
         time_s: f64,
@@ -232,7 +240,9 @@ impl BfoModel {
             let heading = 150.0 + hdg_i as f64;
             for spd_i in 0..7 {
                 let speed = 400.0 + spd_i as f64 * 20.0;
-                let r = self.residual(pos, heading, speed, time_s, measured_bfo, config)?.abs();
+                let r = self
+                    .residual(satellite, pos, heading, speed, time_s, measured_bfo, config)?
+                    .abs();
                 if r < best_residual {
                     best_residual = r;
                 }

@@ -33,7 +33,7 @@ export interface AnalysisConfig {
 }
 
 export const defaultAnalysisConfig: AnalysisConfig = {
-  dataset_path: "mh370_data.json",
+  dataset_path: "",
   satellite_ephemeris_path: "",
   ring_points: 360,
   min_speed_kts: 350,

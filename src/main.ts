@@ -20,6 +20,15 @@ import type { Map as MapboxMap } from "mapbox-gl";
 import { getProbabilityHeatmap, IS_TAURI, type BackendProbPoint } from "./lib/backend";
 import { setSelectedAnomaly } from "./layers/anomalies";
 
+function createLoader(): HTMLElement {
+  const el = document.createElement("div");
+  el.id = "loader";
+  el.className = "loader-overlay";
+  el.innerHTML = '<div class="loader-content"><div class="loader-spinner"></div><span class="loader-text">Loading analysis data</span></div>';
+  document.getElementById("app")!.appendChild(el);
+  return el;
+}
+
 const LAYER_PREFIXES = [
   "arcs-",
   "anomalies-",
@@ -203,6 +212,8 @@ async function main(): Promise<void> {
     },
   });
 
+  const loader = document.getElementById("loader");
+
   map.on("load", async () => {
     try {
       await loadAllLayers(map);
@@ -211,6 +222,9 @@ async function main(): Promise<void> {
       console.error("Failed to load layers:", err);
     }
 
+    loader?.classList.add("hidden");
+    loader?.addEventListener("transitionend", () => loader.remove(), { once: true });
+
     await initTimeline((_index, arcNum) => {
       highlightArc(map, arcNum);
     });
@@ -218,6 +232,8 @@ async function main(): Promise<void> {
 
   initSidebar({
     onRunModel: async () => {
+      const runLoader = document.getElementById("loader") ?? createLoader();
+      runLoader.classList.remove("hidden");
       try {
         removeAllLayers(map);
         await loadAllLayers(map);
@@ -225,6 +241,7 @@ async function main(): Promise<void> {
       } catch (err) {
         console.error("Failed to reload layers:", err);
       }
+      runLoader.classList.add("hidden");
     },
     onConfigChange: () => {
       updateConfidence("Pending rerun");

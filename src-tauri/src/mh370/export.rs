@@ -3,31 +3,45 @@ use serde_json::json;
 use super::data::{load_dataset, resolve_config, AnalysisConfig};
 use super::paths::{sample_candidate_paths_from_dataset, FlightPath};
 use super::probability::{generate_probability_heatmap_from_dataset, ProbPoint};
+use super::satellite::SatelliteModel;
 
-pub fn export_probability_geojson(path: String, config: Option<AnalysisConfig>) -> Result<String, String> {
+pub fn export_probability_geojson(
+    satellite: &SatelliteModel,
+    path: String,
+    config: Option<AnalysisConfig>,
+) -> Result<String, String> {
     let config = resolve_config(config);
     let dataset = load_dataset(&config)?;
-    let points = generate_probability_heatmap_from_dataset(&dataset, &config)?;
+    let points = generate_probability_heatmap_from_dataset(satellite, &dataset, &config)?;
     let geojson = probability_to_geojson(&points);
     let serialized = serde_json::to_string_pretty(&geojson)
         .map_err(|err| format!("serialization failed: {err}"))?;
     std::fs::write(&path, serialized).map_err(|err| format!("write failed: {err}"))?;
-    Ok(format!("Exported {} probability points to {}", points.len(), path))
+    Ok(format!(
+        "Exported {} probability points to {}",
+        points.len(),
+        path
+    ))
 }
 
 pub fn export_paths_geojson(
+    satellite: &SatelliteModel,
     path: String,
     n: usize,
     config: Option<AnalysisConfig>,
 ) -> Result<String, String> {
     let config = resolve_config(config);
     let dataset = load_dataset(&config)?;
-    let paths = sample_candidate_paths_from_dataset(&dataset, n, &config)?;
+    let paths = sample_candidate_paths_from_dataset(satellite, &dataset, n, &config)?;
     let geojson = paths_to_geojson(&paths);
     let serialized = serde_json::to_string_pretty(&geojson)
         .map_err(|err| format!("serialization failed: {err}"))?;
     std::fs::write(&path, serialized).map_err(|err| format!("write failed: {err}"))?;
-    Ok(format!("Exported {} candidate paths to {}", paths.len(), path))
+    Ok(format!(
+        "Exported {} candidate paths to {}",
+        paths.len(),
+        path
+    ))
 }
 
 pub fn probability_to_geojson(points: &[ProbPoint]) -> serde_json::Value {

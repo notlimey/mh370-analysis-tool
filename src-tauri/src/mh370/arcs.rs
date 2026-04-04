@@ -5,7 +5,7 @@ use super::data::{
     resolve_config, AnalysisConfig, InmarsatHandshake, Mh370Dataset,
 };
 use super::geometry::{destination_point, haversine, LatLon};
-use super::satellite::satellite_subpoint;
+use super::satellite::{satellite_subpoint, SatelliteModel};
 
 const SPEED_OF_LIGHT_KM_PER_S: f64 = 299_792.458;
 const EARTH_RADIUS_KM: f64 = 6_371.0;
@@ -41,19 +41,26 @@ pub struct ArcRing {
     pub points: Vec<[f64; 2]>,
 }
 
-pub fn calibrate_bto_offset(config: Option<AnalysisConfig>) -> Result<BtoCalibration, String> {
+pub fn calibrate_bto_offset(
+    satellite: &SatelliteModel,
+    config: Option<AnalysisConfig>,
+) -> Result<BtoCalibration, String> {
     let config = resolve_config(config);
     let dataset = load_dataset(&config)?;
-    calibrate_bto_offset_from_dataset(&dataset, &config)
+    calibrate_bto_offset_from_dataset(satellite, &dataset, &config)
 }
 
-pub fn generate_arc_rings(config: Option<AnalysisConfig>) -> Result<Vec<ArcRing>, String> {
+pub fn generate_arc_rings(
+    satellite: &SatelliteModel,
+    config: Option<AnalysisConfig>,
+) -> Result<Vec<ArcRing>, String> {
     let config = resolve_config(config);
     let dataset = load_dataset(&config)?;
-    generate_arc_rings_from_dataset(&dataset, &config)
+    generate_arc_rings_from_dataset(satellite, &dataset, &config)
 }
 
 pub fn calibrate_bto_offset_from_dataset(
+    satellite: &SatelliteModel,
     dataset: &Mh370Dataset,
     config: &AnalysisConfig,
 ) -> Result<BtoCalibration, String> {
@@ -64,20 +71,29 @@ pub fn calibrate_bto_offset_from_dataset(
         .iter()
         .filter(|handshake| handshake.position_known && handshake.bto_us.is_some())
     {
-        let lat = handshake
-            .lat
-            .ok_or_else(|| format!("missing lat for calibration handshake {}", handshake.time_utc))?;
-        let lon = handshake
-            .lon
-            .ok_or_else(|| format!("missing lon for calibration handshake {}", handshake.time_utc))?;
+        let lat = handshake.lat.ok_or_else(|| {
+            format!(
+                "missing lat for calibration handshake {}",
+                handshake.time_utc
+            )
+        })?;
+        let lon = handshake.lon.ok_or_else(|| {
+            format!(
+                "missing lon for calibration handshake {}",
+                handshake.time_utc
+            )
+        })?;
         let time_s = parse_time_utc_seconds(&handshake.time_utc)?;
-        let altitude_ft = nearest_known_altitude_ft(dataset, time_s, config.calibration_altitude_ft);
+        let altitude_ft =
+            nearest_known_altitude_ft(dataset, time_s, config.calibration_altitude_ft);
         let aircraft_altitude_km = altitude_ft * FT_TO_KM;
         let aircraft_position = LatLon::new(lat, lon);
-        let satellite_subpoint = satellite_subpoint(time_s, config)?;
-        let slant_range_km = slant_range_km(aircraft_position, aircraft_altitude_km, satellite_subpoint);
+        let satellite_subpoint = satellite_subpoint(satellite, time_s, config)?;
+        let slant_range_km =
+            slant_range_km(aircraft_position, aircraft_altitude_km, satellite_subpoint);
         let bto_us = handshake.bto_us.unwrap_or_default();
-        let derived_offset_us = bto_us - 2.0 * slant_range_km / SPEED_OF_LIGHT_KM_PER_S * 1_000_000.0;
+        let derived_offset_us =
+            bto_us - 2.0 * slant_range_km / SPEED_OF_LIGHT_KM_PER_S * 1_000_000.0;
 
         samples.push(BtoCalibrationSample {
             time_utc: handshake.time_utc.clone(),
@@ -93,7 +109,11 @@ pub fn calibrate_bto_offset_from_dataset(
         return Err("no known-position BTO records available for calibration".to_string());
     }
 
-    let offset_us = samples.iter().map(|sample| sample.derived_offset_us).sum::<f64>() / samples.len() as f64;
+    let offset_us = samples
+        .iter()
+        .map(|sample| sample.derived_offset_us)
+        .sum::<f64>()
+        / samples.len() as f64;
 
     Ok(BtoCalibration {
         offset_us,
@@ -103,18 +123,20 @@ pub fn calibrate_bto_offset_from_dataset(
 }
 
 pub fn generate_arc_rings_from_dataset(
+    satellite: &SatelliteModel,
     dataset: &Mh370Dataset,
     config: &AnalysisConfig,
 ) -> Result<Vec<ArcRing>, String> {
-    let calibration = calibrate_bto_offset_from_dataset(dataset, config)?;
+    let calibration = calibrate_bto_offset_from_dataset(satellite, dataset, config)?;
 
     good_bto_handshakes(dataset)
         .into_iter()
-        .map(|handshake| build_arc_ring(handshake, calibration.offset_us, config))
+        .map(|handshake| build_arc_ring(satellite, handshake, calibration.offset_us, config))
         .collect()
 }
 
 pub fn build_arc_ring(
+    satellite: &SatelliteModel,
     handshake: &InmarsatHandshake,
     calibrated_offset_us: f64,
     config: &AnalysisConfig,
@@ -124,8 +146,9 @@ pub fn build_arc_ring(
         .bto_us
         .ok_or_else(|| format!("missing BTO for handshake {}", handshake.time_utc))?;
     let slant_range_km = bto_to_slant_range_km(bto_us, calibrated_offset_us);
-    let satellite_subpoint = satellite_subpoint(time_s, config)?;
-    let surface_distance_km = slant_range_to_surface_distance_km(slant_range_km, config.cruise_altitude_ft * FT_TO_KM)?;
+    let satellite_subpoint = satellite_subpoint(satellite, time_s, config)?;
+    let surface_distance_km =
+        slant_range_to_surface_distance_km(slant_range_km, config.cruise_altitude_ft * FT_TO_KM)?;
 
     let points = (0..config.ring_points.max(12))
         .map(|index| {
@@ -175,7 +198,7 @@ pub fn slant_range_km(
     let aircraft_radius = EARTH_RADIUS_KM + aircraft_altitude_km;
     (GEO_RADIUS_KM.powi(2) + aircraft_radius.powi(2)
         - 2.0 * GEO_RADIUS_KM * aircraft_radius * central_angle.cos())
-        .sqrt()
+    .sqrt()
 }
 
 #[cfg(test)]
@@ -188,6 +211,10 @@ mod tests {
             ring_points: 36,
             ..AnalysisConfig::default()
         }
+    }
+
+    fn test_satellite() -> SatelliteModel {
+        SatelliteModel::load().unwrap()
     }
 
     fn test_dataset() -> Mh370Dataset {
@@ -216,7 +243,8 @@ mod tests {
     #[test]
     fn calibrates_offset_from_known_positions() {
         let dataset = test_dataset();
-        let calibration = calibrate_bto_offset_from_dataset(&dataset, &test_config()).unwrap();
+        let calibration =
+            calibrate_bto_offset_from_dataset(&test_satellite(), &dataset, &test_config()).unwrap();
 
         assert_eq!(calibration.sample_count, 2);
         assert!(calibration.offset_us.is_finite());
@@ -226,11 +254,15 @@ mod tests {
     #[test]
     fn excludes_critical_anomaly_arc() {
         let dataset = test_dataset();
-        let rings = generate_arc_rings_from_dataset(&dataset, &test_config()).unwrap();
+        let rings =
+            generate_arc_rings_from_dataset(&test_satellite(), &dataset, &test_config()).unwrap();
 
         assert_eq!(rings.len(), 2);
         let arc1_count = rings.iter().filter(|ring| ring.arc == 1).count();
         assert_eq!(arc1_count, 1);
-        assert_eq!(rings.iter().find(|ring| ring.arc == 1).unwrap().bto_us, 12_520.0);
+        assert_eq!(
+            rings.iter().find(|ring| ring.arc == 1).unwrap().bto_us,
+            12_520.0
+        );
     }
 }

@@ -693,6 +693,50 @@ body.browser-mode #map {
   text-decoration: none;
 }
 
+/* --- Loader --- */
+.loader-overlay {
+  grid-column: 2;
+  grid-row: 1;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(10, 10, 10, 0.7);
+  backdrop-filter: blur(4px);
+  transition: opacity 0.4s ease;
+}
+
+.loader-overlay.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.loader-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.loader-spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.loader-text {
+  font-size: 13px;
+  color: var(--text-secondary);
+  letter-spacing: 0.02em;
+}
+
 @media (max-width: 1200px) {
   :root {
     --sidebar-width: 290px;

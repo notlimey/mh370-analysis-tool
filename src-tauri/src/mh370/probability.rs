@@ -1,9 +1,12 @@
 use serde::Serialize;
 
 use super::arcs::{build_arc_ring, calibrate_bto_offset_from_dataset};
-use super::data::{load_dataset, primary_arc_handshakes, resolve_config, AnalysisConfig, Mh370Dataset};
+use super::data::{
+    load_dataset, primary_arc_handshakes, resolve_config, AnalysisConfig, Mh370Dataset,
+};
 use super::geometry::{haversine, LatLon};
 use super::paths::{apply_fuel_filter, sample_candidate_paths_from_dataset};
+use super::satellite::SatelliteModel;
 
 #[derive(Debug, Clone, Serialize)]
 pub struct ProbPoint {
@@ -15,26 +18,29 @@ pub struct ProbPoint {
 }
 
 pub fn generate_probability_heatmap(
+    satellite: &SatelliteModel,
     config: Option<AnalysisConfig>,
 ) -> Result<Vec<ProbPoint>, String> {
     let config = resolve_config(config);
     let dataset = load_dataset(&config)?;
-    generate_probability_heatmap_from_dataset(&dataset, &config)
+    generate_probability_heatmap_from_dataset(satellite, &dataset, &config)
 }
 
 pub fn generate_probability_heatmap_from_dataset(
+    satellite: &SatelliteModel,
     dataset: &Mh370Dataset,
     config: &AnalysisConfig,
 ) -> Result<Vec<ProbPoint>, String> {
-    let calibration = calibrate_bto_offset_from_dataset(dataset, config)?;
+    let calibration = calibrate_bto_offset_from_dataset(satellite, dataset, config)?;
     let primary_handshakes = primary_arc_handshakes(dataset);
     let arc7_handshake = primary_handshakes
         .last()
         .ok_or_else(|| "missing arc 7 handshake".to_string())?;
-    let arc7_ring = build_arc_ring(arc7_handshake, calibration.offset_us, config)?;
-    let fuel_summary = apply_fuel_filter(config.beam_width.max(200), Some(config.clone()))?;
+    let arc7_ring = build_arc_ring(satellite, arc7_handshake, calibration.offset_us, config)?;
+    let fuel_summary =
+        apply_fuel_filter(satellite, config.beam_width.max(200), Some(config.clone()))?;
     let fuel_paths = if fuel_summary.paths.is_empty() {
-        sample_candidate_paths_from_dataset(dataset, config.beam_width.max(200), config)?
+        sample_candidate_paths_from_dataset(satellite, dataset, config.beam_width.max(200), config)?
     } else {
         fuel_summary.paths
     };
@@ -72,7 +78,8 @@ pub fn generate_probability_heatmap_from_dataset(
                 };
                 let distance_km = haversine(point_latlon, LatLon::new(last[1], last[0]));
                 let closeness = (-distance_km.powi(2) / (2.0 * 90.0_f64.powi(2))).exp();
-                let continuation = (path.extra_endurance_minutes / config.max_post_arc7_minutes).clamp(0.0, 1.0);
+                let continuation =
+                    (path.extra_endurance_minutes / config.max_post_arc7_minutes).clamp(0.0, 1.0);
                 closeness * (0.5 + 0.5 * continuation)
             })
             .sum::<f64>();
@@ -82,20 +89,25 @@ pub fn generate_probability_heatmap_from_dataset(
         raw_points.push((point, raw_score, path_density, fuel_weight, debris_weight));
     }
 
-    let total_score: f64 = raw_points.iter().map(|(_, raw_score, _, _, _)| raw_score).sum();
+    let total_score: f64 = raw_points
+        .iter()
+        .map(|(_, raw_score, _, _, _)| raw_score)
+        .sum();
     if total_score <= 0.0 {
         return Ok(Vec::new());
     }
 
     Ok(raw_points
         .into_iter()
-        .map(|(position, raw_score, path_density, fuel_weight, debris_weight)| ProbPoint {
-            position,
-            probability: raw_score / total_score,
-            path_density,
-            fuel_weight,
-            debris_weight,
-        })
+        .map(
+            |(position, raw_score, path_density, fuel_weight, debris_weight)| ProbPoint {
+                position,
+                probability: raw_score / total_score,
+                path_density,
+                fuel_weight,
+                debris_weight,
+            },
+        )
         .collect())
 }
 
@@ -132,7 +144,8 @@ fn debris_weight(lat: f64, config: &AnalysisConfig) -> f64 {
         1.0
     } else {
         let center = (config.debris_weight_min_lat + config.debris_weight_max_lat) / 2.0;
-        let sigma = ((config.debris_weight_max_lat - config.debris_weight_min_lat).abs() / 2.0).max(1.0);
+        let sigma =
+            ((config.debris_weight_max_lat - config.debris_weight_min_lat).abs() / 2.0).max(1.0);
         let diff = lat - center;
         (-diff.powi(2) / (2.0 * sigma.powi(2))).exp() * 0.5
     }
