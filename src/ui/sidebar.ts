@@ -53,6 +53,22 @@ const NUMERIC_FIELDS = [
   { key: "debris_weight_max_lat", label: "Debris max lat", step: 0.5 },
 ] as const;
 
+const PRIORITY_GAP_FOCUS_PRESET: Record<string, boolean> = {
+  flightpath: false,
+  anomalies: false,
+  airspaces: false,
+  magnetic: false,
+  arcs: false,
+  heatmap: true,
+  paths: false,
+  debris: false,
+  holidays: false,
+  priority: true,
+  points: false,
+  searched: true,
+  sonar: false,
+};
+
 export function initSidebar({ onRunModel, onConfigChange }: SidebarCallbacks): void {
   const sidebar = document.getElementById("sidebar");
   if (!sidebar) return;
@@ -65,6 +81,9 @@ export function initSidebar({ onRunModel, onConfigChange }: SidebarCallbacks): v
 
     <div class="sidebar-section">
       <h2>Layers</h2>
+      <div class="button-row">
+        <button id="focus-priority-btn" class="btn-secondary">Focus Priority Gaps</button>
+      </div>
       <div id="layer-toggles"></div>
     </div>
 
@@ -182,6 +201,7 @@ export function initSidebar({ onRunModel, onConfigChange }: SidebarCallbacks): v
   renderFamilyLegend({ counts: {} });
   updatePriorityHint();
 
+  document.getElementById("focus-priority-btn")?.addEventListener("click", focusPriorityGaps);
   document.getElementById("run-model-btn")?.addEventListener("click", onRunModel);
   document.getElementById("reset-model-btn")?.addEventListener("click", () => {
     resetAnalysisConfig();
@@ -197,6 +217,23 @@ function updatePriorityHint(): void {
   const note = document.getElementById("priority-note");
   if (!note) return;
   note.style.display = layerVisibility.heatmap ? "none" : "block";
+}
+
+function focusPriorityGaps(): void {
+  for (const [layer, visible] of Object.entries(PRIORITY_GAP_FOCUS_PRESET)) {
+    toggleLayer(layer, visible);
+  }
+  syncLayerToggles();
+  updatePriorityHint();
+}
+
+function syncLayerToggles(): void {
+  for (const toggle of LAYER_TOGGLES) {
+    const input = document.querySelector<HTMLInputElement>(`input[data-layer="${toggle.id}"]`);
+    if (input) {
+      input.checked = Boolean(layerVisibility[toggle.id]);
+    }
+  }
 }
 
 function renderSonarControls(): void {
