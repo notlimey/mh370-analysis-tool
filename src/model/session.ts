@@ -1,7 +1,7 @@
 import type { AnalysisConfig } from "./config";
 
 const STORAGE_KEY = "mh370.sessionState";
-const SESSION_SCHEMA_VERSION = 2;
+const SESSION_SCHEMA_VERSION = 3;
 
 interface SessionState {
   schemaVersion?: number;
