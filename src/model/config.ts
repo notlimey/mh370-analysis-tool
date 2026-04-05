@@ -13,6 +13,8 @@ export interface AnalysisConfig {
   ring_sample_step: number;
   speed_consistency_sigma_kts: number;
   heading_change_sigma_deg: number;
+  northward_leg_sigma_deg: number;
+  northward_penalty_weight: number;
   bfo_sigma_hz: number;
   bfo_score_weight: number;
   satellite_nominal_lon_deg: number;

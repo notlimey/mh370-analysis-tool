@@ -86,5 +86,6 @@ function panelTitle(id: PanelId): string {
     case "layers": return "Layers";
     case "evidence": return "Evidence";
     case "export": return "Export & History";
+    case "sensitivity": return "Sensitivity Analysis";
   }
 }

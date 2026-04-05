@@ -66,11 +66,23 @@ pub fn calibrate_bto_offset_from_dataset(
 ) -> Result<BtoCalibration, String> {
     let mut samples = Vec::new();
 
-    for handshake in dataset
+    let known_bto_handshakes: Vec<&InmarsatHandshake> = dataset
         .inmarsat_handshakes
         .iter()
         .filter(|handshake| handshake.position_known && handshake.bto_us.is_some())
-    {
+        .collect();
+    let calibration_handshakes: Vec<&InmarsatHandshake> = known_bto_handshakes
+        .iter()
+        .copied()
+        .filter(|handshake| handshake.message_type == "R-Channel Log-on")
+        .collect();
+    let calibration_handshakes = if calibration_handshakes.is_empty() {
+        known_bto_handshakes
+    } else {
+        calibration_handshakes
+    };
+
+    for handshake in calibration_handshakes {
         let lat = handshake.lat.ok_or_else(|| {
             format!(
                 "missing lat for calibration handshake {}",

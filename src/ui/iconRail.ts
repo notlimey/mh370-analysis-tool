@@ -1,4 +1,4 @@
-export type PanelId = "model" | "drift" | "layers" | "evidence" | "export";
+export type PanelId = "model" | "drift" | "layers" | "evidence" | "export" | "sensitivity";
 
 interface RailButton {
   id: PanelId;
@@ -31,6 +31,11 @@ const BUTTONS: RailButton[] = [
     id: "export",
     label: "Export",
     svg: `<svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 3v10"/><path d="M6 9l4 4 4-4"/><path d="M3 15v2h14v-2"/></svg>`,
+  },
+  {
+    id: "sensitivity",
+    label: "Sensitivity",
+    svg: `<svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17h2v-6H3z"/><path d="M7 17h2V8H7z"/><path d="M11 17h2V4h-2z"/><path d="M15 17h2v-9h-2z"/></svg>`,
   },
 ];
 

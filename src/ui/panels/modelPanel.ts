@@ -22,6 +22,8 @@ export interface ModelResultSummary {
   endpointCounts: Record<string, number>;
   fuelFeasiblePercent?: number;
   bfoMeanAbsResidualHz?: number;
+  bestEndpointLat?: number;
+  bestEndpointLon?: number;
   peakLat?: number;
   peakLon?: number;
   searchedOverlapLabel?: string;
@@ -55,6 +57,13 @@ let cachedFamilySummary: FamilySummary | null = null;
 let cachedSpeedRange = "\u2014";
 let cachedFuel = "\u2014";
 let cachedFamilySpread = "\u2014";
+
+function formatLatLon(lat?: number, lon?: number, digits = 2): string {
+  if (lat == null || lon == null) return "\u2014";
+  const latHemisphere = lat < 0 ? "S" : "N";
+  const lonHemisphere = lon < 0 ? "W" : "E";
+  return `${Math.abs(lat).toFixed(digits)}\u00b0${latHemisphere}, ${Math.abs(lon).toFixed(digits)}\u00b0${lonHemisphere}`;
+}
 
 let onRunModel: (() => void) | null = null;
 let onConfigureModel: (() => void) | null = null;
@@ -273,16 +282,29 @@ function applyResultsSummary(): void {
   const el = document.getElementById("model-results-summary");
   if (!el || !cachedResultSummary) return;
   const r = cachedResultSummary;
+  const endpointMismatch = r.bestEndpointLat != null && r.peakLat != null
+    ? Math.sign(r.bestEndpointLat) !== Math.sign(r.peakLat) || Math.abs(r.bestEndpointLat - r.peakLat) > 10
+    : false;
+  const warnings = [
+    r.bfoMeanAbsResidualHz != null && r.bfoMeanAbsResidualHz > 40
+      ? `BFO fit is weak (${r.bfoMeanAbsResidualHz.toFixed(1)} Hz), so the best path is not tightly constrained.`
+      : null,
+    endpointMismatch
+      ? "Best path endpoint and heatmap peak diverge. Treat the heatmap as a broad density view, not confirmation of the blue path."
+      : null,
+  ].filter((warning): warning is string => Boolean(warning));
   el.innerHTML = `
     <div class="results-grid">
       <span class="label">Best family</span><span class="value">${r.bestFamily ?? "\u2014"}</span>
-      <span class="label">Peak</span><span class="value">${r.peakLat != null ? `${r.peakLat.toFixed(2)}\u00b0S, ${r.peakLon?.toFixed(2)}\u00b0E` : "\u2014"}</span>
+      <span class="label">Peak</span><span class="value">${formatLatLon(r.peakLat, r.peakLon)}</span>
+      <span class="label">Best endpoint</span><span class="value">${formatLatLon(r.bestEndpointLat, r.bestEndpointLon)}</span>
       <span class="label">Paths</span><span class="value">${r.pathCount}</span>
       <span class="label">Heatmap</span><span class="value">${r.heatmapCount} points</span>
       ${r.fuelFeasiblePercent != null ? `<span class="label">Fuel feasible</span><span class="value">${r.fuelFeasiblePercent.toFixed(0)}%</span>` : ""}
       ${r.bfoMeanAbsResidualHz != null ? `<span class="label">BFO residual</span><span class="value">${r.bfoMeanAbsResidualHz.toFixed(1)} Hz</span>` : ""}
       ${r.searchedOverlapLabel ? `<span class="label">Search overlap</span><span class="value">${r.searchedOverlapLabel}</span>` : ""}
     </div>
+    ${warnings.length > 0 ? `<div class="info-text" style="margin-top:10px">${warnings.join(" ")}</div>` : ""}
   `;
 }
 

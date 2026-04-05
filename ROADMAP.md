@@ -68,11 +68,14 @@ Priority tasks:
 - Export score decomposition for the best path/family
 - Add weak-fit warnings when BFO residuals are high
 - Add a quick BFO sensitivity rerun workflow
+- Surface temporary path priors separately from physics-based score terms
+- Show arc-by-arc score decomposition for the winning path, especially where a corridor dies early
 
 Success looks like:
 
 - The app can distinguish `best available` from `good fit`
 - A user can tell whether BFO is constraining the answer or being overwhelmed by other terms
+- A user can tell when a path looks plausible only because an explicit prior is active
 
 ### 3. Improve comparison workflows
 
@@ -85,6 +88,7 @@ Priority tasks:
 - Compare two saved runs side-by-side in text form
 - Highlight config differences and result differences clearly
 - Add a lightweight sensitivity workflow for a few key assumptions
+- Compare `raw physics` vs `physics + priors` runs side by side
 
 Success looks like:
 
@@ -169,6 +173,37 @@ Likely direction:
 - Session snapshot export/import
 - Model config modal
 - Reset-to-default support in model config
+- Heatmap now follows sampled endpoints instead of a hidden southern-only prior
+- Best endpoint is surfaced separately from heatmap peak
+- Session-state migration clears stale saved model config after schema changes
+
+## Open Modeling Notes
+
+These are important current truths about the solver and should not be lost in future cleanup.
+
+- The earlier south-looking heatmap was once partly caused by separate southern heatmap logic, not by the actual sampled best path.
+- The current candidate path now goes south because of two things:
+  1. a corrected BFO sign convention in `src-tauri/src/mh370/bfo.rs`
+  2. an explicit removable northward-leg penalty prior in `src-tauri/src/mh370/paths.rs`
+- The northward-leg prior is a usability/modeling assumption, not a validated physics result.
+- Current default prior fields:
+  - `northward_leg_sigma_deg`
+  - `northward_penalty_weight`
+- If later work improves the raw physics enough, this prior should be reduced or removed and the run should be compared directly against the prior-enabled behavior.
+- BFO fit is still weak even after the candidate-path shape was improved. High residual warnings should be treated as real, not cosmetic.
+- The key failure point discovered during debugging was Arc 3: southbound states were being eliminated there before the sign correction.
+- The current solver still needs a proper path-level explanation of why early arcs prefer one corridor over another without relying on a broad directional prior.
+
+## Future Investigations
+
+These are concrete questions worth revisiting later.
+
+- Re-test whether the northward-leg prior is still necessary after future BFO work.
+- Improve BFO residual quality rather than only path shape.
+- Revisit whether BFO should be weighted differently on early arcs versus late arcs.
+- Investigate whether the Honeywell/SDU compensation model is still incomplete even after the sign correction.
+- Revisit fuel infeasibility and post-Arc-7 continuation, since the current best path remains handshake-constrained with no fuel-feasible endpoints.
+- Consider exposing the northward-leg prior in the UI so the workspace makes clear when a directional prior is active.
 
 ## Decision Rule
 

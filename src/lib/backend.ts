@@ -22,6 +22,8 @@ const BROWSER_FALLBACK_CONFIG: AnalysisConfig = {
   ring_sample_step: 1,
   speed_consistency_sigma_kts: 35,
   heading_change_sigma_deg: 80,
+  northward_leg_sigma_deg: 1.5,
+  northward_penalty_weight: 2,
   bfo_sigma_hz: 7,
   bfo_score_weight: 1,
   satellite_nominal_lon_deg: 64.5,
@@ -29,7 +31,7 @@ const BROWSER_FALLBACK_CONFIG: AnalysisConfig = {
   satellite_drift_start_lat_offset_deg: 0,
   satellite_drift_amplitude_deg: 1.6,
   satellite_drift_end_time_utc: "00:19:29.416",
-  fuel_remaining_at_arc1_kg: 33500,
+  fuel_remaining_at_arc1_kg: 34500,
   fuel_baseline_kg_per_hr: 6500,
   fuel_baseline_speed_kts: 471,
   fuel_baseline_altitude_ft: 35000,
@@ -191,6 +193,52 @@ export interface InversionResult {
   item_contributions: InversionItemContribution[];
   validation_ok?: boolean;
   validation_message?: string;
+}
+
+// ── Sensitivity sweep types ──
+
+export interface SweepParameter {
+  field_name: string;
+  sigma: number;
+}
+
+export interface SensitivityRequest {
+  parameters: SweepParameter[];
+  steps_per_side: number;
+}
+
+export interface SweepTrial {
+  value: number;
+  delta_from_base: number;
+  peak_lat: number | null;
+  peak_lon: number | null;
+  peak_probability: number | null;
+  fuel_feasible_count: number;
+  total_path_count: number;
+  distance_from_base_km: number;
+}
+
+export interface ParameterSweepResult {
+  field_name: string;
+  base_value: number;
+  trials: SweepTrial[];
+  peak_shift_km: number;
+}
+
+export interface SensitivityResult {
+  base_peak_lat: number | null;
+  base_peak_lon: number | null;
+  base_path_count: number;
+  base_fuel_feasible_count: number;
+  sweeps: ParameterSweepResult[];
+  total_trials: number;
+}
+
+export interface SensitivityProgress {
+  pct: number;
+  parameter: string;
+  trial: number;
+  total_trials: number;
 }
 
 async function tauriInvoke<T>(command: string, args?: Record<string, unknown>): Promise<T> {
@@ -392,4 +440,15 @@ export async function getDriftBeaching(params?: DriftSimParams, config?: Analysi
     });
   }
   return [];
+}
+
+export async function runSensitivitySweep(
+  request: SensitivityRequest,
+  config?: AnalysisConfig,
+): Promise<SensitivityResult> {
+  if (!IS_TAURI) throw new Error("Sensitivity sweep requires Tauri backend");
+  return tauriInvoke("run_sensitivity_sweep", {
+    request,
+    ...(config ? { config } : {}),
+  });
 }

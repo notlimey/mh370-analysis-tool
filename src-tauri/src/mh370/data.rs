@@ -18,6 +18,8 @@ pub struct AnalysisConfig {
     pub ring_sample_step: usize,
     pub speed_consistency_sigma_kts: f64,
     pub heading_change_sigma_deg: f64,
+    pub northward_leg_sigma_deg: f64,
+    pub northward_penalty_weight: f64,
     pub bfo_sigma_hz: f64,
     pub bfo_score_weight: f64,
     pub satellite_nominal_lon_deg: f64,
@@ -55,6 +57,8 @@ impl Default for AnalysisConfig {
             ring_sample_step: 1,
             speed_consistency_sigma_kts: 35.0,
             heading_change_sigma_deg: 80.0,
+            northward_leg_sigma_deg: 1.5,
+            northward_penalty_weight: 2.0,
             bfo_sigma_hz: 7.0,
             bfo_score_weight: 1.0,
             satellite_nominal_lon_deg: 64.5,
@@ -62,7 +66,7 @@ impl Default for AnalysisConfig {
             satellite_drift_start_lat_offset_deg: 0.0,
             satellite_drift_amplitude_deg: 1.6,
             satellite_drift_end_time_utc: "00:19:29.416".to_string(),
-            fuel_remaining_at_arc1_kg: 33_500.0,
+            fuel_remaining_at_arc1_kg: 34_500.0,
             fuel_baseline_kg_per_hr: 6_500.0,
             fuel_baseline_speed_kts: 471.0,
             fuel_baseline_altitude_ft: 35_000.0,
@@ -291,5 +295,27 @@ pub fn primary_arc_handshakes<'a>(dataset: &'a Mh370Dataset) -> Vec<&'a Inmarsat
             selected.push(handshake);
         }
     }
+    selected
+}
+
+pub fn path_scoring_handshakes<'a>(dataset: &'a Mh370Dataset) -> Vec<&'a InmarsatHandshake> {
+    let mut selected: Vec<&InmarsatHandshake> = dataset
+        .inmarsat_handshakes
+        .iter()
+        .filter(|handshake| handshake.arc >= 1 && handshake.bto_us.is_some())
+        .filter(|handshake| !matches!(handshake.flag.as_deref(), Some("CRITICAL_ANOMALY")))
+        .filter(|handshake| {
+            matches!(
+                handshake.reliability.as_deref(),
+                Some("GOOD") | Some("GOOD_BTO_UNCERTAIN_BFO") | Some("UNRELIABLE_BFO")
+            )
+        })
+        .collect();
+
+    selected.sort_by(|left, right| {
+        let left_time = parse_time_utc_seconds(&left.time_utc).unwrap_or_default();
+        let right_time = parse_time_utc_seconds(&right.time_utc).unwrap_or_default();
+        left_time.partial_cmp(&right_time).unwrap()
+    });
     selected
 }

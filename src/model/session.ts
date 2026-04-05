@@ -1,8 +1,10 @@
 import type { AnalysisConfig } from "./config";
 
 const STORAGE_KEY = "mh370.sessionState";
+const SESSION_SCHEMA_VERSION = 2;
 
 interface SessionState {
+  schemaVersion?: number;
   analysisConfig?: Partial<AnalysisConfig>;
   activeScenarioId?: string | null;
   layerVisibility?: Record<string, boolean>;
@@ -15,7 +17,21 @@ function readSessionState(): SessionState {
   const raw = window.localStorage.getItem(STORAGE_KEY);
   if (!raw) return {};
   try {
-    return JSON.parse(raw) as SessionState;
+    const parsed = JSON.parse(raw) as SessionState;
+    if (parsed.schemaVersion === SESSION_SCHEMA_VERSION) {
+      return parsed;
+    }
+
+    // Drop stale model config after schema changes so old tuning does not
+    // silently override new backend defaults.
+    const migrated: SessionState = {
+      schemaVersion: SESSION_SCHEMA_VERSION,
+      activeScenarioId: parsed.activeScenarioId ?? null,
+      layerVisibility: parsed.layerVisibility,
+      analystNotes: parsed.analystNotes,
+    };
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(migrated));
+    return migrated;
   } catch {
     return {};
   }
@@ -24,7 +40,14 @@ function readSessionState(): SessionState {
 function writeSessionState(next: SessionState): void {
   if (typeof window === "undefined") return;
   const current = readSessionState();
-  window.localStorage.setItem(STORAGE_KEY, JSON.stringify({ ...current, ...next }));
+  window.localStorage.setItem(
+    STORAGE_KEY,
+    JSON.stringify({
+      ...current,
+      ...next,
+      schemaVersion: SESSION_SCHEMA_VERSION,
+    }),
+  );
 }
 
 export function getStoredAnalysisConfig(): Partial<AnalysisConfig> | null {

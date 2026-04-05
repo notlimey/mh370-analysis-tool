@@ -63,6 +63,8 @@ interface ModelResultSummary {
   endpointCounts: Record<string, number>;
   fuelFeasiblePercent?: number;
   bfoMeanAbsResidualHz?: number;
+  bestEndpointLat?: number;
+  bestEndpointLon?: number;
   peakLat?: number;
   peakLon?: number;
   searchedOverlapLabel?: string;
@@ -985,9 +987,8 @@ function renderModelResultsSummary(): void {
     return;
   }
 
-  const peak = latestResultSummary.peakLat !== undefined && latestResultSummary.peakLon !== undefined
-    ? `~${latestResultSummary.peakLat.toFixed(1)}S, ${latestResultSummary.peakLon.toFixed(1)}E`
-    : "--";
+  const peak = formatOptionalLatLon(latestResultSummary.peakLat, latestResultSummary.peakLon);
+  const bestEndpoint = formatOptionalLatLon(latestResultSummary.bestEndpointLat, latestResultSummary.bestEndpointLon);
   const endpointCounts = Object.entries(latestResultSummary.endpointCounts)
     .filter(([, count]) => count > 0)
     .sort((left, right) => right[1] - left[1])
@@ -1015,6 +1016,8 @@ function renderModelResultsSummary(): void {
       <div class="model-results-value">${bfoResidual}</div>
       <div class="model-results-label">Peak probability</div>
       <div class="model-results-value">${peak}</div>
+      <div class="model-results-label">Best path endpoint</div>
+      <div class="model-results-value">${bestEndpoint}</div>
       <div class="model-results-label">Searched overlap</div>
       <div class="model-results-value">${latestResultSummary.searchedOverlapLabel ?? "--"}</div>
       <div class="model-results-label">Continuation share</div>
@@ -1089,7 +1092,9 @@ function buildRunChanges(
 
 function formatOptionalLatLon(lat?: number, lon?: number): string {
   if (lat === undefined || lon === undefined) return "--";
-  return `~${lat.toFixed(1)}S, ${lon.toFixed(1)}E`;
+  const latHemisphere = lat < 0 ? "S" : "N";
+  const lonHemisphere = lon < 0 ? "W" : "E";
+  return `~${Math.abs(lat).toFixed(1)}${latHemisphere}, ${Math.abs(lon).toFixed(1)}${lonHemisphere}`;
 }
 
 function formatOptionalPercent(value?: number): string {

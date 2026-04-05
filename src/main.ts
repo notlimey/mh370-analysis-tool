@@ -21,6 +21,7 @@ import { createLayersPanel } from "./ui/panels/layersPanel";
 import { createDriftPanel } from "./ui/panels/driftPanel";
 import { createEvidenceBrowsePanel } from "./ui/panels/evidenceBrowsePanel";
 import { createExportPanel } from "./ui/panels/exportPanel";
+import { createSensitivityPanel } from "./ui/panels/sensitivityPanel";
 import { getSelectedAnomalyId, initEvidencePanel, onEvidenceSelectionChange, openAnomalyDetail } from "./ui/evidencePanel";
 import { initTimeline } from "./ui/timeline";
 import { setupPopups } from "./popups";
@@ -56,6 +57,12 @@ interface FamilySummary {
   familySpreadKm?: number;
   firsByFamily: Record<string, string[]>;
   endpointNarrative?: string;
+}
+
+function formatLatLon(lat: number, lon: number, digits = 1): string {
+  const latHemisphere = lat < 0 ? "S" : "N";
+  const lonHemisphere = lon < 0 ? "W" : "E";
+  return `~${Math.abs(lat).toFixed(digits)}${latHemisphere}, ${Math.abs(lon).toFixed(digits)}${lonHemisphere}`;
 }
 
 function createLoader(): HTMLElement {
@@ -160,13 +167,12 @@ async function loadAllLayers(map: MapboxMap): Promise<LayerLoadSummary> {
     const maxProb = Math.max(...heatmap.map((p) => p.probability));
     const maxPoint = heatmap.find((p) => p.probability === maxProb);
     if (maxPoint) {
-      const lat = maxPoint.position[1].toFixed(1);
-      const lon = maxPoint.position[0].toFixed(1);
-      updateConfidence(`~${lat}S, ${lon}E`);
+      updateConfidence(formatLatLon(maxPoint.position[1], maxPoint.position[0]));
     }
   }
 
   const bestPath = paths[0];
+  const bestEndpoint = bestPath?.points[bestPath.points.length - 1];
   const summary = summarizeFamilies(pathAnnotations);
   const peakPoint = heatmap
     .slice()
@@ -181,6 +187,8 @@ async function loadAllLayers(map: MapboxMap): Promise<LayerLoadSummary> {
     endpointCounts: summary.counts,
     fuelFeasiblePercent: paths.length > 0 ? (fuelFeasibleCount / paths.length) * 100 : undefined,
     bfoMeanAbsResidualHz: bestPath?.bfo_summary?.mean_abs_residual_hz,
+    bestEndpointLat: bestEndpoint?.[1],
+    bestEndpointLon: bestEndpoint?.[0],
     peakLat: peakPoint?.position[1],
     peakLon: peakPoint?.position[0],
     searchedOverlapLabel: overlapSummary,
@@ -462,6 +470,7 @@ async function main(): Promise<void> {
   registerPanel("layers", createLayersPanel());
   registerPanel("evidence", createEvidenceBrowsePanel());
   registerPanel("export", createExportPanel());
+  registerPanel("sensitivity", createSensitivityPanel());
 
   // Wire icon rail toggle
   initIconRail((panel) => {

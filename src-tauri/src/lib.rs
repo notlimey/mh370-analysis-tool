@@ -39,6 +39,9 @@ use mh370::probability::{
     generate_probability_heatmap as run_generate_probability_heatmap, ProbPoint,
 };
 use mh370::satellite::SatelliteModel;
+use mh370::sensitivity::{
+    run_sensitivity_sweep as run_sensitivity, SensitivityRequest, SensitivityResult,
+};
 use serde_json::Value;
 
 pub use mh370::config;
@@ -162,6 +165,42 @@ async fn run_debris_inversion(
     };
 
     Ok(result)
+}
+
+#[derive(Debug, Clone, Serialize)]
+struct SensitivityProgress {
+    pct: u32,
+    parameter: String,
+    trial: usize,
+    total_trials: usize,
+}
+
+#[tauri::command]
+async fn run_sensitivity_sweep(
+    app: AppHandle,
+    state: State<'_, AppState>,
+    request: SensitivityRequest,
+    config: Option<AnalysisConfig>,
+) -> Result<SensitivityResult, String> {
+    let satellite = state.satellite.clone();
+    let config = Some(effective_config(&state, config));
+    let app_handle = app.clone();
+
+    tauri::async_runtime::spawn_blocking(move || {
+        run_sensitivity(&satellite, &request, config, |completed, total, field| {
+            let _ = app_handle.emit(
+                "sensitivity-sweep-progress",
+                SensitivityProgress {
+                    pct: (completed as f64 / total as f64 * 100.0) as u32,
+                    parameter: field.to_string(),
+                    trial: completed,
+                    total_trials: total,
+                },
+            );
+        })
+    })
+    .await
+    .map_err(|err| format!("sensitivity sweep task failed: {err}"))?
 }
 
 fn get_or_compute_drift_validation(state: &AppState) -> bool {
@@ -490,6 +529,7 @@ pub fn run() {
             run_debris_inversion,
             get_drift_particle_clouds,
             get_drift_beaching,
+            run_sensitivity_sweep,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

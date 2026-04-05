@@ -1,9 +1,6 @@
 use serde::Serialize;
 
-use super::arcs::{build_arc_ring, calibrate_bto_offset_from_dataset};
-use super::data::{
-    load_dataset, primary_arc_handshakes, resolve_config, AnalysisConfig, Mh370Dataset,
-};
+use super::data::{load_dataset, resolve_config, AnalysisConfig, Mh370Dataset};
 use super::geometry::{haversine, LatLon};
 use super::paths::{apply_fuel_filter, sample_candidate_paths_from_dataset};
 use super::satellite::SatelliteModel;
@@ -31,12 +28,6 @@ pub fn generate_probability_heatmap_from_dataset(
     dataset: &Mh370Dataset,
     config: &AnalysisConfig,
 ) -> Result<Vec<ProbPoint>, String> {
-    let calibration = calibrate_bto_offset_from_dataset(satellite, dataset, config)?;
-    let primary_handshakes = primary_arc_handshakes(dataset);
-    let arc7_handshake = primary_handshakes
-        .last()
-        .ok_or_else(|| "missing arc 7 handshake".to_string())?;
-    let arc7_ring = build_arc_ring(satellite, arc7_handshake, calibration.offset_us, config)?;
     let fuel_summary =
         apply_fuel_filter(satellite, config.beam_width.max(200), Some(config.clone()))?;
     let fuel_paths = if fuel_summary.paths.is_empty() {
@@ -45,12 +36,7 @@ pub fn generate_probability_heatmap_from_dataset(
         fuel_summary.paths
     };
 
-    let arc7_points = interpolate_arc_segment(
-        &arc7_ring.points,
-        config.arc7_grid_min_lat,
-        config.arc7_grid_max_lat,
-        config.arc7_grid_points,
-    );
+    let arc7_points = endpoint_heatmap_points(&fuel_paths, config.arc7_grid_points);
 
     if arc7_points.is_empty() {
         return Ok(Vec::new());
@@ -84,8 +70,10 @@ pub fn generate_probability_heatmap_from_dataset(
             })
             .sum::<f64>();
 
-        let debris_weight = debris_weight(point[1], config);
-        let raw_score = path_density + fuel_weight + debris_weight;
+        // Keep the heatmap anchored to the sampled path family rather than a
+        // separate southern prior so the map agrees with the candidate paths.
+        let debris_weight = 0.0;
+        let raw_score = path_density + fuel_weight;
         raw_points.push((point, raw_score, path_density, fuel_weight, debris_weight));
     }
 
@@ -111,42 +99,27 @@ pub fn generate_probability_heatmap_from_dataset(
         .collect())
 }
 
-fn interpolate_arc_segment(
-    ring_points: &[[f64; 2]],
-    min_lat: f64,
-    max_lat: f64,
+fn endpoint_heatmap_points(
+    paths: &[super::paths::FlightPath],
     target_points: usize,
 ) -> Vec<[f64; 2]> {
-    let mut filtered: Vec<[f64; 2]> = ring_points
+    let mut endpoints: Vec<[f64; 2]> = paths
         .iter()
-        .copied()
-        .filter(|point| point[1] >= min_lat && point[1] <= max_lat)
+        .filter_map(|path| path.points.last().copied())
         .collect();
 
-    filtered.sort_by(|left, right| left[1].partial_cmp(&right[1]).unwrap());
+    endpoints.sort_by(|left, right| left[1].partial_cmp(&right[1]).unwrap());
 
-    if filtered.len() <= target_points.max(2) {
-        return filtered;
+    if endpoints.len() <= target_points.max(2) {
+        return endpoints;
     }
 
-    let step = filtered.len() as f64 / target_points.max(2) as f64;
+    let step = endpoints.len() as f64 / target_points.max(2) as f64;
     let mut result = Vec::new();
     let mut index = 0.0_f64;
-    while (index as usize) < filtered.len() {
-        result.push(filtered[index as usize]);
+    while (index as usize) < endpoints.len() {
+        result.push(endpoints[index as usize]);
         index += step;
     }
     result
-}
-
-fn debris_weight(lat: f64, config: &AnalysisConfig) -> f64 {
-    if lat >= config.debris_weight_min_lat && lat <= config.debris_weight_max_lat {
-        1.0
-    } else {
-        let center = (config.debris_weight_min_lat + config.debris_weight_max_lat) / 2.0;
-        let sigma =
-            ((config.debris_weight_max_lat - config.debris_weight_min_lat).abs() / 2.0).max(1.0);
-        let diff = lat - center;
-        (-diff.powi(2) / (2.0 * sigma.powi(2))).exp() * 0.5
-    }
 }

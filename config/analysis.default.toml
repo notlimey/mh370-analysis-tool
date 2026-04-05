@@ -27,6 +27,12 @@ speed_consistency_sigma_kts = 35.0
 heading_change_sigma_deg = 80.0
 # effect: Gaussian sigma for heading-change penalty between consecutive legs
 
+northward_leg_sigma_deg = 1.5
+# effect: Gaussian sigma for penalising northward latitude change on a leg
+
+northward_penalty_weight = 2.0
+# effect: weight of the explicit northward-leg penalty term; 0 disables it
+
 
 # BFO scoring
 
@@ -66,11 +72,16 @@ satellite_drift_end_time_utc = "00:19:29.416"
 
 # Fuel model
 
-fuel_remaining_at_arc1_kg = 33500.0
+fuel_remaining_at_arc1_kg = 34500.0
 # effect: fuel assumed remaining at Arc 1
+# source: independent analyst estimate (DrB / Godfrey, 34,490-34,571 kg)
+#         Boeing segment analysis gives 33,500 kg; this is the more generous bound.
+# ref: https://mh370.radiantphysics.com/2019/06/30/a-comprehensive-survey-of-possible-mh370-paths/
 
 fuel_baseline_kg_per_hr = 6500.0
-# effect: baseline burn rate at reference speed/altitude
+# effect: baseline burn rate at reference speed/altitude (initial weight, ~207,000 kg)
+# note: weight-corrected in code — effective flight average is ~5,700 kg/hr (ATSB-validated)
+# ref: Boeing Performance Analysis, Appendix 1.6E
 
 fuel_baseline_speed_kts = 471.0
 # effect: reference speed for burn rate scaling

@@ -14,5 +14,7 @@ pub mod export;
 pub mod geometry;
 pub mod hycom_currents;
 pub mod paths;
+pub mod performance;
 pub mod probability;
 pub mod satellite;
+pub mod sensitivity;

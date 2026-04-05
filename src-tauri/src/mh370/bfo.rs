@@ -5,7 +5,7 @@
 //! satellite's orbital motion and predicting BFO for a given aircraft state,
 //! we can score candidate paths against measured BFO values.
 //!
-//! BFO_predicted = (f_uplink / c) × range_rate(aircraft, satellite) + bias
+//! BFO_predicted = (f_uplink / c) × uncompensated_range_rate + bias
 //!
 //! The bias absorbs the SDU oscillator offset, satellite frequency compensation,
 //! and downlink Doppler to the Perth ground station. It is calibrated from the
@@ -16,7 +16,7 @@
 
 use std::f64::consts::PI;
 
-use super::data::AnalysisConfig;
+use super::data::{load_dataset, parse_time_utc_seconds, AnalysisConfig};
 use super::geometry::LatLon;
 use super::satellite::{sat_state_at_time_s, SatelliteModel};
 
@@ -36,18 +36,6 @@ const F_UPLINK_HZ: f64 = 1_626_500_000.0;
 
 /// Typical Boeing 777 cruise altitude (km). ~FL350.
 const AIRCRAFT_ALT_KM: f64 = 10.668;
-
-// ---------------------------------------------------------------------------
-// Calibration reference: KLIA ground point at 16:00:13 UTC
-// ---------------------------------------------------------------------------
-
-const KLIA: LatLon = LatLon {
-    lat: 2.75,
-    lon: 101.71,
-};
-/// BFO measured at 16:00:13 UTC logon with aircraft stationary at gate.
-/// Source: Malaysian government Inmarsat data release, May 2014.
-const BFO_GROUND: f64 = 88.0;
 
 // ---------------------------------------------------------------------------
 // ECEF helpers
@@ -185,11 +173,28 @@ impl BfoModel {
     /// the combined bias. The satellite position comes from the same model used
     /// for BTO arc calculations, ensuring consistency.
     pub fn calibrate(satellite: &SatelliteModel, config: &AnalysisConfig) -> Result<Self, String> {
-        // Calibration should not apply aircraft horizontal velocity because it's at the gate,
-        // but raw_range_rate uses the provided speed (0.0). So it works.
-        let time_s = super::data::parse_time_utc_seconds("16:00:13.406")?;
-        let rr = Self::raw_range_rate(satellite, KLIA, 0.0, 0.0, time_s, config, 0.0)?;
-        let bias = BFO_GROUND - (-(F_UPLINK_HZ / C_M_S) * rr);
+        let dataset = load_dataset(config)?;
+        let handshake = dataset
+            .inmarsat_handshakes
+            .iter()
+            .find(|handshake| {
+                handshake.position_known
+                    && handshake.bto_us.is_some()
+                    && handshake.bfo_hz.is_some()
+                    && handshake.message_type == "R-Channel Log-on"
+            })
+            .ok_or_else(|| "missing ground BFO calibration handshake".to_string())?;
+        let pos = LatLon {
+            lat: handshake
+                .lat
+                .ok_or_else(|| "missing lat for ground BFO calibration handshake".to_string())?,
+            lon: handshake
+                .lon
+                .ok_or_else(|| "missing lon for ground BFO calibration handshake".to_string())?,
+        };
+        let time_s = parse_time_utc_seconds(&handshake.time_utc)?;
+        let rr = Self::raw_range_rate(satellite, pos, 0.0, 0.0, time_s, config, 0.0)?;
+        let bias = handshake.bfo_hz.unwrap_or_default() - ((F_UPLINK_HZ / C_M_S) * rr);
         Ok(BfoModel { bias })
     }
 
@@ -256,14 +261,10 @@ impl BfoModel {
             config,
             vertical_speed_fpm,
         )?;
-        // Range rate is (Actual - Compensated).
-        // Actual BFO equation:
-        // Downlink doppler is absorbed into bias.
-        // Uplink doppler: f_uplink * v_rel / c
-        // where v_rel is positive for approaching.
-        // range_rate(sat, ac) is positive when separating (distance increasing)
-        // so approaching velocity is -rr
-        Ok(-(F_UPLINK_HZ / C_M_S) * rr + self.bias)
+        // Range rate is (Actual - Compensated), with the sign convention inherited from
+        // `range_rate(sat, ac)`. Empirically, the measured handshake series aligns with the
+        // positive uplink coefficient once the ground handshake is used for calibration.
+        Ok((F_UPLINK_HZ / C_M_S) * rr + self.bias)
     }
 
     /// BFO residual: predicted - measured (Hz).

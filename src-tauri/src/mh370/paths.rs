@@ -3,7 +3,7 @@ use serde::Serialize;
 use super::arcs::{bto_to_slant_range_km, build_arc_ring, calibrate_bto_offset_from_dataset};
 use super::bfo::BfoModel;
 use super::data::{
-    load_dataset, parse_time_utc_seconds, primary_arc_handshakes, resolve_config, AnalysisConfig,
+    load_dataset, parse_time_utc_seconds, path_scoring_handshakes, resolve_config, AnalysisConfig,
     Mh370Dataset,
 };
 use super::geometry::{bearing, haversine, LatLon};
@@ -23,6 +23,10 @@ struct PathState {
     speeds_kts: Vec<f64>,
     headings_deg: Vec<f64>,
     log_score: f64,
+    speed_log_score: f64,
+    heading_log_score: f64,
+    northward_log_score: f64,
+    bfo_log_score: f64,
 }
 
 #[derive(Debug, Clone, Serialize)]
@@ -42,6 +46,10 @@ pub struct FlightPath {
     pub extra_range_nm: f64,
     pub bfo_summary: BfoSummary,
     pub bfo_diagnostics: Vec<BfoDiagnostic>,
+    pub speed_log_score: f64,
+    pub heading_log_score: f64,
+    pub northward_log_score: f64,
+    pub bfo_log_score: f64,
 }
 
 #[derive(Debug, Clone, Serialize)]
@@ -160,17 +168,15 @@ pub fn sample_candidate_paths_from_dataset(
     config: &AnalysisConfig,
 ) -> Result<Vec<FlightPath>, String> {
     let calibration = calibrate_bto_offset_from_dataset(satellite, dataset, config)?;
-    let primary_handshakes = primary_arc_handshakes(dataset);
-    let path_handshakes: Vec<&super::data::InmarsatHandshake> = primary_handshakes
-        .iter()
-        .copied()
+    let path_handshakes: Vec<&super::data::InmarsatHandshake> = path_scoring_handshakes(dataset)
+        .into_iter()
         .filter(|handshake| handshake.arc >= 2)
         .collect();
     let last_radar_time_s = parse_time_utc_seconds(LAST_RADAR_TIME_UTC)?;
     let bfo_model = BfoModel::calibrate(satellite, config)?;
 
     if path_handshakes.len() < 6 {
-        return Err("expected six path-constraining primary arcs in dataset".to_string());
+        return Err("expected at least six path-constraining handshakes in dataset".to_string());
     }
 
     let mut states = vec![PathState {
@@ -178,6 +184,10 @@ pub fn sample_candidate_paths_from_dataset(
         speeds_kts: Vec::new(),
         headings_deg: Vec::new(),
         log_score: 0.0,
+        speed_log_score: 0.0,
+        heading_log_score: 0.0,
+        northward_log_score: 0.0,
+        bfo_log_score: 0.0,
     }];
 
     let mut current_time_s = last_radar_time_s;
@@ -218,6 +228,12 @@ pub fn sample_candidate_paths_from_dataset(
                 } else {
                     1.0
                 };
+                let northward_delta_deg = (candidate.lat - from.lat).max(0.0);
+                let northward_score = if config.northward_penalty_weight > 0.0 {
+                    gaussian_score(northward_delta_deg, config.northward_leg_sigma_deg.max(0.1))
+                } else {
+                    1.0
+                };
                 let bfo_score = score_bfo_handshake(
                     &bfo_model,
                     satellite,
@@ -233,9 +249,15 @@ pub fn sample_candidate_paths_from_dataset(
                 next_state.points.push(candidate);
                 next_state.speeds_kts.push(speed_kts);
                 next_state.headings_deg.push(heading_deg);
-                next_state.log_score += speed_score.ln()
-                    + 0.35 * heading_score.ln()
-                    + config.bfo_score_weight * bfo_score.ln();
+                let speed_log = speed_score.ln();
+                let heading_log = 0.35 * heading_score.ln();
+                let northward_log = config.northward_penalty_weight * northward_score.ln();
+                let bfo_log = config.bfo_score_weight * bfo_score.ln();
+                next_state.speed_log_score += speed_log;
+                next_state.heading_log_score += heading_log;
+                next_state.northward_log_score += northward_log;
+                next_state.bfo_log_score += bfo_log;
+                next_state.log_score += speed_log + heading_log + northward_log + bfo_log;
                 next_states.push(next_state);
             }
         }
@@ -296,6 +318,10 @@ pub fn sample_candidate_paths_from_dataset(
                 extra_range_nm: fuel.extra_range_nm,
                 bfo_summary,
                 bfo_diagnostics,
+                speed_log_score: state.speed_log_score,
+                heading_log_score: state.heading_log_score,
+                northward_log_score: state.northward_log_score,
+                bfo_log_score: state.bfo_log_score,
             })
         })
         .collect::<Result<Vec<_>, _>>()?;
@@ -313,17 +339,15 @@ pub fn debug_path_sampling(
     let config = resolve_config(config);
     let dataset = load_dataset(&config)?;
     let calibration = calibrate_bto_offset_from_dataset(satellite, &dataset, &config)?;
-    let primary_handshakes = primary_arc_handshakes(&dataset);
-    let path_handshakes: Vec<&super::data::InmarsatHandshake> = primary_handshakes
-        .iter()
-        .copied()
+    let path_handshakes: Vec<&super::data::InmarsatHandshake> = path_scoring_handshakes(&dataset)
+        .into_iter()
         .filter(|handshake| handshake.arc >= 2)
         .collect();
     let last_radar_time_s = parse_time_utc_seconds(LAST_RADAR_TIME_UTC)?;
     let bfo_model = BfoModel::calibrate(satellite, &config)?;
 
     if path_handshakes.len() < 6 {
-        return Err("expected six path-constraining primary arcs in dataset".to_string());
+        return Err("expected at least six path-constraining handshakes in dataset".to_string());
     }
 
     let mut steps = Vec::new();
@@ -332,6 +356,10 @@ pub fn debug_path_sampling(
         speeds_kts: Vec::new(),
         headings_deg: Vec::new(),
         log_score: 0.0,
+        speed_log_score: 0.0,
+        heading_log_score: 0.0,
+        northward_log_score: 0.0,
+        bfo_log_score: 0.0,
     }];
     let mut current_time_s = last_radar_time_s;
 
@@ -381,6 +409,12 @@ pub fn debug_path_sampling(
                 } else {
                     1.0
                 };
+                let northward_delta_deg = (candidate.lat - from.lat).max(0.0);
+                let northward_score = if config.northward_penalty_weight > 0.0 {
+                    gaussian_score(northward_delta_deg, config.northward_leg_sigma_deg.max(0.1))
+                } else {
+                    1.0
+                };
                 let bfo_score = score_bfo_handshake(
                     &bfo_model,
                     satellite,
@@ -396,9 +430,15 @@ pub fn debug_path_sampling(
                 next_state.points.push(candidate);
                 next_state.speeds_kts.push(speed_kts);
                 next_state.headings_deg.push(heading_deg);
-                next_state.log_score += speed_score.ln()
-                    + 0.35 * heading_score.ln()
-                    + config.bfo_score_weight * bfo_score.ln();
+                let speed_log = speed_score.ln();
+                let heading_log = 0.35 * heading_score.ln();
+                let northward_log = config.northward_penalty_weight * northward_score.ln();
+                let bfo_log = config.bfo_score_weight * bfo_score.ln();
+                next_state.speed_log_score += speed_log;
+                next_state.heading_log_score += heading_log;
+                next_state.northward_log_score += northward_log;
+                next_state.bfo_log_score += bfo_log;
+                next_state.log_score += speed_log + heading_log + northward_log + bfo_log;
                 next_states.push(next_state);
             }
         }
@@ -440,6 +480,8 @@ fn evaluate_fuel(
     total_distance_km: f64,
     config: &AnalysisConfig,
 ) -> FuelEvaluation {
+    use super::performance::fuel_flow;
+
     let average_speed_kts = if speeds_kts.is_empty() {
         config.fuel_baseline_speed_kts
     } else {
@@ -458,15 +500,58 @@ fn evaluate_fuel(
         (config.fuel_baseline_altitude_ft - config.cruise_altitude_ft) / 10_000.0;
     let altitude_factor =
         1.0 + altitude_delta_10kft.max(0.0) * config.fuel_low_altitude_penalty_per_10kft;
-    let fuel_burn_rate = config.fuel_baseline_kg_per_hr * speed_factor * altitude_factor;
-    let fuel_used = flight_hours * fuel_burn_rate;
-    let fuel_remaining_at_arc7_kg = config.fuel_remaining_at_arc1_kg - fuel_used;
+
+    // Weight-corrected fuel burn: as the aircraft burns fuel, it gets lighter,
+    // and the fuel flow rate decreases. We integrate this using N steps to
+    // approximate the continuous weight reduction.
+    //
+    // Validated against ATSB data: Boeing 777-200ER burns 33,500 kg over
+    // ~5.875 hours = 5,702 kg/hr average, NOT the 6,500 kg/hr initial rate.
+    // Source: Boeing Performance Analysis, Appendix 1.6E.
+    //
+    // Weight-sensitivity coefficient: fuel flow decreases ~0.045 kg/hr per kg
+    // of weight reduction, derived from Boeing reference points:
+    //   6,500 kg/hr at 207,000 kg → 5,000 kg/hr at 174,000 kg.
+    let initial_weight_kg = config.fuel_remaining_at_arc1_kg
+        + super::performance::airframe::ZFW_KG;
+    let nominal_burn_rate =
+        config.fuel_baseline_kg_per_hr * speed_factor * altitude_factor;
+
+    // Integrate fuel burn over N steps, adjusting for weight reduction each step.
+    const N_STEPS: usize = 20;
+    let dt = flight_hours / N_STEPS as f64;
+    let mut fuel_remaining = config.fuel_remaining_at_arc1_kg;
+    let mut current_weight = initial_weight_kg;
+
+    for _ in 0..N_STEPS {
+        // Scale burn rate by current weight relative to the reference weight.
+        // At reference weight, weight_correction = 1.0.
+        // As weight drops, burn rate drops proportionally.
+        let weight_correction = 1.0
+            - fuel_flow::WEIGHT_SENSITIVITY_KG_HR_PER_KG
+                * (fuel_flow::WEIGHT_SENSITIVITY_REF_KG - current_weight)
+                / fuel_flow::WEIGHT_SENSITIVITY_REF_FLOW_KG_HR;
+        let step_burn_rate = nominal_burn_rate * weight_correction.max(0.5);
+        let fuel_burned = step_burn_rate * dt;
+        fuel_remaining -= fuel_burned;
+        current_weight -= fuel_burned;
+    }
+
+    let fuel_remaining_at_arc7_kg = fuel_remaining;
     let fuel_feasible = fuel_remaining_at_arc7_kg >= 0.0;
 
-    let low_speed_burn_rate = config.fuel_baseline_kg_per_hr
+    // Post-Arc 7: use the lighter weight for the low-speed burn rate
+    let low_speed_nominal = config.fuel_baseline_kg_per_hr
         * (config.post_arc7_low_speed_kts / config.fuel_baseline_speed_kts)
             .powf(config.fuel_speed_exponent)
         * altitude_factor;
+    let weight_at_arc7 = super::performance::airframe::ZFW_KG + fuel_remaining_at_arc7_kg.max(0.0);
+    let low_weight_correction = 1.0
+        - fuel_flow::WEIGHT_SENSITIVITY_KG_HR_PER_KG
+            * (fuel_flow::WEIGHT_SENSITIVITY_REF_KG - weight_at_arc7)
+            / fuel_flow::WEIGHT_SENSITIVITY_REF_FLOW_KG_HR;
+    let low_speed_burn_rate = low_speed_nominal * low_weight_correction.max(0.5);
+
     let extra_endurance_minutes = if fuel_remaining_at_arc7_kg > 0.0 && low_speed_burn_rate > 0.0 {
         (fuel_remaining_at_arc7_kg / low_speed_burn_rate * 60.0).min(config.max_post_arc7_minutes)
     } else {
@@ -593,7 +678,8 @@ fn score_bfo_handshake(
         return Ok(1.0);
     };
 
-    if !matches!(handshake.reliability.as_deref(), Some("GOOD")) {
+    let reliability_weight = bfo_reliability_weight(handshake);
+    if reliability_weight <= 0.0 {
         return Ok(1.0);
     }
 
@@ -609,7 +695,15 @@ fn score_bfo_handshake(
             0.0,
         )?
         .abs();
-    Ok(gaussian_score(residual, config.bfo_sigma_hz))
+    Ok(gaussian_score(residual, config.bfo_sigma_hz).powf(reliability_weight))
+}
+
+fn bfo_reliability_weight(handshake: &super::data::InmarsatHandshake) -> f64 {
+    match handshake.reliability.as_deref() {
+        Some("GOOD") => 1.0,
+        Some("GOOD_BTO_UNCERTAIN_BFO") => 0.35,
+        _ => 0.0,
+    }
 }
 
 fn build_bfo_diagnostics(
@@ -626,8 +720,8 @@ fn build_bfo_diagnostics(
         .zip(state.speeds_kts.iter())
         .map(|(((handshake, pos), heading_deg), speed_kts)| {
             let reliability = handshake.reliability.clone();
-            let used_in_score = matches!(handshake.reliability.as_deref(), Some("GOOD"))
-                && handshake.bfo_hz.is_some();
+            let reliability_weight = bfo_reliability_weight(handshake);
+            let used_in_score = reliability_weight > 0.0 && handshake.bfo_hz.is_some();
             let skip_reason = if handshake.bfo_hz.is_none() {
                 Some("No measured BFO".to_string())
             } else if !used_in_score {
@@ -759,6 +853,10 @@ mod tests {
             speeds_kts: vec![speed_kts],
             headings_deg: vec![heading_deg],
             log_score: 0.0,
+            speed_log_score: 0.0,
+            heading_log_score: 0.0,
+            northward_log_score: 0.0,
+            bfo_log_score: 0.0,
         }
     }
 
@@ -801,7 +899,51 @@ mod tests {
     }
 
     #[test]
-    fn bfo_scoring_only_uses_good_handshakes() {
+    fn fuel_model_matches_atsb_validated_average() {
+        // ATSB-validated: 33,500 kg burned over ~5.875 hours at LRC (~471 kts).
+        // The weight-corrected model should produce a flight-average burn rate
+        // close to the ATSB value of ~5,702 kg/hr.
+        // Source: Boeing Performance Analysis, Appendix 1.6E.
+        let mut config = AnalysisConfig::default();
+        config.fuel_remaining_at_arc1_kg = 33_500.0; // Boeing estimate
+        let speeds = vec![471.0; 6]; // LRC speed
+        let distance_km = 471.0 * KTS_TO_KM_PER_HR * 5.875; // ~5,120 km
+        let fuel = evaluate_fuel(&speeds, distance_km, &config);
+
+        // Should be close to feasible (within ±2,000 kg of zero)
+        assert!(
+            fuel.fuel_remaining_at_arc7_kg.abs() < 2_000.0,
+            "fuel remaining {} should be close to zero for ATSB-validated path",
+            fuel.fuel_remaining_at_arc7_kg,
+        );
+
+        // Effective average burn rate should be close to 5,702 kg/hr
+        let fuel_used = config.fuel_remaining_at_arc1_kg - fuel.fuel_remaining_at_arc7_kg;
+        let effective_avg = fuel_used / 5.875;
+        assert!(
+            (effective_avg - 5_702.0).abs() < 500.0,
+            "effective average {} should be near ATSB 5,702 kg/hr",
+            effective_avg,
+        );
+    }
+
+    #[test]
+    fn fuel_feasible_at_moderate_speed_and_distance() {
+        // A path at 460 kts covering 5,000 km should be fuel-feasible
+        // with the updated default of 34,500 kg starting fuel.
+        let config = AnalysisConfig::default();
+        let speeds = vec![460.0; 6];
+        let fuel = evaluate_fuel(&speeds, 5_000.0, &config);
+
+        assert!(
+            fuel.fuel_feasible,
+            "460 kts / 5000 km path should be feasible with 34,500 kg, got {} kg remaining",
+            fuel.fuel_remaining_at_arc7_kg,
+        );
+    }
+
+    #[test]
+    fn bfo_scoring_downweights_uncertain_handshakes() {
         let config = AnalysisConfig::default();
         let satellite = test_satellite();
         let model = BfoModel::calibrate(&satellite, &config).unwrap();
@@ -834,7 +976,7 @@ mod tests {
             &config,
         )
         .unwrap();
-        let skipped = score_bfo_handshake(
+        let uncertain_score = score_bfo_handshake(
             &model,
             &satellite,
             &uncertain,
@@ -847,7 +989,8 @@ mod tests {
         .unwrap();
 
         assert!(weighted < 1.0);
-        assert_eq!(skipped, 1.0);
+        assert!(uncertain_score < 1.0);
+        assert!(uncertain_score > weighted);
     }
 
     #[test]
@@ -892,6 +1035,10 @@ mod tests {
             speeds_kts: vec![470.0, 465.0],
             headings_deg: vec![190.0, 185.0],
             log_score: 0.0,
+            speed_log_score: 0.0,
+            heading_log_score: 0.0,
+            northward_log_score: 0.0,
+            bfo_log_score: 0.0,
         };
 
         let handshake_refs: Vec<&InmarsatHandshake> = handshakes.iter().collect();
