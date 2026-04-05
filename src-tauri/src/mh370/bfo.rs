@@ -241,23 +241,99 @@ fn downlink_doppler_hz(sat_pos: Vec3, sat_vel: Vec3) -> f64 {
 }
 
 // ---------------------------------------------------------------------------
+// ATSB/Inmarsat per-arc corrections
+// ---------------------------------------------------------------------------
+
+/// Combined satellite transponder oscillator (δf_sat) and Enhanced AFC (δf_AFC)
+/// correction, provided by Inmarsat to the MH370 Flight Path Reconstruction Group.
+///
+/// These values capture the satellite's internal oscillator thermal drift
+/// (affected by eclipse, solar angle, heater cycling) and the Perth GES AFC
+/// receiver's partial compensation (using a 24-hour moving average of the
+/// Burum Pilot signal).
+///
+/// Source: ATSB via Holland 2017; joewragg/MH370 GitHub (ATSB appendix data).
+/// Ref: Holland 2017, arXiv:1702.02432, Section III.
+const ATSB_CORRECTIONS: &[(f64, f64)] = &[
+    // (time_s after 16:00 UTC epoch, δf_sat + δf_AFC in Hz)
+    // Arc 1: 18:25:27 UTC
+    (2.0 * 3600.0 + 25.0 * 60.0 + 27.0, 10.8),
+    // Arc 2: 19:41:02 UTC
+    (3.0 * 3600.0 + 41.0 * 60.0 + 2.0, -1.2),
+    // Arc 3: 20:41:04 UTC
+    (4.0 * 3600.0 + 41.0 * 60.0 + 4.0, -1.3),
+    // Arc 4: 21:41:26 UTC
+    (5.0 * 3600.0 + 41.0 * 60.0 + 26.0, -17.9),
+    // Arc 5: 22:41:21 UTC
+    (6.0 * 3600.0 + 41.0 * 60.0 + 21.0, -28.5),
+    // Arc 6 (phone call): 23:14:01 UTC — interpolated between Arc 5 and Arc 6b
+    (7.0 * 3600.0 + 14.0 * 60.0 + 1.0, -33.1),
+    // Arc 6b: 00:10:58 UTC
+    (8.0 * 3600.0 + 10.0 * 60.0 + 58.0, -37.7),
+    // Arc 7: 00:19:29 UTC
+    (8.0 * 3600.0 + 19.0 * 60.0 + 29.0, -38.0),
+];
+
+/// ATSB constant bias (δf_bias): SDU oscillator offset.
+/// Source: ATSB via Holland 2017; independently confirmed by Duncan Steel
+/// and Richard Godfrey analyses.
+#[allow(dead_code)]
+const ATSB_BIAS_HZ: f64 = 152.5;
+
+/// Interpolate the δf_sat + δf_AFC correction at a given time.
+/// Uses linear interpolation between the tabulated ATSB values.
+/// Clamps to the nearest value outside the tabulated range.
+fn interpolate_atsb_correction(time_s: f64) -> f64 {
+    if ATSB_CORRECTIONS.is_empty() {
+        return 0.0;
+    }
+    let first = ATSB_CORRECTIONS[0];
+    let last = ATSB_CORRECTIONS[ATSB_CORRECTIONS.len() - 1];
+
+    if time_s <= first.0 {
+        return first.1;
+    }
+    if time_s >= last.0 {
+        return last.1;
+    }
+
+    for window in ATSB_CORRECTIONS.windows(2) {
+        let (t0, v0) = window[0];
+        let (t1, v1) = window[1];
+        if time_s >= t0 && time_s <= t1 {
+            let frac = (time_s - t0) / (t1 - t0);
+            return v0 + frac * (v1 - v0);
+        }
+    }
+    last.1
+}
+
+// ---------------------------------------------------------------------------
 // BFO model
 // ---------------------------------------------------------------------------
 
-/// Calibrated BFO model.
+/// BFO model implementing the full DSTG/Holland decomposition with
+/// ATSB-provided per-arc corrections.
 ///
-/// Implements Holland 2017 Eq. (1):
-///   BFO = Δf_up + Δf_comp + Δf_down + bias
+/// BFO = Δf_up + Δf_comp + Δf_down + δf_sat + δf_AFC + δf_bias
 ///
-/// The bias absorbs: SDU oscillator offset (δf_bias), satellite transponder
-/// frequency variation (δf_sat), and AFC correction (δf_AFC). These are
-/// approximately constant over the flight.
+/// Where δf_sat + δf_AFC are interpolated from ATSB tabulated values
+/// and δf_bias is the ATSB constant (152.5 Hz).
+///
+/// Source: Holland 2017, arXiv:1702.02432, Eq. (1)-(4);
+///         ATSB correction data via joewragg/MH370.
 pub struct BfoModel {
+    /// δf_bias: SDU oscillator offset (Hz). Uses ATSB value by default,
+    /// or calibrated from ground logon if ATSB value doesn't match.
     bias: f64,
 }
 
 impl BfoModel {
-    /// Calibrate using the 16:00:13 ground logon (aircraft stationary at KLIA gate).
+    /// Calibrate using the 16:00:13 ground logon.
+    ///
+    /// Computes the bias as the residual between the measured BFO and the
+    /// predicted BFO (Doppler + ATSB correction) at the ground calibration
+    /// point. This should be close to the ATSB constant of 152.5 Hz.
     pub fn calibrate(satellite: &SatelliteModel, config: &AnalysisConfig) -> Result<Self, String> {
         let dataset = load_dataset(config)?;
         let handshake = dataset
@@ -282,7 +358,8 @@ impl BfoModel {
         let doppler = Self::total_doppler_hz(
             satellite, lat, lon, 0.0, 0.0, 0.0, time_s, config,
         )?;
-        let bias = measured_bfo - doppler;
+        let correction = interpolate_atsb_correction(time_s);
+        let bias = measured_bfo - doppler - correction;
         Ok(BfoModel { bias })
     }
 
@@ -319,6 +396,8 @@ impl BfoModel {
     }
 
     /// Predict BFO (Hz) for a given aircraft state.
+    ///
+    /// BFO = Δf_up + Δf_comp + Δf_down + (δf_sat + δf_AFC) + δf_bias
     pub fn predict(
         &self,
         satellite: &SatelliteModel,
@@ -333,7 +412,8 @@ impl BfoModel {
             satellite, pos.lat, pos.lon, heading_deg, speed_kts, vertical_speed_fpm,
             time_s, config,
         )?;
-        Ok(doppler + self.bias)
+        let correction = interpolate_atsb_correction(time_s);
+        Ok(doppler + correction + self.bias)
     }
 
     /// BFO residual: predicted - measured (Hz).

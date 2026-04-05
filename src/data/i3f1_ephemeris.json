@@ -1,5 +1,25 @@
 [
     {
+        "utc_hours": 16.000,
+        "x_km": 18118.888,
+        "y_km": 38081.754,
+        "z_km": 706.675,
+        "vx": 0.002243,
+        "vy": -0.000873,
+        "vz": 0.071251,
+        "_source": "PAR5 parametric ephemeris (Rydberg), validated to 58m vs GMAT"
+    },
+    {
+        "utc_hours": 16.250,
+        "x_km": 18120.891,
+        "y_km": 38080.917,
+        "z_km": 769.236,
+        "vx": 0.002207,
+        "vy": -0.000982,
+        "vz": 0.067722,
+        "_source": "PAR5 parametric ephemeris (Rydberg)"
+    },
+    {
         "utc_hours": 16.500,
         "x_km": 18122.9,
         "y_km": 38080.0,
