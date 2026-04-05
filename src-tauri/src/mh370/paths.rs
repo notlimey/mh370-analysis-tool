@@ -606,6 +606,7 @@ fn score_bfo_handshake(
             time_s,
             measured_bfo,
             config,
+            0.0,
         )?
         .abs();
     Ok(gaussian_score(residual, config.bfo_sigma_hz))
@@ -639,7 +640,15 @@ fn build_bfo_diagnostics(
             };
             let time_s = parse_time_utc_seconds(&handshake.time_utc)?;
             let predicted_bfo_hz = if handshake.bfo_hz.is_some() {
-                Some(model.predict(satellite, *pos, *heading_deg, *speed_kts, time_s, config)?)
+                Some(model.predict(
+                    satellite,
+                    *pos,
+                    *heading_deg,
+                    *speed_kts,
+                    time_s,
+                    config,
+                    0.0,
+                )?)
             } else {
                 None
             };

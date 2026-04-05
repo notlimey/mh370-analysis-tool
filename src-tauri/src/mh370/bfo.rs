@@ -120,7 +120,12 @@ fn satellite_ecef(
 // ---------------------------------------------------------------------------
 
 /// Aircraft velocity in ECEF (km/s) from position, heading (deg), ground speed (km/s).
-fn aircraft_velocity_ecef(pos: LatLon, heading_deg: f64, speed_km_s: f64) -> Vec3 {
+fn aircraft_velocity_ecef(
+    pos: LatLon,
+    heading_deg: f64,
+    speed_km_s: f64,
+    vertical_speed_km_s: f64,
+) -> Vec3 {
     let lat = to_rad(pos.lat);
     let lon = to_rad(pos.lon);
     let hdg = to_rad(heading_deg);
@@ -129,10 +134,21 @@ fn aircraft_velocity_ecef(pos: LatLon, heading_deg: f64, speed_km_s: f64) -> Vec
     let v_north = speed_km_s * hdg.cos();
     let v_east = speed_km_s * hdg.sin();
 
-    Vec3 {
+    let horizontal = Vec3 {
         x: -v_north * lat.sin() * lon.cos() - v_east * lon.sin(),
         y: -v_north * lat.sin() * lon.sin() + v_east * lon.cos(),
         z: v_north * lat.cos(),
+    };
+    let up = Vec3 {
+        x: lat.cos() * lon.cos(),
+        y: lat.cos() * lon.sin(),
+        z: lat.sin(),
+    };
+
+    Vec3 {
+        x: horizontal.x + up.x * vertical_speed_km_s,
+        y: horizontal.y + up.y * vertical_speed_km_s,
+        z: horizontal.z + up.z * vertical_speed_km_s,
     }
 }
 
@@ -169,8 +185,11 @@ impl BfoModel {
     /// the combined bias. The satellite position comes from the same model used
     /// for BTO arc calculations, ensuring consistency.
     pub fn calibrate(satellite: &SatelliteModel, config: &AnalysisConfig) -> Result<Self, String> {
-        let rr = Self::raw_range_rate(satellite, KLIA, 0.0, 0.0, 0.0, config)?;
-        let bias = BFO_GROUND - (F_UPLINK_HZ / C_M_S) * rr;
+        // Calibration should not apply aircraft horizontal velocity because it's at the gate,
+        // but raw_range_rate uses the provided speed (0.0). So it works.
+        let time_s = super::data::parse_time_utc_seconds("16:00:13.406")?;
+        let rr = Self::raw_range_rate(satellite, KLIA, 0.0, 0.0, time_s, config, 0.0)?;
+        let bias = BFO_GROUND - (-(F_UPLINK_HZ / C_M_S) * rr);
         Ok(BfoModel { bias })
     }
 
@@ -182,15 +201,39 @@ impl BfoModel {
         speed_kts: f64,
         time_s: f64,
         config: &AnalysisConfig,
+        vertical_speed_fpm: f64,
     ) -> Result<f64, String> {
         let speed_km_s = speed_kts * 1.852 / 3600.0;
+        let vertical_speed_km_s = vertical_speed_fpm * 0.0003048 / 60.0;
 
         let ac_pos = to_ecef(pos.lat, pos.lon, AIRCRAFT_ALT_KM);
-        let ac_vel = aircraft_velocity_ecef(pos, heading_deg, speed_km_s);
+        let ac_vel = aircraft_velocity_ecef(pos, heading_deg, speed_km_s, vertical_speed_km_s);
         let (sat_pos, sat_vel) = satellite_ecef(satellite, time_s, config)?;
 
-        // range_rate in km/s → convert to m/s
-        Ok(range_rate(ac_pos, ac_vel, sat_pos, sat_vel) * 1000.0)
+        // 1. Actual range rate
+        let actual_rr = range_rate(sat_pos, sat_vel, ac_pos, ac_vel);
+
+        // 2. AES compensated range rate (assumes satellite at nominal position with 0 velocity)
+        // MH370 AES pre-compensated for satellite Doppler using an assumed fixed satellite position
+        let nom_sat_pos = to_ecef(
+            config.satellite_nominal_lat_deg,
+            config.satellite_nominal_lon_deg,
+            35786.0, // GEO altitude
+        );
+        let nom_sat_vel = Vec3 {
+            x: 0.0,
+            y: 0.0,
+            z: 0.0,
+        };
+        // The AES incorrectly applies Doppler compensation as if the aircraft is flying relative to
+        // the *nominal* satellite position rather than the *actual* satellite position.
+        // Also it usually does not compensate for vertical speed, but standard implementation uses 3D ECEF velocity
+        let comp_rr = range_rate(nom_sat_pos, nom_sat_vel, ac_pos, ac_vel);
+
+        // Actual Doppler = - (actual_rr / c) * f_uplink
+        // AES Compensation = + (comp_rr / c) * f_uplink
+        // Uncompensated range rate (km/s) -> m/s
+        Ok((actual_rr - comp_rr) * 1000.0)
     }
 
     /// Predict BFO (Hz) for a given aircraft state.
@@ -202,9 +245,25 @@ impl BfoModel {
         speed_kts: f64,
         time_s: f64,
         config: &AnalysisConfig,
+        vertical_speed_fpm: f64,
     ) -> Result<f64, String> {
-        let rr = Self::raw_range_rate(satellite, pos, heading_deg, speed_kts, time_s, config)?;
-        Ok((F_UPLINK_HZ / C_M_S) * rr + self.bias)
+        let rr = Self::raw_range_rate(
+            satellite,
+            pos,
+            heading_deg,
+            speed_kts,
+            time_s,
+            config,
+            vertical_speed_fpm,
+        )?;
+        // Range rate is (Actual - Compensated).
+        // Actual BFO equation:
+        // Downlink doppler is absorbed into bias.
+        // Uplink doppler: f_uplink * v_rel / c
+        // where v_rel is positive for approaching.
+        // range_rate(sat, ac) is positive when separating (distance increasing)
+        // so approaching velocity is -rr
+        Ok(-(F_UPLINK_HZ / C_M_S) * rr + self.bias)
     }
 
     /// BFO residual: predicted - measured (Hz).
@@ -217,8 +276,17 @@ impl BfoModel {
         time_s: f64,
         measured_bfo: f64,
         config: &AnalysisConfig,
+        vertical_speed_fpm: f64,
     ) -> Result<f64, String> {
-        Ok(self.predict(satellite, pos, heading_deg, speed_kts, time_s, config)? - measured_bfo)
+        Ok(self.predict(
+            satellite,
+            pos,
+            heading_deg,
+            speed_kts,
+            time_s,
+            config,
+            vertical_speed_fpm,
+        )? - measured_bfo)
     }
 
     /// Score a candidate point on the 7th arc by finding the best-matching heading.
@@ -241,7 +309,16 @@ impl BfoModel {
             for spd_i in 0..7 {
                 let speed = 400.0 + spd_i as f64 * 20.0;
                 let r = self
-                    .residual(satellite, pos, heading, speed, time_s, measured_bfo, config)?
+                    .residual(
+                        satellite,
+                        pos,
+                        heading,
+                        speed,
+                        time_s,
+                        measured_bfo,
+                        config,
+                        0.0,
+                    )?
                     .abs();
                 if r < best_residual {
                     best_residual = r;
