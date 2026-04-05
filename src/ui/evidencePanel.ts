@@ -5,8 +5,17 @@ interface EvidencePanelCallbacks {
   onSelectAnomaly: (id: string | null) => void;
 }
 
+export interface EvidenceSelection {
+  kind: "none" | "anomaly" | "info";
+  id: string | null;
+  title?: string;
+  subtitle?: string;
+}
+
 let onSelectAnomalyCallback: ((id: string | null) => void) | null = null;
 let selectedAnomalyId: string | null = null;
+let currentEvidenceSelection: EvidenceSelection = { kind: "none", id: null };
+const selectionListeners: Array<(selection: EvidenceSelection) => void> = [];
 
 export async function initEvidencePanel(callbacks: EvidencePanelCallbacks): Promise<void> {
   onSelectAnomalyCallback = callbacks.onSelectAnomaly;
@@ -42,6 +51,12 @@ export function openAnomalyDetail(id: string): void {
   if (!anomaly) return;
 
   selectedAnomalyId = id;
+  currentEvidenceSelection = {
+    kind: "anomaly",
+    id,
+    title: anomaly.title,
+    subtitle: anomaly.source,
+  };
   const panel = document.getElementById("evidence-panel");
   const body = document.getElementById("evidence-body");
   if (!panel || !body) return;
@@ -49,16 +64,19 @@ export function openAnomalyDetail(id: string): void {
   panel.classList.add("active");
   body.innerHTML = renderAnomaly(anomaly);
   wireRelationButtons(body);
+  notifySelectionListeners();
 }
 
 export function clearEvidenceSelection(): void {
   selectedAnomalyId = null;
+  currentEvidenceSelection = { kind: "none", id: null };
   const panel = document.getElementById("evidence-panel");
   if (panel) {
     panel.classList.remove("active");
   }
   renderEmptyState();
   onSelectAnomalyCallback?.(null);
+  notifySelectionListeners();
 }
 
 export function openInfoDetail(id: string): void {
@@ -66,6 +84,12 @@ export function openInfoDetail(id: string): void {
   if (!info) return;
 
   selectedAnomalyId = null;
+  currentEvidenceSelection = {
+    kind: "info",
+    id,
+    title: info.title,
+    subtitle: info.subtitle,
+  };
   const panel = document.getElementById("evidence-panel");
   const body = document.getElementById("evidence-body");
   if (!panel || !body) return;
@@ -73,10 +97,19 @@ export function openInfoDetail(id: string): void {
   panel.classList.add("active");
   body.innerHTML = renderInfo(info);
   onSelectAnomalyCallback?.(null);
+  notifySelectionListeners();
 }
 
 export function getSelectedAnomalyId(): string | null {
   return selectedAnomalyId;
+}
+
+export function getEvidenceSelection(): EvidenceSelection {
+  return { ...currentEvidenceSelection };
+}
+
+export function onEvidenceSelectionChange(listener: (selection: EvidenceSelection) => void): void {
+  selectionListeners.push(listener);
 }
 
 function renderEmptyState(): void {
@@ -190,4 +223,10 @@ function wireRelationButtons(root: HTMLElement): void {
 
 function labelize(value: string): string {
   return value.split("_").join(" ");
+}
+
+function notifySelectionListeners(): void {
+  for (const listener of selectionListeners) {
+    listener(getEvidenceSelection());
+  }
 }

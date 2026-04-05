@@ -12,8 +12,8 @@ use super::drift_transport::{
 
 const N_PARTICLES_BEACH: usize = 200;
 const BEACHING_MAX_DAYS: usize = 900;
-const BEACH_CURRENT_NOISE_MPS: f64 = 0.04;
-const BEACH_WIND_NOISE_MPS: f64 = 0.02;
+const BEACH_CURRENT_NOISE_MPS: f64 = 0.12;
+const BEACH_WIND_NOISE_MPS: f64 = 0.05;
 
 #[derive(Debug, Clone)]
 pub struct DriftProfile {
@@ -252,8 +252,8 @@ impl LandHit {
             LandHit::None => 0.0,
             LandHit::Reunion => 0.82,
             LandHit::Mauritius => 0.78,
-            LandHit::MadagascarEast => 0.62,
-            LandHit::MadagascarWest => 0.62,
+            LandHit::MadagascarEast => 0.35,
+            LandHit::MadagascarWest => 0.40,
             LandHit::AfricaEast => 0.38,
             LandHit::AfricaSouth => 0.46,
             LandHit::WesternAustralia => 0.24,
@@ -285,11 +285,40 @@ fn push_particle_offshore(
     beach_lon: f64,
 ) -> (f64, f64) {
     let offshore_km = 18.0;
+    let mad_offshore_km = 40.0;
     match hit {
-        LandHit::AfricaEast => (beach_lat, beach_lon + lon_offset_km(beach_lat, offshore_km)),
+        LandHit::AfricaEast => {
+            // South of -18°S: Agulhas/Mozambique Channel carries debris southward along coast.
+            // The current is strong enough (~0.1-0.15 m/s) to sweep debris past the coast.
+            if beach_lat < -18.0 {
+                let agulhas_strength = ((-18.0 - beach_lat) / 12.0).clamp(0.0, 1.0);
+                let south_km = lerp(40.0, 120.0, agulhas_strength);
+                (beach_lat - lat_offset_km(south_km), beach_lon + lon_offset_km(beach_lat, offshore_km))
+            } else {
+                (beach_lat, beach_lon + lon_offset_km(beach_lat, offshore_km))
+            }
+        }
         LandHit::AfricaSouth => (beach_lat - lat_offset_km(offshore_km), beach_lon),
-        LandHit::MadagascarEast => (beach_lat, beach_lon + lon_offset_km(beach_lat, offshore_km)),
-        LandHit::MadagascarWest => (beach_lat, beach_lon - lon_offset_km(beach_lat, offshore_km)),
+        LandHit::MadagascarEast => {
+            // East Madagascar Current splits flow: deflect north or south along coast.
+            // Stronger deflection near the southern tip to push particles clear of the island.
+            let mid_lat = -18.0;
+            if beach_lat > mid_lat {
+                // Northern half: deflect northward toward the EACC
+                let along_km = 40.0;
+                (beach_lat + lat_offset_km(along_km), beach_lon + lon_offset_km(beach_lat, mad_offshore_km))
+            } else {
+                // Southern half: deflect southward. Stronger near the tip (-25° to -26°S)
+                // so particles escape into the Agulhas system
+                let tip_proximity = ((beach_lat + 20.0) / -6.0).clamp(0.0, 1.0);
+                let along_km = lerp(30.0, 80.0, tip_proximity);
+                (beach_lat - lat_offset_km(along_km), beach_lon + lon_offset_km(beach_lat, mad_offshore_km))
+            }
+        }
+        LandHit::MadagascarWest => {
+            // Mozambique Channel: push southward along west coast
+            (beach_lat - lat_offset_km(25.0), beach_lon - lon_offset_km(beach_lat, mad_offshore_km))
+        }
         LandHit::Reunion | LandHit::Mauritius => {
             let lat_delta = beach_lat - prev_lat;
             let lon_delta = beach_lon - prev_lon;

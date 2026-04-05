@@ -252,14 +252,14 @@ pub fn synthetic_current_field_at(lat: f64, lon: f64, month: u32) -> (f64, f64) 
         gyre_v,
     );
 
-    let sec_weight = smooth_window(lat, -27.0, -9.0, 2.5) * smooth_window(lon, 58.0, 82.0, 4.0);
+    let sec_weight = smooth_window(lat, -27.0, -9.0, 2.5) * smooth_window(lon, 58.0, 105.0, 5.0);
     let sec_t = ((lat + 26.0) / 16.0).clamp(0.0, 1.0);
     add_regime(
         &mut u_sum,
         &mut v_sum,
         &mut weight_sum,
         sec_weight,
-        lerp(-0.10, -0.20, sec_t) * sec_s,
+        lerp(-0.06, -0.12, sec_t) * sec_s,
         lerp(0.01, 0.02, sec_t),
     );
 
@@ -337,7 +337,7 @@ pub fn synthetic_current_field_at(lat: f64, lon: f64, month: u32) -> (f64, f64) 
         lerp(-0.10, -0.02, west_mad_t) * (1.0 + 0.05 * mp),
     );
 
-    let agulhas_weight = smooth_window(lat, -37.0, -23.5, 2.8) * smooth_cap(46.0 - lon, 9.0, 2.5);
+    let agulhas_weight = smooth_window(lat, -37.0, -23.5, 2.8) * smooth_cap(46.0 - lon, 14.0, 3.0);
     let cape_turn = smooth_cap(35.0 - lon, 3.5, 1.2) * smooth_cap(-29.5 - lat, 3.5, 1.2);
     let cape_leak = smooth_cap(31.0 - lon, 3.0, 1.2) * smooth_cap(-32.8 - lat, 2.4, 1.2);
     let leakage = cape_turn.max(cape_leak);
@@ -352,16 +352,44 @@ pub fn synthetic_current_field_at(lat: f64, lon: f64, month: u32) -> (f64, f64) 
         agulhas_v,
     );
 
-    let eacc_weight = smooth_window(lat, -11.0, -1.0, 1.5) * smooth_window(lon, 37.0, 43.0, 1.5);
-    let base_strength = ((lat + 10.0) / 8.0).clamp(0.0, 1.0);
-    let v_base = lerp(-0.03, 0.10, (mp + 1.0) / 2.0) * (1.0 - base_strength * 0.5);
+    // Agulhas leakage: westward transport along South Africa's south coast (~18-30°E)
+    // Models debris carried around Cape Agulhas and along the south coast to Mossel Bay
+    let sa_south_coast_weight = smooth_window(lat, -36.5, -33.0, 1.5)
+        * smooth_window(lon, 17.0, 30.0, 2.0);
+    let sa_coast_t = ((lon - 18.0) / 12.0).clamp(0.0, 1.0);
+    add_regime(
+        &mut u_sum,
+        &mut v_sum,
+        &mut weight_sum,
+        sa_south_coast_weight,
+        lerp(-0.06, -0.12, sa_coast_t),
+        lerp(0.01, -0.02, sa_coast_t),
+    );
+
+    let eacc_weight = smooth_window(lat, -15.0, -1.0, 2.0) * smooth_window(lon, 35.0, 43.0, 2.0);
+    let base_strength = ((lat + 14.0) / 12.0).clamp(0.0, 1.0);
+    let v_base = lerp(-0.02, 0.12, (mp + 1.0) / 2.0) * (1.0 - base_strength * 0.4);
     add_regime(
         &mut u_sum,
         &mut v_sum,
         &mut weight_sum,
         eacc_weight,
-        -0.02,
+        -0.03,
         v_base,
+    );
+
+    // North Madagascar → EACC transition: SEC northern branch rounds Madagascar's tip
+    // and feeds northwestward into the East African coast toward Tanzania
+    let nmad_eacc_weight = smooth_window(lat, -15.0, -8.0, 2.0)
+        * smooth_window(lon, 42.0, 52.0, 2.5);
+    let nmad_t = ((lat + 14.0) / 6.0).clamp(0.0, 1.0);
+    add_regime(
+        &mut u_sum,
+        &mut v_sum,
+        &mut weight_sum,
+        nmad_eacc_weight,
+        lerp(-0.10, -0.06, nmad_t) * (1.0 + 0.15 * mp),
+        lerp(0.04, 0.08, nmad_t) * (1.0 + 0.15 * mp),
     );
 
     let equatorial_weight = smooth_step(lat, -11.0, -8.0);
@@ -381,17 +409,20 @@ pub fn wind_field_at(lat: f64, _lon: f64, leeway_coeff: f64, month: u32) -> (f64
     let mp = monsoon_phase(month);
     let trade_mod = 1.0 + 0.12 * mp;
 
-    if lat >= -35.0 {
+    if lat >= -28.0 {
+        // SE trade winds: WNW-directed forcing on debris (wind from ESE)
         let wind = 9.0 * leeway_coeff * trade_mod;
-        (-wind * 0.65, wind * 0.45)
-    } else if lat >= -42.0 {
-        let t = ((lat + 42.0) / 7.0).clamp(0.0, 1.0);
+        (-wind * 0.75, wind * 0.30)
+    } else if lat >= -37.0 {
+        // Transition zone: trades fade into mid-latitude westerlies
+        let t = ((lat + 37.0) / 9.0).clamp(0.0, 1.0);
         let trade = 8.0 * leeway_coeff * trade_mod;
         let westerly = 10.0 * leeway_coeff;
-        let u = lerp(westerly * 0.5, -trade * 0.55, t);
-        let v = lerp(-westerly * 0.1, trade * 0.35, t);
+        let u = lerp(westerly * 0.5, -trade * 0.65, t);
+        let v = lerp(-westerly * 0.1, trade * 0.25, t);
         (u, v)
     } else {
+        // Roaring Forties: strong westerlies, slight equatorward Ekman drift
         let wind = 11.0 * leeway_coeff;
         (wind * 0.5, -wind * 0.1)
     }

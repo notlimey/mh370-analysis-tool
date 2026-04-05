@@ -57,8 +57,22 @@ pub struct InversionResult {
     pub intersection_lat: f64,
     pub items_used: u32,
     pub items_excluded: u32,
+    pub item_contributions: Vec<ItemContribution>,
     pub validation_ok: bool,
     pub validation_message: String,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct ItemContribution {
+    pub id: String,
+    pub label: String,
+    pub item_type: String,
+    pub confidence: f64,
+    pub uncertainty_km: f64,
+    pub likelihood: f64,
+    pub weighted_log_likelihood: f64,
+    pub contribution_share: f64,
+    pub support_label: String,
 }
 
 pub fn load_debris_items() -> Result<Vec<DebrisItem>, String> {
@@ -161,6 +175,7 @@ where
     let confidence_interval_95 = confidence_interval(&candidates, 0.95, peak.lat);
     let intersection_lat =
         weighted_intersection_lat(peak.lat, satellite_peak_lat, confidence_interval_68);
+    let item_contributions = summarize_item_contributions(&usable_items, peak.lat, peak.lon);
     let validation_ok = validate_drift_model();
     let validation_message = if validation_ok {
         "✓ Drift model validated against Réunion flaperon find".to_string()
@@ -178,8 +193,100 @@ where
         intersection_lat,
         items_used: usable_items.len() as u32,
         items_excluded,
+        item_contributions,
         validation_ok,
         validation_message,
+    }
+}
+
+fn summarize_item_contributions(
+    usable_items: &[&DebrisItem],
+    peak_lat: f64,
+    peak_lon: f64,
+) -> Vec<ItemContribution> {
+    let raw: Vec<(String, String, String, f64, f64, f64, f64)> = usable_items
+        .iter()
+        .map(|item| {
+            let uncertainty_km = item_type_uncertainty_km(&item.item_type);
+            let likelihood = drift_likelihood_with_sigma(
+                peak_lat,
+                peak_lon,
+                item.find_lat,
+                item.find_lon,
+                item.find_date_days,
+                item.leeway_coeff,
+                uncertainty_km,
+            );
+            let weighted_log_likelihood = item.confidence * likelihood.ln();
+            (
+                item.id.clone(),
+                debris_item_label(&item.id, item.find_location.as_deref()),
+                item.item_type.clone(),
+                item.confidence,
+                uncertainty_km,
+                likelihood,
+                weighted_log_likelihood,
+            )
+        })
+        .collect();
+
+    let max_weighted_log = raw
+        .iter()
+        .map(|(_, _, _, _, _, _, weighted_log)| *weighted_log)
+        .fold(f64::NEG_INFINITY, f64::max);
+    let norm_sum = raw
+        .iter()
+        .map(|(_, _, _, _, _, _, weighted_log)| (*weighted_log - max_weighted_log).exp())
+        .sum::<f64>()
+        .max(f64::MIN_POSITIVE);
+
+    let mut contributions: Vec<ItemContribution> = raw
+        .into_iter()
+        .map(
+            |(
+                id,
+                label,
+                item_type,
+                confidence,
+                uncertainty_km,
+                likelihood,
+                weighted_log_likelihood,
+            )| {
+                let contribution_share =
+                    ((weighted_log_likelihood - max_weighted_log).exp() / norm_sum) * 100.0;
+                ItemContribution {
+                    support_label: support_label(likelihood),
+                    id,
+                    label,
+                    item_type,
+                    confidence,
+                    uncertainty_km,
+                    likelihood,
+                    weighted_log_likelihood,
+                    contribution_share,
+                }
+            },
+        )
+        .collect();
+
+    contributions.sort_by(|left, right| {
+        right
+            .weighted_log_likelihood
+            .partial_cmp(&left.weighted_log_likelihood)
+            .unwrap()
+    });
+    contributions
+}
+
+fn support_label(likelihood: f64) -> String {
+    if likelihood >= 0.6 {
+        "strong".to_string()
+    } else if likelihood >= 0.2 {
+        "moderate".to_string()
+    } else if likelihood >= 0.05 {
+        "weak".to_string()
+    } else {
+        "tension".to_string()
     }
 }
 

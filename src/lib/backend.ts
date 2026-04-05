@@ -158,6 +158,18 @@ export interface InversionOriginCandidate {
   contributing_items: number;
 }
 
+export interface InversionItemContribution {
+  id: string;
+  label: string;
+  item_type: string;
+  confidence: number;
+  uncertainty_km: number;
+  likelihood: number;
+  weighted_log_likelihood: number;
+  contribution_share: number;
+  support_label: string;
+}
+
 export interface BackendParticleCloud {
   origin_lat: number;
   origin_lon: number;
@@ -176,6 +188,7 @@ export interface InversionResult {
   intersection_lat: number;
   items_used: number;
   items_excluded: number;
+  item_contributions: InversionItemContribution[];
   validation_ok?: boolean;
   validation_message?: string;
 }

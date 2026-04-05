@@ -1,6 +1,8 @@
 use std::path::Path;
 
 use serde_json::json;
+use time::format_description::well_known::Rfc3339;
+use time::OffsetDateTime;
 
 use super::data::{load_dataset, resolve_config, AnalysisConfig};
 use super::debris_inversion::{load_debris_items, run_joint_inversion, sample_7th_arc};
@@ -61,9 +63,12 @@ pub fn export_debris_inversion_snapshot(
 }
 
 pub fn probability_to_geojson(points: &[ProbPoint], config: &AnalysisConfig) -> serde_json::Value {
+    let summary = probability_summary(points);
     json!({
         "type": "FeatureCollection",
+        "generated_at": generated_at_iso8601(),
         "config": config,
+        "summary": summary,
         "features": points.iter().map(|point| {
             json!({
                 "type": "Feature",
@@ -88,9 +93,12 @@ pub fn probability_to_geojson(points: &[ProbPoint], config: &AnalysisConfig) -> 
 }
 
 pub fn paths_to_geojson(paths: &[FlightPath], config: &AnalysisConfig) -> serde_json::Value {
+    let summary = paths_summary(paths);
     json!({
         "type": "FeatureCollection",
+        "generated_at": generated_at_iso8601(),
         "config": config,
+        "summary": summary,
         "features": paths.iter().enumerate().map(|(index, path)| {
             let average_speed_kts = if path.speeds_kts.is_empty() {
                 0.0
@@ -114,6 +122,35 @@ pub fn paths_to_geojson(paths: &[FlightPath], config: &AnalysisConfig) -> serde_
             })
         }).collect::<Vec<_>>()
     })
+}
+
+fn probability_summary(points: &[ProbPoint]) -> serde_json::Value {
+    let peak = points
+        .iter()
+        .max_by(|left, right| left.probability.partial_cmp(&right.probability).unwrap());
+
+    json!({
+        "peak_probability_lat": peak.map(|point| point.position[1]),
+        "peak_probability_lon": peak.map(|point| point.position[0]),
+        "point_count": points.len(),
+    })
+}
+
+fn paths_summary(paths: &[FlightPath]) -> serde_json::Value {
+    let best = paths.first();
+    let mean_bfo_residual = best.and_then(|path| path.bfo_summary.mean_abs_residual_hz);
+    json!({
+        "best_family": best.map(|path| path.family.clone()),
+        "best_score": best.map(|path| path.score),
+        "path_count": paths.len(),
+        "bfo_mean_abs_residual_hz": mean_bfo_residual,
+    })
+}
+
+fn generated_at_iso8601() -> String {
+    OffsetDateTime::now_utc()
+        .format(&Rfc3339)
+        .unwrap_or_else(|_| "unknown".to_string())
 }
 
 #[cfg(test)]
@@ -140,7 +177,9 @@ mod tests {
         ];
         let json = probability_to_geojson(&points, &AnalysisConfig::default());
         assert_eq!(json["type"], "FeatureCollection");
+        assert!(json["generated_at"].is_string());
         assert!(json["config"].is_object());
+        assert!(json["summary"].is_object());
         assert_eq!(json["features"].as_array().unwrap().len(), 2);
         assert!(json["features"][0]["properties"]["probability"].is_number());
     }

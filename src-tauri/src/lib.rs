@@ -1,6 +1,6 @@
-mod mh370;
+pub mod mh370;
 
-use std::sync::atomic::{AtomicBool, AtomicU64, Ordering};
+use std::sync::atomic::{AtomicU64, Ordering};
 use std::sync::Mutex;
 
 use serde::{Deserialize, Serialize};
@@ -13,7 +13,7 @@ use mh370::arcs::{
     ArcRing, BtoCalibration,
 };
 use mh370::config as mh370_config;
-use mh370::config::ResolvedConfig;
+use mh370::config::{ConfigSource, ResolvedConfig};
 use mh370::data::{handshake_views, load_dataset, HandshakeView};
 use mh370::debris_inversion::{
     load_debris_items, run_joint_inversion_with_progress, sample_7th_arc,
@@ -48,7 +48,7 @@ struct AppState {
     satellite: SatelliteModel,
     resolved_config: Mutex<ResolvedConfig>,
     last_heatmap_peak: AtomicU64,
-    drift_validation_ok: AtomicBool,
+    drift_validation_ok: Mutex<Option<bool>>,
 }
 
 #[derive(Debug, Clone, Serialize)]
@@ -129,7 +129,7 @@ async fn run_debris_inversion(
 ) -> Result<InversionResult, String> {
     let satellite = state.satellite.clone();
     let satellite_peak = f64::from_bits(state.last_heatmap_peak.load(Ordering::Relaxed));
-    let validation_ok = state.drift_validation_ok.load(Ordering::Relaxed);
+    let validation_ok = get_or_compute_drift_validation(&state);
     let config = effective_config(&state, config);
     let satellite_peak_lat = if satellite_peak == 0.0 {
         -34.23
@@ -162,6 +162,22 @@ async fn run_debris_inversion(
     };
 
     Ok(result)
+}
+
+fn get_or_compute_drift_validation(state: &AppState) -> bool {
+    let mut cached = state.drift_validation_ok.lock().unwrap();
+    if let Some(value) = *cached {
+        return value;
+    }
+
+    log_startup("running drift validation on demand");
+    let computed = validate_drift_model();
+    log_startup(&format!(
+        "drift validation: {}",
+        if computed { "ok" } else { "failed" }
+    ));
+    *cached = Some(computed);
+    computed
 }
 
 #[tauri::command]
@@ -406,42 +422,50 @@ fn get_resolved_config(state: State<'_, AppState>) -> ResolvedConfig {
     state.resolved_config.lock().unwrap().clone()
 }
 
+fn log_startup(message: &str) {
+    eprintln!("[mh370] {message}");
+}
+
+fn format_source_count(counts: &std::collections::HashMap<ConfigSource, usize>, source: ConfigSource) -> usize {
+    counts.get(&source).copied().unwrap_or(0)
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
         .setup(|app| {
+            log_startup("booting Tauri backend");
+            log_startup("loading embedded satellite model");
             let satellite = SatelliteModel::load().expect("failed to load embedded I3F1 ephemeris");
             let mut roots = Vec::new();
             if let Ok(resource_dir) = app.path().resource_dir() {
+                log_startup(&format!("resource dir: {}", resource_dir.display()));
                 roots.push(resource_dir);
             }
             if let Ok(cwd) = std::env::current_dir() {
+                log_startup(&format!("working dir: {}", cwd.display()));
                 roots.push(cwd);
             }
 
+            log_startup("resolving analysis config");
             let resolved_config =
                 mh370_config::load_config_from_roots(&roots).map_err(std::io::Error::other)?;
-            let initial_heatmap_peak =
-                run_generate_probability_heatmap(&satellite, Some(resolved_config.config.clone()))
-                    .ok()
-                    .and_then(|points| {
-                        points
-                            .into_iter()
-                            .max_by(|left, right| {
-                                left.probability.partial_cmp(&right.probability).unwrap()
-                            })
-                            .map(|point| point.position[1])
-                    })
-                    .unwrap_or(-34.23);
-            let drift_validation_ok = validate_drift_model();
-
+            let source_counts = resolved_config.source_counts();
+            log_startup(&format!(
+                "config sources: default={} toml={} local={} ui={}",
+                format_source_count(&source_counts, ConfigSource::CompiledDefault),
+                format_source_count(&source_counts, ConfigSource::DefaultToml),
+                format_source_count(&source_counts, ConfigSource::LocalToml),
+                format_source_count(&source_counts, ConfigSource::UiOverride),
+            ));
             app.manage(AppState {
                 satellite,
                 resolved_config: Mutex::new(resolved_config),
-                last_heatmap_peak: AtomicU64::new(initial_heatmap_peak.to_bits()),
-                drift_validation_ok: AtomicBool::new(drift_validation_ok),
+                last_heatmap_peak: AtomicU64::new((-34.23_f64).to_bits()),
+                drift_validation_ok: Mutex::new(None),
             });
 
+            log_startup("backend ready");
             Ok(())
         })
         .plugin(tauri_plugin_opener::init())

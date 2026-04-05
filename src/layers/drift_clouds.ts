@@ -33,11 +33,16 @@ let selectedOriginIdx: number | null = null;
 /** Listeners for selection changes (used by drift sidebar panel) */
 type SelectionListener = (idx: number | null, cloud: BackendBeachingCloud | null) => void;
 const selectionListeners: SelectionListener[] = [];
+const stateSelectionListeners: SelectionListener[] = [];
 
 export function onOriginSelectionChange(listener: SelectionListener): void {
   // Clear previous listeners to avoid stacking on sidebar re-renders
   selectionListeners.length = 0;
   selectionListeners.push(listener);
+}
+
+export function onDriftOriginStateChange(listener: SelectionListener): void {
+  stateSelectionListeners.push(listener);
 }
 
 export function getBeachingClouds(): BackendBeachingCloud[] {
@@ -57,6 +62,9 @@ export function selectOrigin(map: MapboxMap, idx: number | null): void {
 function notifyListeners(): void {
   const cloud = selectedOriginIdx !== null ? allClouds[selectedOriginIdx] ?? null : null;
   for (const listener of selectionListeners) {
+    listener(selectedOriginIdx, cloud);
+  }
+  for (const listener of stateSelectionListeners) {
     listener(selectedOriginIdx, cloud);
   }
 }
@@ -119,9 +127,10 @@ export function initDriftCloudsLayer(map: MapboxMap): void {
     source: SOURCE_DRIFTING,
     paint: {
       "circle-radius": [
-        "case", ["get", "selected"],
-        ["interpolate", ["linear"], ["zoom"], 3, 3.5, 6, 5, 9, 8],
-        ["interpolate", ["linear"], ["zoom"], 3, 2, 6, 3, 9, 4],
+        "interpolate", ["linear"], ["zoom"],
+        3, ["case", ["get", "selected"], 3.5, 2],
+        6, ["case", ["get", "selected"], 5, 3],
+        9, ["case", ["get", "selected"], 8, 4],
       ],
       "circle-color": ["get", "color"],
       "circle-opacity": ["case", ["get", "selected"], 0.6, 0.3],
@@ -320,7 +329,7 @@ function rebuildDynamicSources(map: MapboxMap): void {
     }
 
     // Trace line to centroid of still-drifting particles (so user can find them)
-    if (cloud.still_drifting.length > 0 && showBeaching) {
+    if (cloud.still_drifting.length > 0 && isSelected) {
       const centLon = cloud.still_drifting.reduce((s, p) => s + p[0], 0) / cloud.still_drifting.length;
       const centLat = cloud.still_drifting.reduce((s, p) => s + p[1], 0) / cloud.still_drifting.length;
       traceFeatures.push({
@@ -335,6 +344,7 @@ function rebuildDynamicSources(map: MapboxMap): void {
 
     const coastGroups = groupByCoast(cloud);
     for (const [coast, particles] of Object.entries(coastGroups)) {
+      if (!isSelected) continue;
       if (particles.length === 0) continue;
       const centLon = particles.reduce((s, p) => s + p.lon, 0) / particles.length;
       const centLat = particles.reduce((s, p) => s + p.lat, 0) / particles.length;

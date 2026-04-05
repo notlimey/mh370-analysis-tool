@@ -14,13 +14,17 @@ import {
 } from "../model/config";
 import type { AnalysisConfig } from "../model/config";
 import { getFamilyColor } from "../layers/paths";
+import { loadPinsLayer, refreshPinsLayer, setPinPlacementMode } from "../layers/pins";
 import { ensureModelSummaryPanel, updateModelSummaryPanel } from "./modelSummary";
 import { openInfoDetail } from "./evidencePanel";
 import { SCENARIOS, type ScenarioPreset } from "../model/scenarios";
-import { getSavedRun, listSavedRuns, saveRun } from "../model/runs";
-import { applyScenario, clearScenario } from "../lib/scenarioManager";
+import { getSavedRun, listConfigDiffs, listSavedRuns, saveRun } from "../model/runs";
+import { listSavedPins, removePin, savePin, updatePin } from "../model/pins";
+import type { SavedRun } from "../model/runs";
+import { applyScenario, clearScenario, getActiveScenarioId } from "../lib/scenarioManager";
 import { wireDriftPanel, renderDriftPanel } from "./sidebarDrift";
 import { initInversionControls, renderInversionSection } from "./sidebarInversion";
+import { generateComparisonReport, generateRunReport } from "./report";
 
 interface LayerToggle {
   id: string;
@@ -125,6 +129,7 @@ const LAYER_TOGGLES: LayerToggle[] = [
   { id: "holidays", label: "Data Holidays", infoId: "layer:holidays" },
   { id: "priority", label: "Priority Gaps", infoId: "layer:priority" },
   { id: "points", label: "Key Points", infoId: "layer:points" },
+  { id: "pins", label: "Saved Pins", infoId: "layer:points" },
   { id: "searched", label: "Searched Areas", infoId: "layer:searched" },
   { id: "drift-clouds", label: "Drift Beaching Sim", infoId: "layer:drift-clouds" },
 ];
@@ -164,11 +169,15 @@ let lastCompletedConfig: AnalysisConfig | null = null;
 let lastCompletedResult: ModelResultSummary | null = null;
 let latestResultSummary: ModelResultSummary | null = null;
 let latestRunChanges: RunChange[] = [];
+let selectedComparisonLeft = "";
+let selectedComparisonRight = "";
+let pinPlacementArmed = false;
 
 export function initSidebar(callbacks: SidebarCallbacks): void {
   sidebarCallbacks = callbacks;
   bindSidebarInfoClick();
-  renderSidebar(null);
+  const initialScenario = SCENARIOS.find((scenario) => scenario.id === getActiveScenarioId()) ?? null;
+  renderSidebar(initialScenario);
 }
 
 function bindSidebarInfoClick(): void {
@@ -334,6 +343,13 @@ function renderStandardPanels(): string {
         <div id="layer-toggles"></div>
       </div>
       <div class="sidebar-section-inner">
+        <div class="section-heading"><h2>Pins</h2></div>
+        <div class="button-row">
+          <button id="add-pin-btn" class="btn-secondary">Add Pin</button>
+        </div>
+        <div id="saved-pins-list" class="saved-pins-list"></div>
+      </div>
+      <div class="sidebar-section-inner">
         <div class="section-heading"><h2>Search Coverage</h2><button class="info-icon-button" type="button" data-info-id="section:search" aria-label="About Search Coverage">i</button></div>
         <div id="sonar-toggles" class="sonar-toggles"></div>
         <label class="slider-row">
@@ -379,8 +395,22 @@ function renderStandardPanels(): string {
         <div class="section-heading"><h2>Run History</h2></div>
         <div class="button-row">
           <button id="save-run-btn" class="btn-secondary">Save Run</button>
+          <button id="generate-report-btn" class="btn-secondary">Generate Report</button>
+          <button id="copy-report-btn" class="btn-secondary">Copy Report</button>
         </div>
         <div id="saved-runs-list" class="saved-runs-list"></div>
+      </div>
+      <div class="sidebar-section-inner">
+        <div class="section-heading"><h2>Run Comparison</h2></div>
+        <div class="compare-controls">
+          <select id="compare-left-select" class="scenario-dropdown"></select>
+          <select id="compare-right-select" class="scenario-dropdown"></select>
+        </div>
+        <div id="run-comparison-table" class="run-comparison-table">Select two saved runs to compare.</div>
+      </div>
+      <div class="sidebar-section-inner">
+        <div class="section-heading"><h2>Generated Report</h2></div>
+        <textarea id="generated-report" class="generated-report" readonly>Generate a report from the current run or compare two saved runs.</textarea>
       </div>
       <div class="sidebar-section-inner">
         <div class="section-heading"><h2>Notes</h2><button class="info-icon-button" type="button" data-info-id="section:info" aria-label="About Info">i</button></div>
@@ -441,6 +471,7 @@ function wireStandardPanels(): void {
   renderModelResultsSummary();
   renderConfigInspector();
   renderSavedRuns();
+  renderSavedPins();
   updateModelRunStatus({ state: "idle" });
   updatePriorityHint();
   ensureModelSummaryPanel();
@@ -448,10 +479,20 @@ function wireStandardPanels(): void {
   initInversionControls();
 
   document.getElementById("focus-priority-btn")?.addEventListener("click", focusPriorityGaps);
+  document.getElementById("add-pin-btn")?.addEventListener("click", () => {
+    togglePinPlacement();
+  });
   document.getElementById("run-model-btn")?.addEventListener("click", onRunModel);
   document.getElementById("save-run-btn")?.addEventListener("click", () => {
     saveCurrentRun();
     renderSavedRuns();
+    renderRunComparison();
+  });
+  document.getElementById("generate-report-btn")?.addEventListener("click", () => {
+    renderGeneratedReport();
+  });
+  document.getElementById("copy-report-btn")?.addEventListener("click", () => {
+    void copyGeneratedReport();
   });
   document.getElementById("reset-model-btn")?.addEventListener("click", () => {
     resetAnalysisConfig();
@@ -557,6 +598,8 @@ function syncModelControls(): void {
     if (input) input.value = String(config[key]);
   }
   renderConfigInspector();
+  renderRunComparison();
+  renderGeneratedReport();
 }
 
 function refreshAssumptionDisplay(): void {
@@ -640,6 +683,181 @@ function renderSavedRuns(): void {
   });
 }
 
+function renderSavedPins(): void {
+  const container = document.getElementById("saved-pins-list");
+  if (!container) return;
+
+  const pins = listSavedPins();
+  if (pins.length === 0) {
+    container.innerHTML = '<div class="toggle-note">No saved pins yet.</div>';
+    return;
+  }
+
+  container.innerHTML = pins.map((pin) => `
+    <div class="saved-pin-row">
+      <input class="saved-pin-label" type="text" data-pin-id="${pin.id}" value="${escapeHtml(pin.label)}" />
+      <button class="saved-pin-remove" type="button" data-pin-remove-id="${pin.id}">Remove</button>
+      <div class="saved-pin-coordinates">${pin.coordinates[1].toFixed(3)}, ${pin.coordinates[0].toFixed(3)}</div>
+    </div>
+  `).join("");
+
+  container.querySelectorAll<HTMLInputElement>(".saved-pin-label[data-pin-id]").forEach((input) => {
+    input.addEventListener("change", () => {
+      const id = input.dataset.pinId;
+      if (!id) return;
+      updatePin(id, { label: input.value.trim() || input.defaultValue });
+      reloadPinsUiAndLayer();
+    });
+  });
+  container.querySelectorAll<HTMLButtonElement>(".saved-pin-remove[data-pin-remove-id]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const id = button.dataset.pinRemoveId;
+      if (!id) return;
+      removePin(id);
+      reloadPinsUiAndLayer();
+    });
+  });
+}
+
+function togglePinPlacement(): void {
+  pinPlacementArmed = !pinPlacementArmed;
+  const map = getMap();
+  const button = document.getElementById("add-pin-btn") as HTMLButtonElement | null;
+  if (button) {
+    button.textContent = pinPlacementArmed ? "Click Map…" : "Add Pin";
+  }
+  setPinPlacementMode(map, pinPlacementArmed, pinPlacementArmed ? (coordinates) => {
+    const label = window.prompt("Label for pin:", `Point ${listSavedPins().length + 1}`) ?? "";
+    savePin(coordinates, label);
+    pinPlacementArmed = false;
+    if (button) button.textContent = "Add Pin";
+    reloadPinsUiAndLayer();
+  } : null);
+}
+
+function reloadPinsUiAndLayer(): void {
+  const map = getMap();
+  loadPinsLayer(map);
+  refreshPinsLayer(map);
+  renderSavedPins();
+}
+
+function escapeHtml(value: string): string {
+  return value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
+function renderRunComparison(): void {
+  const leftSelect = document.getElementById("compare-left-select") as HTMLSelectElement | null;
+  const rightSelect = document.getElementById("compare-right-select") as HTMLSelectElement | null;
+  const table = document.getElementById("run-comparison-table");
+  if (!leftSelect || !rightSelect || !table) return;
+
+  const runs = listSavedRuns();
+  const options = ['<option value="">Select run</option>', ...runs.map((run) => (
+    `<option value="${run.id}">${formatSavedRunTime(run.timestamp)} · ${run.summary.bestFamily ?? "No viable path"}</option>`
+  ))].join("");
+  leftSelect.innerHTML = options;
+  rightSelect.innerHTML = options;
+  if (selectedComparisonLeft) leftSelect.value = selectedComparisonLeft;
+  if (selectedComparisonRight) rightSelect.value = selectedComparisonRight;
+
+  leftSelect.onchange = () => {
+    selectedComparisonLeft = leftSelect.value;
+    renderRunComparison();
+    renderGeneratedReport();
+  };
+  rightSelect.onchange = () => {
+    selectedComparisonRight = rightSelect.value;
+    renderRunComparison();
+    renderGeneratedReport();
+  };
+
+  const left = selectedComparisonLeft ? getSavedRun(selectedComparisonLeft) ?? null : null;
+  const right = selectedComparisonRight ? getSavedRun(selectedComparisonRight) ?? null : null;
+  table.innerHTML = buildComparisonTable(left, right);
+}
+
+function buildComparisonTable(left: SavedRun | null, right: SavedRun | null): string {
+  if (!left || !right) {
+    return "Select two saved runs to compare.";
+  }
+
+  const summaryRows = [
+    ["Best family", left.summary.bestFamily ?? "No viable path", right.summary.bestFamily ?? "No viable path"],
+    ["Best score", left.summary.bestScore?.toFixed(3) ?? "--", right.summary.bestScore?.toFixed(3) ?? "--"],
+    ["Peak", formatOptionalLatLon(left.summary.peakLat, left.summary.peakLon), formatOptionalLatLon(right.summary.peakLat, right.summary.peakLon)],
+    ["Path count", String(left.summary.pathCount), String(right.summary.pathCount)],
+    ["BFO residual", formatOptionalHz(left.summary.bfoMeanAbsResidualHz), formatOptionalHz(right.summary.bfoMeanAbsResidualHz)],
+    ["Searched overlap", left.summary.searchedOverlapLabel ?? "--", right.summary.searchedOverlapLabel ?? "--"],
+    ["Continuation", left.summary.continuationLabel ?? "--", right.summary.continuationLabel ?? "--"],
+  ];
+  const configDiffs = listConfigDiffs(left.config, right.config);
+
+  const summaryMarkup = summaryRows.map(([label, leftValue, rightValue]) => `
+    <div class="run-comparison-row">
+      <span class="run-comparison-label">${label}</span>
+      <span class="run-comparison-value">${leftValue}</span>
+      <span class="run-comparison-value">${rightValue}</span>
+    </div>
+  `).join("");
+
+  const configMarkup = configDiffs.length === 0
+    ? '<div class="toggle-note">No config diffs.</div>'
+    : configDiffs.map((diff) => `
+      <div class="run-comparison-row run-comparison-row--config">
+        <span class="run-comparison-label">${String(diff.key)}</span>
+        <span class="run-comparison-value">${diff.left}</span>
+        <span class="run-comparison-value">${diff.right}</span>
+      </div>
+    `).join("");
+
+  return `
+    <div class="run-comparison-group-title">Result Diffs</div>
+    ${summaryMarkup}
+    <div class="run-comparison-group-title">Config Diffs</div>
+    ${configMarkup}
+  `;
+}
+
+function renderGeneratedReport(): void {
+  const report = document.getElementById("generated-report") as HTMLTextAreaElement | null;
+  if (!report) return;
+
+  const left = selectedComparisonLeft ? getSavedRun(selectedComparisonLeft) ?? null : null;
+  const right = selectedComparisonRight ? getSavedRun(selectedComparisonRight) ?? null : null;
+  if (left && right) {
+    report.value = generateComparisonReport(left, right);
+    return;
+  }
+  if (latestResultSummary) {
+    report.value = generateRunReport(
+      "Current Run",
+      getAnalysisConfig(),
+      latestResultSummary,
+      "Generated from the current in-app state.",
+    );
+    return;
+  }
+  report.value = "Generate a report from the current run or compare two saved runs.";
+}
+
+async function copyGeneratedReport(): Promise<void> {
+  const report = document.getElementById("generated-report") as HTMLTextAreaElement | null;
+  if (!report || !report.value.trim()) return;
+
+  try {
+    await navigator.clipboard.writeText(report.value);
+  } catch {
+    report.select();
+    document.execCommand("copy");
+    report.setSelectionRange(0, 0);
+  }
+}
+
 function saveCurrentRun(): void {
   if (!latestResultSummary) {
     window.alert("Run the model once before saving a run snapshot.");
@@ -658,6 +876,9 @@ function saveCurrentRun(): void {
       peakLon: latestResultSummary.peakLon,
       pathCount: latestResultSummary.pathCount,
       heatmapCount: latestResultSummary.heatmapCount,
+      searchedOverlapLabel: latestResultSummary.searchedOverlapLabel,
+      continuationLabel: latestResultSummary.continuationLabel,
+      bfoMeanAbsResidualHz: latestResultSummary.bfoMeanAbsResidualHz,
     },
     notes,
   });

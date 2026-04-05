@@ -11,6 +11,7 @@ import { getAnalysisConfig } from "../model/config";
 import { showDriftConfigModal } from "./driftConfigModal";
 import { hideDriftProgress, showDriftProgress, updateDriftProgress } from "./driftProgress";
 import { initInversionControls, renderInversionSection } from "./sidebarInversion";
+import { markDriftRunCompleted } from "../lib/workspaceState";
 
 const ACTUAL_FIND_NAMES = [
   "Flaperon, Réunion",
@@ -131,6 +132,7 @@ async function handleRunDriftSimulation(config: { nParticles: number; nOrigins: 
 
     const map = getMap();
     populateDriftClouds(map, clouds);
+    markDriftRunCompleted(getAnalysisConfig(), new Date());
 
     const originsSection = document.getElementById("drift-origins-section");
     if (originsSection) originsSection.style.display = "";

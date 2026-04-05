@@ -7,6 +7,9 @@ export interface SavedRunSummary {
   peakLon?: number;
   pathCount: number;
   heatmapCount: number;
+  searchedOverlapLabel?: string;
+  continuationLabel?: string;
+  bfoMeanAbsResidualHz?: number;
 }
 
 export interface SavedRun {
@@ -42,4 +45,18 @@ export function saveRun(run: SavedRun): void {
 
 export function getSavedRun(id: string): SavedRun | undefined {
   return listSavedRuns().find((run) => run.id === id);
+}
+
+export function listConfigDiffs(left: AnalysisConfig, right: AnalysisConfig): Array<{
+  key: keyof AnalysisConfig;
+  left: string;
+  right: string;
+}> {
+  return (Object.keys(left) as (keyof AnalysisConfig)[])
+    .filter((key) => left[key] !== right[key])
+    .map((key) => ({
+      key,
+      left: String(left[key]),
+      right: String(right[key]),
+    }));
 }

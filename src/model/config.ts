@@ -1,5 +1,6 @@
 import { getResolvedConfig } from "../lib/backend";
 import type { BackendResolvedConfig, ConfigSource } from "../lib/backend";
+import { getStoredAnalysisConfig, setStoredAnalysisConfig } from "./session";
 
 export interface AnalysisConfig {
   dataset_path: string;
@@ -43,16 +44,23 @@ let resolvedConfigState: BackendResolvedConfig = {
   config: {} as AnalysisConfig,
   sources: {},
 };
+const configChangeListeners: Array<(config: AnalysisConfig) => void> = [];
 
 export async function initConfig(): Promise<AnalysisConfig> {
   const resolved = await getResolvedConfig();
+  const storedConfig = getStoredAnalysisConfig();
   resolvedConfigState = {
     config: { ...resolved.config },
     sources: { ...resolved.sources },
   };
   defaultAnalysisConfig = { ...resolved.config };
-  currentAnalysisConfig = { ...resolved.config };
+  currentAnalysisConfig = { ...resolved.config, ...storedConfig };
+  setStoredAnalysisConfig(currentAnalysisConfig);
   return getAnalysisConfig();
+}
+
+export function onAnalysisConfigChange(listener: (config: AnalysisConfig) => void): void {
+  configChangeListeners.push(listener);
 }
 
 export function getAnalysisConfig(): AnalysisConfig {
@@ -61,11 +69,15 @@ export function getAnalysisConfig(): AnalysisConfig {
 
 export function updateAnalysisConfig(patch: Partial<AnalysisConfig>): AnalysisConfig {
   currentAnalysisConfig = { ...currentAnalysisConfig, ...patch };
+  setStoredAnalysisConfig(currentAnalysisConfig);
+  notifyConfigChangeListeners();
   return getAnalysisConfig();
 }
 
 export function resetAnalysisConfig(): AnalysisConfig {
   currentAnalysisConfig = { ...defaultAnalysisConfig };
+  setStoredAnalysisConfig(currentAnalysisConfig);
+  notifyConfigChangeListeners();
   return getAnalysisConfig();
 }
 
@@ -81,4 +93,11 @@ export function getResolvedConfigView(): BackendResolvedConfig {
     config: getAnalysisConfig(),
     sources,
   };
+}
+
+function notifyConfigChangeListeners(): void {
+  const config = getAnalysisConfig();
+  for (const listener of configChangeListeners) {
+    listener(config);
+  }
 }

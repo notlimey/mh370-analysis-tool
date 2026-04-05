@@ -80,7 +80,7 @@ macro_rules! define_partial_analysis_config {
 
 analysis_config_fields!(define_partial_analysis_config);
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize)]
 pub enum ConfigSource {
     CompiledDefault,
     DefaultToml,
@@ -105,6 +105,14 @@ impl ResolvedConfig {
             config: AnalysisConfig::default(),
             sources,
         }
+    }
+
+    pub fn source_counts(&self) -> HashMap<ConfigSource, usize> {
+        let mut counts = HashMap::new();
+        for source in self.sources.values().copied() {
+            *counts.entry(source).or_insert(0) += 1;
+        }
+        counts
     }
 }
 

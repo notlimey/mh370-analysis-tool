@@ -11,17 +11,37 @@ import { loadPriorityGapsLayer } from "./layers/priority";
 import { loadHeatmapLayer } from "./layers/heatmap";
 import { loadDebrisLayer } from "./layers/debris";
 import { loadPointsLayer } from "./layers/points";
+import { loadPinsLayer } from "./layers/pins";
 import { loadFlightPathLayer } from "./layers/flightpath";
-import { initDriftCloudsLayer } from "./layers/drift_clouds";
-import { initSidebar, renderFamilyLegend, updateConfidence, updateModelResultsSummary, updateModelRunStatus, updateModelSummary } from "./ui/sidebar";
-import { getSelectedAnomalyId, initEvidencePanel, openAnomalyDetail } from "./ui/evidencePanel";
+import { initDriftCloudsLayer, onDriftOriginStateChange } from "./layers/drift_clouds";
+import { initIconRail, setActivePanel } from "./ui/iconRail";
+import { registerPanel, openFlyout, closeFlyout, setOnClose } from "./ui/flyoutShell";
+import { createModelPanel, setModelCallbacks, updateConfidence, updateModelSummary, updateModelResultsSummary, updateModelRunStatus, renderFamilyLegend } from "./ui/panels/modelPanel";
+import { createLayersPanel } from "./ui/panels/layersPanel";
+import { createDriftPanel } from "./ui/panels/driftPanel";
+import { createEvidenceBrowsePanel } from "./ui/panels/evidenceBrowsePanel";
+import { createExportPanel } from "./ui/panels/exportPanel";
+import { getSelectedAnomalyId, initEvidencePanel, onEvidenceSelectionChange, openAnomalyDetail } from "./ui/evidencePanel";
 import { initTimeline } from "./ui/timeline";
 import { setupPopups } from "./popups";
 import type { Map as MapboxMap } from "mapbox-gl";
 import { getProbabilityHeatmap, IS_TAURI, type BackendProbPoint } from "./lib/backend";
 import { setSelectedAnomaly } from "./layers/anomalies";
 import { getAnalysisConfig, initConfig } from "./model/config";
+import { onAnalysisConfigChange } from "./model/config";
 import { SEARCHED_2014_2017, SEARCHED_2018, SEARCHED_2025_2026 } from "./constants";
+import { applyUrlStateFromHash, scheduleUrlStateSync } from "./lib/urlState";
+import { onLayerVisibilityChange } from "./map";
+import { onActiveScenarioChange } from "./lib/scenarioManager";
+import { markModelRunCompleted, markWorkspaceInputsChanged } from "./lib/workspaceState";
+import { showModelConfigModal } from "./ui/modelConfigModal";
+import {
+  downloadSessionSnapshot,
+  persistSessionSnapshot,
+  restoreStoredSessionSnapshot,
+  scheduleAutoSaveSessionSnapshot,
+} from "./lib/sessionSnapshot";
+import { copyAnalysisContextForAi } from "./lib/contextExport";
 
 interface LayerLoadSummary {
   pathCount: number;
@@ -64,6 +84,7 @@ const LAYER_PREFIXES = [
   "priority-",
   "debris-",
   "points-",
+  "pins-",
   "searched-",
   "flightpath-",
   "drift-clouds-",
@@ -97,6 +118,7 @@ function removeAllLayers(map: MapboxMap): void {
 async function loadAllLayers(map: MapboxMap): Promise<LayerLoadSummary> {
   // Static layers first (no async)
   loadPointsLayer(map);
+  loadPinsLayer(map);
   const config = getAnalysisConfig();
 
   const [heatmap, paths] = await Promise.all([
@@ -351,6 +373,37 @@ async function main(): Promise<void> {
   await initConfig();
 
   const map = initMap();
+  applyUrlStateFromHash();
+
+  onLayerVisibilityChange(() => {
+    scheduleUrlStateSync();
+    scheduleAutoSaveSessionSnapshot();
+  });
+  onAnalysisConfigChange((config) => {
+    scheduleUrlStateSync();
+    markWorkspaceInputsChanged(config);
+    scheduleAutoSaveSessionSnapshot();
+  });
+  onActiveScenarioChange(() => {
+    scheduleUrlStateSync();
+    scheduleAutoSaveSessionSnapshot();
+  });
+  onDriftOriginStateChange(() => {
+    scheduleUrlStateSync();
+    scheduleAutoSaveSessionSnapshot();
+  });
+  map.on("moveend", () => {
+    scheduleUrlStateSync();
+    scheduleAutoSaveSessionSnapshot();
+  });
+  map.on("rotateend", () => {
+    scheduleUrlStateSync();
+    scheduleAutoSaveSessionSnapshot();
+  });
+  map.on("pitchend", () => {
+    scheduleUrlStateSync();
+    scheduleAutoSaveSessionSnapshot();
+  });
 
   await initEvidencePanel({
     onSelectAnomaly: (id) => {
@@ -359,6 +412,10 @@ async function main(): Promise<void> {
         openAnomalyDetail(id);
       }
     },
+  });
+
+  onEvidenceSelectionChange(() => {
+    scheduleAutoSaveSessionSnapshot();
   });
 
   const loader = document.getElementById("loader");
@@ -377,6 +434,11 @@ async function main(): Promise<void> {
         bfoDiagnosticCount: summary.bfoDiagnosticCount,
         bfoAvailable: summary.bfoAvailable,
       });
+      markModelRunCompleted(getAnalysisConfig(), new Date());
+      if (!window.location.hash) {
+        restoreStoredSessionSnapshot();
+      }
+      scheduleAutoSaveSessionSnapshot();
     } catch (err) {
       console.error("Failed to load layers:", err);
       updateModelRunStatus({
@@ -394,7 +456,29 @@ async function main(): Promise<void> {
     });
   });
 
-  initSidebar({
+  // Register flyout panels
+  registerPanel("model", createModelPanel());
+  registerPanel("drift", createDriftPanel());
+  registerPanel("layers", createLayersPanel());
+  registerPanel("evidence", createEvidenceBrowsePanel());
+  registerPanel("export", createExportPanel());
+
+  // Wire icon rail toggle
+  initIconRail((panel) => {
+    if (panel) {
+      openFlyout(panel);
+    } else {
+      closeFlyout();
+    }
+    scheduleAutoSaveSessionSnapshot();
+  });
+  setOnClose(() => {
+    setActivePanel(null);
+    scheduleAutoSaveSessionSnapshot();
+  });
+
+  // Wire model callbacks
+  setModelCallbacks({
     onRunModel: async () => {
       const runLoader = document.getElementById("loader") ?? createLoader();
       const startedAt = new Date();
@@ -416,6 +500,8 @@ async function main(): Promise<void> {
           bfoDiagnosticCount: summary.bfoDiagnosticCount,
           bfoAvailable: summary.bfoAvailable,
         });
+        markModelRunCompleted(getAnalysisConfig(), new Date());
+        scheduleAutoSaveSessionSnapshot();
       } catch (err) {
         console.error("Failed to reload layers:", err);
         updateModelRunStatus({
@@ -428,10 +514,27 @@ async function main(): Promise<void> {
       }
       runLoader.classList.add("hidden");
     },
-    onConfigChange: () => {
-      updateConfidence("Pending rerun");
+    onConfigureModel: () => {
+      showModelConfigModal();
     },
   });
+
+  document.addEventListener("keydown", (event) => {
+    if (!(event.metaKey || event.ctrlKey) || !event.shiftKey) return;
+    if (event.key.toLowerCase() === "c") {
+      event.preventDefault();
+      void copyAnalysisContextForAi();
+    }
+    if (event.key.toLowerCase() === "e") {
+      event.preventDefault();
+      downloadSessionSnapshot();
+    }
+  });
+
+  window.addEventListener("beforeunload", () => {
+    persistSessionSnapshot();
+  });
+
 }
 
 main();

@@ -176,6 +176,16 @@ export function setupPopups(map: MapboxMap): void {
     });
   }
 
+  if (map.getLayer("pins-markers")) {
+    map.on("mouseenter", "pins-markers", () => setCursor(map, "pointer"));
+    map.on("mouseleave", "pins-markers", () => setCursor(map, ""));
+    map.on("click", "pins-markers", (e) => {
+      const props = e.features?.[0]?.properties;
+      if (!props) return;
+      showPopup(map, e, `<strong>${props.label}</strong>`);
+    });
+  }
+
   // --- Flight path waypoints: click for name + time ---
   if (map.getLayer("flightpath-waypoint-dots")) {
     map.on("mouseenter", "flightpath-waypoint-dots", () => setCursor(map, "pointer"));

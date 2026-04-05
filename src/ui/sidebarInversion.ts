@@ -1,5 +1,5 @@
 import { getMap } from "../map";
-import { runDebrisInversion, type InversionResult, IS_TAURI } from "../lib/backend";
+import { runDebrisInversion, type InversionItemContribution, type InversionResult, IS_TAURI } from "../lib/backend";
 import {
   renderComparisonOverlay,
   renderDebrisInversionLayer,
@@ -8,8 +8,21 @@ import {
 } from "../layers/debris_inversion";
 import { getAnalysisConfig } from "../model/config";
 import { updateModelSummaryPanel } from "./modelSummary";
+import { markInversionRunCompleted } from "../lib/workspaceState";
 
 let latestInversionResult: InversionResult | null = null;
+let inversionVisible = false;
+let comparisonVisible = false;
+
+export function getLatestInversionResult(): InversionResult | null {
+  return latestInversionResult
+    ? {
+        ...latestInversionResult,
+        candidates: latestInversionResult.candidates.map((candidate) => ({ ...candidate })),
+        item_contributions: latestInversionResult.item_contributions.map((item) => ({ ...item })),
+      }
+    : null;
+}
 
 export function renderInversionSection(mode: "standard" | "drift"): string {
   if (mode === "drift") {
@@ -18,13 +31,13 @@ export function renderInversionSection(mode: "standard" | "drift"): string {
         <div class="section-heading"><h2>Inversion Analysis</h2></div>
         <label class="toggle-row">
           <span class="toggle-main">
-            <input id="debris-inversion-toggle" type="checkbox" />
+            <input id="debris-inversion-toggle" type="checkbox" ${inversionVisible ? "checked" : ""} />
             <span>Debris Inversion Result</span>
           </span>
         </label>
         <label class="toggle-row">
           <span class="toggle-main">
-            <input id="debris-comparison-toggle" type="checkbox" />
+            <input id="debris-comparison-toggle" type="checkbox" ${comparisonVisible ? "checked" : ""} />
             <span>Satellite vs Debris Comparison</span>
           </span>
         </label>
@@ -42,7 +55,7 @@ export function renderInversionSection(mode: "standard" | "drift"): string {
       <div class="section-heading"><h2>Inversion Analysis</h2><button class="info-icon-button" type="button" data-info-id="section:inversion" aria-label="About Inversion Analysis">i</button></div>
       <label class="toggle-row">
         <span class="toggle-main">
-          <input id="debris-inversion-toggle" type="checkbox" />
+          <input id="debris-inversion-toggle" type="checkbox" ${inversionVisible ? "checked" : ""} />
           <span>Debris Inversion Result</span>
         </span>
         <button class="info-icon-button" type="button" data-info-id="inversion:result" aria-label="About Debris Inversion Result">i</button>
@@ -50,7 +63,7 @@ export function renderInversionSection(mode: "standard" | "drift"): string {
       <div class="toggle-note">Joint Bayesian inversion of debris items already present in this repo snapshot.</div>
       <label class="toggle-row">
         <span class="toggle-main">
-          <input id="debris-comparison-toggle" type="checkbox" />
+          <input id="debris-comparison-toggle" type="checkbox" ${comparisonVisible ? "checked" : ""} />
           <span>Satellite vs Debris Comparison</span>
         </span>
         <button class="info-icon-button" type="button" data-info-id="inversion:comparison" aria-label="About Satellite vs Debris Comparison">i</button>
@@ -61,6 +74,7 @@ export function renderInversionSection(mode: "standard" | "drift"): string {
       </div>
       ${renderProgressMarkup()}
       <div id="inversion-summary" class="toggle-note" style="margin-top:8px;white-space:pre-line;">No inversion run yet.</div>
+      <div id="inversion-contributions" class="inversion-contributions"></div>
     </div>
   `;
 }
@@ -111,6 +125,9 @@ async function handleRunInversion(): Promise<void> {
     const map = getMap();
     renderDebrisInversionLayer(map, result);
     renderComparisonOverlay(map, result);
+    markInversionRunCompleted(getAnalysisConfig(), new Date());
+    inversionVisible = true;
+    comparisonVisible = true;
 
     const inversionToggle = document.getElementById("debris-inversion-toggle") as HTMLInputElement | null;
     const comparisonToggle = document.getElementById("debris-comparison-toggle") as HTMLInputElement | null;
@@ -120,6 +137,7 @@ async function handleRunInversion(): Promise<void> {
     setInversionProgressPercent(100);
     applyInversionVisibility();
     updateInversionSummary(result);
+    renderItemContributions(result.item_contributions);
     updateModelSummaryPanel({
       debrisPeakLat: result.peak_lat,
       satellitePeakLat: result.satellite_peak_lat,
@@ -130,6 +148,7 @@ async function handleRunInversion(): Promise<void> {
     if (summary) {
       summary.textContent = `Debris inversion failed: ${error instanceof Error ? error.message : String(error)}`;
     }
+    renderItemContributions([]);
     console.error("Failed to run debris inversion:", error);
   } finally {
     unlisten?.();
@@ -144,10 +163,48 @@ async function handleRunInversion(): Promise<void> {
 function applyInversionVisibility(): void {
   if (!latestInversionResult) return;
   const map = getMap();
-  const inversionVisible = (document.getElementById("debris-inversion-toggle") as HTMLInputElement | null)?.checked ?? false;
-  const comparisonVisible = (document.getElementById("debris-comparison-toggle") as HTMLInputElement | null)?.checked ?? false;
+  inversionVisible = (document.getElementById("debris-inversion-toggle") as HTMLInputElement | null)?.checked ?? inversionVisible;
+  comparisonVisible = (document.getElementById("debris-comparison-toggle") as HTMLInputElement | null)?.checked ?? comparisonVisible;
   setDebrisInversionVisible(map, inversionVisible);
   setComparisonOverlayVisible(map, comparisonVisible);
+}
+
+export function getInversionVisibilityState(): { visible: boolean; comparisonVisible: boolean } {
+  return {
+    visible: inversionVisible,
+    comparisonVisible,
+  };
+}
+
+export function restoreInversionState(
+  result: InversionResult | null,
+  visibility: { visible: boolean; comparisonVisible: boolean },
+): void {
+  latestInversionResult = result;
+  inversionVisible = visibility.visible;
+  comparisonVisible = visibility.comparisonVisible;
+
+  const inversionToggle = document.getElementById("debris-inversion-toggle") as HTMLInputElement | null;
+  const comparisonToggle = document.getElementById("debris-comparison-toggle") as HTMLInputElement | null;
+  if (inversionToggle) inversionToggle.checked = inversionVisible;
+  if (comparisonToggle) comparisonToggle.checked = comparisonVisible;
+
+  if (!result) {
+    const summary = document.getElementById("inversion-summary");
+    const contributions = document.getElementById("inversion-contributions");
+    if (summary) summary.textContent = "No inversion run yet.";
+    if (contributions) {
+      contributions.innerHTML = '<div class="toggle-note" style="margin-top:8px;">Run inversion to inspect which debris items support the peak.</div>';
+    }
+    return;
+  }
+
+  const map = getMap();
+  renderDebrisInversionLayer(map, result);
+  renderComparisonOverlay(map, result);
+  updateInversionSummary(result);
+  renderItemContributions(result.item_contributions);
+  applyInversionVisibility();
 }
 
 function updateInversionSummary(result: InversionResult): void {
@@ -155,6 +212,34 @@ function updateInversionSummary(result: InversionResult): void {
   if (!summary) return;
   const validationLine = result.validation_message ? `${result.validation_message}\n\n` : "";
   summary.textContent = `${validationLine}Debris peak: ${formatSouthLat(result.peak_lat)}\nSatellite peak: ${formatSouthLat(result.satellite_peak_lat)}\nIntersection: ${formatSouthLat(result.intersection_lat)}\nItems used: ${result.items_used}`;
+}
+
+function renderItemContributions(contributions: InversionItemContribution[]): void {
+  const container = document.getElementById("inversion-contributions");
+  if (!container) return;
+
+  if (contributions.length === 0) {
+    container.innerHTML = '<div class="toggle-note" style="margin-top:8px;">Run inversion to inspect which debris items support the peak.</div>';
+    return;
+  }
+
+  container.innerHTML = `
+    <div class="inversion-contributions-title">Peak item contributions</div>
+    ${contributions.map((item) => `
+      <div class="inversion-contribution-row inversion-contribution-row--${item.support_label}">
+        <div class="inversion-contribution-head">
+          <span class="inversion-contribution-label">${item.label}</span>
+          <span class="inversion-contribution-badge">${item.support_label}</span>
+        </div>
+        <div class="inversion-contribution-meta">${item.item_type} · confidence ${item.confidence.toFixed(2)} · uncertainty ${Math.round(item.uncertainty_km)} km</div>
+        <div class="inversion-contribution-metrics">
+          <span>Likelihood ${item.likelihood.toFixed(3)}</span>
+          <span>Share ${item.contribution_share.toFixed(1)}%</span>
+          <span>Weighted log ${item.weighted_log_likelihood.toFixed(2)}</span>
+        </div>
+      </div>
+    `).join("")}
+  `;
 }
 
 function setInversionProgressPercent(progress: number): void {

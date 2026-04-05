@@ -3,11 +3,25 @@ import { updateAnalysisConfig, resetAnalysisConfig } from "../model/config";
 import type { ScenarioPreset } from "../model/scenarios";
 import { setSelectedAnomaly } from "../layers/anomalies";
 import { clearEvidenceSelection } from "../ui/evidencePanel";
+import { getStoredActiveScenarioId, setStoredActiveScenarioId } from "../model/session";
 
-let activeScenarioId: string | null = null;
+let activeScenarioId: string | null = getStoredActiveScenarioId();
+const activeScenarioListeners: Array<(scenarioId: string | null) => void> = [];
 
 export function getActiveScenarioId(): string | null {
   return activeScenarioId;
+}
+
+export function onActiveScenarioChange(listener: (scenarioId: string | null) => void): void {
+  activeScenarioListeners.push(listener);
+}
+
+export function setActiveScenarioId(scenarioId: string | null): void {
+  activeScenarioId = scenarioId;
+  setStoredActiveScenarioId(activeScenarioId);
+  for (const listener of activeScenarioListeners) {
+    listener(activeScenarioId);
+  }
 }
 
 export function applyScenario(
@@ -18,7 +32,7 @@ export function applyScenario(
     syncLayerToggles?: () => void;
   },
 ): void {
-  activeScenarioId = scenario.id;
+  setActiveScenarioId(scenario.id);
   const map = getMap();
 
   // 1. Apply config overrides
@@ -55,7 +69,7 @@ export function clearScenario(callbacks: {
   syncModelControls?: () => void;
   syncLayerToggles?: () => void;
 }): void {
-  activeScenarioId = null;
+  setActiveScenarioId(null);
   resetAnalysisConfig();
   resetLayerVisibility();
   const map = getMap();
