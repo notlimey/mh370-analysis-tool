@@ -2,6 +2,8 @@ const IS_TAURI = "__TAURI__" in window || "__TAURI_INTERNALS__" in window;
 
 export { IS_TAURI };
 
+import type { AnalysisConfig } from "../model/config";
+
 export interface BackendHandshake {
   arc: number;
   time_utc: string;
@@ -75,6 +77,36 @@ export interface BackendAnomaly {
   status: string;
   conflicts_with: string[];
   supports: string[];
+}
+
+export interface InversionOriginCandidate {
+  lat: number;
+  lon: number;
+  log_likelihood: number;
+  normalized_prob: number;
+  contributing_items: number;
+}
+
+export interface BackendParticleCloud {
+  origin_lat: number;
+  origin_lon: number;
+  n_days: number;
+  particles: [number, number][];
+  hull: [number, number][];
+}
+
+export interface InversionResult {
+  candidates: InversionOriginCandidate[];
+  peak_lat: number;
+  peak_lon: number;
+  confidence_interval_68: [number, number];
+  confidence_interval_95: [number, number];
+  satellite_peak_lat: number;
+  intersection_lat: number;
+  items_used: number;
+  items_excluded: number;
+  validation_ok?: boolean;
+  validation_message?: string;
 }
 
 async function tauriInvoke<T>(command: string, args?: Record<string, unknown>): Promise<T> {
@@ -196,4 +228,71 @@ export async function exportProbabilityGeojson(path: string) {
 export async function exportPathsGeojson(path: string) {
   if (!IS_TAURI) return;
   return tauriInvoke("export_paths_geojson", { path });
+}
+
+export async function runDebrisInversion(config?: AnalysisConfig): Promise<InversionResult> {
+  if (IS_TAURI) {
+    const { invoke } = await import("@tauri-apps/api/core");
+    return invoke("run_debris_inversion", config ? { config } : undefined);
+  }
+
+  const res = await fetch("./data/debris_inversion_result.json");
+  if (!res.ok) {
+    throw new Error("Debris inversion result not available in snapshot");
+  }
+  return res.json();
+}
+
+export async function getDriftParticleClouds(config?: AnalysisConfig): Promise<BackendParticleCloud[]> {
+  if (IS_TAURI) {
+    return tauriInvoke("get_drift_particle_clouds", config ? { config } : undefined);
+  }
+  // No snapshot available for particle clouds in browser mode
+  return [];
+}
+
+export interface BackendBeachedParticle {
+  lon: number;
+  lat: number;
+  days: number;
+  coast: string;
+}
+
+export interface BackendBeachingCloud {
+  origin_lat: number;
+  origin_lon: number;
+  beached: BackendBeachedParticle[];
+  still_drifting: [number, number][];
+  beaching_fraction: number;
+  fit_score: number;
+  spatial_score: number;
+  timing_score: number;
+  match_score: number;
+  match_total: number;
+  matched_finds: string[];
+  debug_coast_contacts: Record<string, number>;
+  debug_coast_captures: Record<string, number>;
+}
+
+export interface DriftSimParams {
+  n_particles: number;
+  n_origins: number;
+  max_days: number;
+}
+
+export interface DriftBeachingProgress {
+  pct: number;
+  origin_index: number;
+  total_origins: number;
+  origin_lat: number;
+}
+
+export async function getDriftBeaching(params?: DriftSimParams, config?: AnalysisConfig): Promise<BackendBeachingCloud[]> {
+  if (IS_TAURI) {
+    return tauriInvoke("get_drift_beaching", {
+      ...(params ? { params } : {}),
+      ...(config ? { config } : {}),
+    });
+  }
+  return [];
 }

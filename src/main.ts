@@ -1,5 +1,5 @@
 import "./style.css";
-import { initMap } from "./map";
+import { applyLayerVisibility, initMap } from "./map";
 import { loadArcsLayer } from "./layers/arcs";
 import { loadAnomaliesLayer } from "./layers/anomalies";
 import { loadAirspacesLayer } from "./layers/airspaces";
@@ -12,6 +12,7 @@ import { loadHeatmapLayer } from "./layers/heatmap";
 import { loadDebrisLayer } from "./layers/debris";
 import { loadPointsLayer } from "./layers/points";
 import { loadFlightPathLayer } from "./layers/flightpath";
+import { initDriftCloudsLayer } from "./layers/drift_clouds";
 import { initSidebar, renderFamilyLegend, updateConfidence, updateModelSummary } from "./ui/sidebar";
 import { getSelectedAnomalyId, initEvidencePanel, openAnomalyDetail } from "./ui/evidencePanel";
 import { initTimeline } from "./ui/timeline";
@@ -43,6 +44,7 @@ const LAYER_PREFIXES = [
   "points-",
   "searched-",
   "flightpath-",
+  "drift-clouds-",
 ];
 
 /** Remove all app layers and sources from the map */
@@ -94,6 +96,7 @@ async function loadAllLayers(map: MapboxMap): Promise<void> {
   await loadHeatmapLayer(map, heatmap);
   loadPriorityGapsLayer(map, heatmap);
   await loadDebrisLayer(map);
+  initDriftCloudsLayer(map);
 
   const selectedAnomalyId = getSelectedAnomalyId();
   if (selectedAnomalyId) {
@@ -102,6 +105,10 @@ async function loadAllLayers(map: MapboxMap): Promise<void> {
 
   // Flight path on top so the trace is clearly visible
   loadFlightPathLayer(map);
+
+  // Re-apply visibility state — layers are added with default visibility,
+  // so if a scenario set some groups to hidden before the reload, enforce it now.
+  applyLayerVisibility();
 
   // Update confidence display
   if (heatmap.length > 0) {

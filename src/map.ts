@@ -2,7 +2,7 @@ import mapboxgl from "mapbox-gl";
 import { MAP_CENTER, MAP_ZOOM } from "./constants";
 
 /** Layer visibility state */
-export const layerVisibility: Record<string, boolean> = {
+export const DEFAULT_LAYER_VISIBILITY: Record<string, boolean> = {
   flightpath: true,
   anomalies: false,
   airspaces: false,
@@ -14,8 +14,13 @@ export const layerVisibility: Record<string, boolean> = {
 	paths: true,
 	heatmap: false,
 	debris: false,
-	points: true,
-	searched: true,
+  points: true,
+  searched: true,
+  "drift-clouds": false,
+};
+
+export const layerVisibility: Record<string, boolean> = {
+  ...DEFAULT_LAYER_VISIBILITY,
 };
 
 let map: mapboxgl.Map | null = null;
@@ -52,6 +57,20 @@ export function initMap(): mapboxgl.Map {
 export function getMap(): mapboxgl.Map {
 	if (!map) throw new Error("Map not initialized");
 	return map;
+}
+
+/** Re-apply current layerVisibility state to all layer groups on the map.
+ *  Call this after adding layers to ensure visibility matches the desired state. */
+export function applyLayerVisibility(): void {
+	for (const [group, visible] of Object.entries(layerVisibility)) {
+		toggleLayer(group, visible);
+	}
+}
+
+export function resetLayerVisibility(): void {
+	for (const [group, visible] of Object.entries(DEFAULT_LAYER_VISIBILITY)) {
+		toggleLayer(group, visible);
+	}
 }
 
 /** Toggle a named layer group on or off */

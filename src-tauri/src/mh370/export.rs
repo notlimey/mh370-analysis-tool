@@ -1,6 +1,9 @@
+use std::path::Path;
+
 use serde_json::json;
 
 use super::data::{load_dataset, resolve_config, AnalysisConfig};
+use super::debris_inversion::{load_debris_items, run_joint_inversion, sample_7th_arc};
 use super::paths::{sample_candidate_paths_from_dataset, FlightPath};
 use super::probability::{generate_probability_heatmap_from_dataset, ProbPoint};
 use super::satellite::SatelliteModel;
@@ -42,6 +45,19 @@ pub fn export_paths_geojson(
         paths.len(),
         path
     ))
+}
+
+pub fn export_debris_inversion_snapshot(
+    satellite: &SatelliteModel,
+    output_dir: &Path,
+) -> Result<(), String> {
+    let items = load_debris_items()?;
+    let arc_points = sample_7th_arc(satellite, None);
+    let result = run_joint_inversion(&items, &arc_points, -34.23);
+    let path = output_dir.join("debris_inversion_result.json");
+    let serialized = serde_json::to_string_pretty(&result)
+        .map_err(|err| format!("serialization failed: {err}"))?;
+    std::fs::write(path, serialized).map_err(|err| format!("write failed: {err}"))
 }
 
 pub fn probability_to_geojson(points: &[ProbPoint]) -> serde_json::Value {

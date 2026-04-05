@@ -52,6 +52,43 @@ export function loadPriorityGapsLayer(map: MapboxMap, heatmap: ProbPoint[]): voi
   });
 }
 
+export function zoomToPriorityGaps(map: MapboxMap): void {
+  const sourceFeatures = map.querySourceFeatures("priority-source");
+  const polygonFeatures = sourceFeatures.filter(
+    (feature) => feature.geometry.type === "Polygon",
+  );
+
+  if (polygonFeatures.length === 0) {
+    return;
+  }
+
+  let minLon = Number.POSITIVE_INFINITY;
+  let minLat = Number.POSITIVE_INFINITY;
+  let maxLon = Number.NEGATIVE_INFINITY;
+  let maxLat = Number.NEGATIVE_INFINITY;
+
+  for (const feature of polygonFeatures) {
+    const geometry = feature.geometry as GeoJSON.Polygon;
+    for (const ring of geometry.coordinates) {
+      for (const [lon, lat] of ring) {
+        minLon = Math.min(minLon, lon);
+        minLat = Math.min(minLat, lat);
+        maxLon = Math.max(maxLon, lon);
+        maxLat = Math.max(maxLat, lat);
+      }
+    }
+  }
+
+  if (!Number.isFinite(minLon) || !Number.isFinite(minLat) || !Number.isFinite(maxLon) || !Number.isFinite(maxLat)) {
+    return;
+  }
+
+  map.fitBounds(
+    [[minLon, minLat], [maxLon, maxLat]],
+    { padding: 60, duration: 900, maxZoom: 7 },
+  );
+}
+
 function computePriorityGaps(heatmap: ProbPoint[]): GeoJSON.FeatureCollection<GeoJSON.Polygon> {
   if (heatmap.length === 0) {
     return { type: "FeatureCollection", features: [] };

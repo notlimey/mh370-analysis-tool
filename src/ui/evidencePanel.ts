@@ -1,4 +1,5 @@
 import { getAnomalies, getAnomalyById, type Anomaly } from "../model/evidence";
+import { getInfoContent, type InfoContent } from "./infoContent";
 
 interface EvidencePanelCallbacks {
   onSelectAnomaly: (id: string | null) => void;
@@ -60,6 +61,20 @@ export function clearEvidenceSelection(): void {
   onSelectAnomalyCallback?.(null);
 }
 
+export function openInfoDetail(id: string): void {
+  const info = getInfoContent(id);
+  if (!info) return;
+
+  selectedAnomalyId = null;
+  const panel = document.getElementById("evidence-panel");
+  const body = document.getElementById("evidence-body");
+  if (!panel || !body) return;
+
+  panel.classList.add("active");
+  body.innerHTML = renderInfo(info);
+  onSelectAnomalyCallback?.(null);
+}
+
 export function getSelectedAnomalyId(): string | null {
   return selectedAnomalyId;
 }
@@ -71,14 +86,33 @@ function renderEmptyState(): void {
   body.innerHTML = `
     <div class="evidence-empty">
       <span class="evidence-kicker">Map Workspace</span>
-      <h3>Select an anomaly</h3>
-      <p>Click an anomaly marker to inspect the claim, see what it supports or conflicts with, and trace how it changes the search corridor.</p>
+      <h3>Select an anomaly or info icon</h3>
+      <p>Click an anomaly marker to inspect the claim, or use the info buttons in the sidebar to see what a layer, control, or analysis section means.</p>
       <ul class="evidence-checklist">
         <li>Blue markers: acoustic evidence</li>
         <li>Orange markers: satellite image interpretations</li>
         <li>Green markers: biological drift clues</li>
         <li>Purple markers: signal-processing anomalies</li>
       </ul>
+    </div>
+  `;
+}
+
+function renderInfo(info: InfoContent): string {
+  return `
+    <div class="evidence-card">
+      <div class="evidence-pill-row">
+        <span class="evidence-pill category">Guide</span>
+      </div>
+      <h3>${info.title}</h3>
+      <div class="evidence-meta">${info.subtitle}</div>
+      <p class="evidence-summary">${info.summary}</p>
+      ${info.sections.map((section) => `
+        <details open>
+          <summary>${section.heading}</summary>
+          <p>${section.body}</p>
+        </details>
+      `).join("")}
     </div>
   `;
 }

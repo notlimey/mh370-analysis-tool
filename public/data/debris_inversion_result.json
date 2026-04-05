@@ -1,0 +1,1427 @@
+{
+  "candidates": [
+    {
+      "lat": -40.0,
+      "lon": 82.4771130497192,
+      "log_likelihood": -602.0306360457325,
+      "normalized_prob": 0.479260660436032,
+      "contributing_items": 11
+    },
+    {
+      "lat": -39.9,
+      "lon": 82.4771130497192,
+      "log_likelihood": -602.0905171865719,
+      "normalized_prob": 0.45140434269361673,
+      "contributing_items": 10
+    },
+    {
+      "lat": -39.8,
+      "lon": 83.27969312342309,
+      "log_likelihood": -604.1959342159187,
+      "normalized_prob": 0.054978733976542384,
+      "contributing_items": 10
+    },
+    {
+      "lat": -39.7,
+      "lon": 83.27969312342309,
+      "log_likelihood": -605.6259888025342,
+      "normalized_prob": 0.013156183403126702,
+      "contributing_items": 9
+    },
+    {
+      "lat": -39.6,
+      "lon": 83.27969312342309,
+      "log_likelihood": -608.2218237158138,
+      "normalized_prob": 0.0009812352474887337,
+      "contributing_items": 9
+    },
+    {
+      "lat": -39.5,
+      "lon": 84.06953911545001,
+      "log_likelihood": -609.7552569584875,
+      "normalized_prob": 0.00021174421048927923,
+      "contributing_items": 9
+    },
+    {
+      "lat": -39.4,
+      "lon": 84.06953911545001,
+      "log_likelihood": -613.1787364902359,
+      "normalized_prob": 6.902609028146644e-6,
+      "contributing_items": 9
+    },
+    {
+      "lat": -39.3,
+      "lon": 84.06953911545001,
+      "log_likelihood": -616.7639670796362,
+      "normalized_prob": 1.9141122990486495e-7,
+      "contributing_items": 9
+    },
+    {
+      "lat": -39.2,
+      "lon": 84.84637696899227,
+      "log_likelihood": -620.2388524259951,
+      "normalized_prob": 5.927122219392389e-9,
+      "contributing_items": 9
+    },
+    {
+      "lat": -39.1,
+      "lon": 84.84637696899227,
+      "log_likelihood": -624.4845854844319,
+      "normalized_prob": 8.490738072925488e-11,
+      "contributing_items": 9
+    },
+    {
+      "lat": -39.0,
+      "lon": 84.84637696899227,
+      "log_likelihood": -629.8071277213922,
+      "normalized_prob": 4.1437612088798287e-13,
+      "contributing_items": 9
+    },
+    {
+      "lat": -38.9,
+      "lon": 84.84637696899227,
+      "log_likelihood": -635.0987461387077,
+      "normalized_prob": 2.0858066201826944e-15,
+      "contributing_items": 9
+    },
+    {
+      "lat": -38.8,
+      "lon": 85.60996452681776,
+      "log_likelihood": -639.1564342873671,
+      "normalized_prob": 3.606139054286267e-17,
+      "contributing_items": 9
+    },
+    {
+      "lat": -38.7,
+      "lon": 85.60996452681776,
+      "log_likelihood": -645.6039554618114,
+      "normalized_prob": 5.713728515382751e-20,
+      "contributing_items": 9
+    },
+    {
+      "lat": -38.6,
+      "lon": 85.60996452681776,
+      "log_likelihood": -651.9278011367755,
+      "normalized_prob": 1.0244914073735904e-22,
+      "contributing_items": 10
+    },
+    {
+      "lat": -38.5,
+      "lon": 86.36009056851188,
+      "log_likelihood": -657.3461144755462,
+      "normalized_prob": 4.543230131286557e-25,
+      "contributing_items": 11
+    },
+    {
+      "lat": -38.4,
+      "lon": 86.36009056851188,
+      "log_likelihood": -664.7740305040237,
+      "normalized_prob": 2.700609510696848e-28,
+      "contributing_items": 11
+    },
+    {
+      "lat": -38.3,
+      "lon": 86.36009056851188,
+      "log_likelihood": -672.5362537941705,
+      "normalized_prob": 1.149134994983146e-31,
+      "contributing_items": 11
+    },
+    {
+      "lat": -38.2,
+      "lon": 86.36009056851188,
+      "log_likelihood": -680.3487716767601,
+      "normalized_prob": 4.6498360943831634e-35,
+      "contributing_items": 11
+    },
+    {
+      "lat": -38.1,
+      "lon": 87.09657372920836,
+      "log_likelihood": -686.0342374199719,
+      "normalized_prob": 1.5785968979631053e-37,
+      "contributing_items": 11
+    },
+    {
+      "lat": -38.0,
+      "lon": 87.09657372920836,
+      "log_likelihood": -694.5925501271729,
+      "normalized_prob": 3.0300044192231797e-41,
+      "contributing_items": 11
+    },
+    {
+      "lat": -37.9,
+      "lon": 87.09657372920836,
+      "log_likelihood": -703.5249014424552,
+      "normalized_prob": 4.0010352282739476e-45,
+      "contributing_items": 11
+    },
+    {
+      "lat": -37.8,
+      "lon": 87.09657372920836,
+      "log_likelihood": -714.6208013216468,
+      "normalized_prob": 6.071336247602547e-50,
+      "contributing_items": 10
+    },
+    {
+      "lat": -37.7,
+      "lon": 87.81926131854252,
+      "log_likelihood": -718.7888419386861,
+      "normalized_prob": 9.399986841466558e-52,
+      "contributing_items": 8
+    },
+    {
+      "lat": -37.6,
+      "lon": 87.81926131854252,
+      "log_likelihood": -730.2432440056356,
+      "normalized_prob": 9.966522108423285e-57,
+      "contributing_items": 8
+    },
+    {
+      "lat": -37.5,
+      "lon": 87.81926131854252,
+      "log_likelihood": -740.073916075361,
+      "normalized_prob": 5.359657049334172e-61,
+      "contributing_items": 8
+    },
+    {
+      "lat": -37.4,
+      "lon": 87.81926131854252,
+      "log_likelihood": -751.8652404217605,
+      "normalized_prob": 4.057232570332363e-66,
+      "contributing_items": 8
+    },
+    {
+      "lat": -37.3,
+      "lon": 88.52802805796229,
+      "log_likelihood": -756.2164716938671,
+      "normalized_prob": 5.230150333688045e-68,
+      "contributing_items": 8
+    },
+    {
+      "lat": -37.2,
+      "lon": 88.52802805796229,
+      "log_likelihood": -768.2535012682168,
+      "normalized_prob": 3.096696545363308e-73,
+      "contributing_items": 8
+    },
+    {
+      "lat": -37.1,
+      "lon": 88.52802805796229,
+      "log_likelihood": -780.9259488687853,
+      "normalized_prob": 9.712355813930602e-79,
+      "contributing_items": 8
+    },
+    {
+      "lat": -37.0,
+      "lon": 88.52802805796229,
+      "log_likelihood": -791.6257240623422,
+      "normalized_prob": 2.1901368897066588e-83,
+      "contributing_items": 8
+    },
+    {
+      "lat": -36.9,
+      "lon": 89.2227747537173,
+      "log_likelihood": -797.6167185295083,
+      "normalized_prob": 5.4779166778735975e-86,
+      "contributing_items": 8
+    },
+    {
+      "lat": -36.8,
+      "lon": 89.2227747537173,
+      "log_likelihood": -811.1339631045804,
+      "normalized_prob": 7.381603144682809e-92,
+      "contributing_items": 8
+    },
+    {
+      "lat": -36.7,
+      "lon": 89.2227747537173,
+      "log_likelihood": -824.4880285093307,
+      "normalized_prob": 1.1709915909655221e-97,
+      "contributing_items": 8
+    },
+    {
+      "lat": -36.6,
+      "lon": 89.2227747537173,
+      "log_likelihood": -835.6138806672927,
+      "normalized_prob": 1.7244776801684147e-102,
+      "contributing_items": 8
+    },
+    {
+      "lat": -36.5,
+      "lon": 89.90342692185543,
+      "log_likelihood": -841.3863363796879,
+      "normalized_prob": 5.366756794103481e-105,
+      "contributing_items": 8
+    },
+    {
+      "lat": -36.4,
+      "lon": 89.90342692185543,
+      "log_likelihood": -855.0243683930722,
+      "normalized_prob": 6.4089940343229e-111,
+      "contributing_items": 8
+    },
+    {
+      "lat": -36.3,
+      "lon": 89.90342692185543,
+      "log_likelihood": -869.2969179555023,
+      "normalized_prob": 4.0578907431652964e-117,
+      "contributing_items": 7
+    },
+    {
+      "lat": -36.2,
+      "lon": 89.90342692185543,
+      "log_likelihood": -883.3593480624155,
+      "normalized_prob": 3.170038612070383e-123,
+      "contributing_items": 7
+    },
+    {
+      "lat": -36.1,
+      "lon": 90.5699333804328,
+      "log_likelihood": -888.8252710492546,
+      "normalized_prob": 1.3404306828400922e-125,
+      "contributing_items": 7
+    },
+    {
+      "lat": -36.0,
+      "lon": 90.5699333804328,
+      "log_likelihood": -903.318399224566,
+      "normalized_prob": 6.807047299345817e-132,
+      "contributing_items": 7
+    },
+    {
+      "lat": -35.9,
+      "lon": 90.5699333804328,
+      "log_likelihood": -917.4669863495504,
+      "normalized_prob": 4.878715051404051e-138,
+      "contributing_items": 7
+    },
+    {
+      "lat": -35.8,
+      "lon": 90.5699333804328,
+      "log_likelihood": -932.805962300207,
+      "normalized_prob": 1.0633416860978855e-144,
+      "contributing_items": 7
+    },
+    {
+      "lat": -35.7,
+      "lon": 90.5699333804328,
+      "log_likelihood": -947.285870217243,
+      "normalized_prob": 5.4717813266387296e-151,
+      "contributing_items": 6
+    },
+    {
+      "lat": -35.6,
+      "lon": 91.22226482292612,
+      "log_likelihood": -951.5755022454654,
+      "normalized_prob": 7.501795373667499e-153,
+      "contributing_items": 6
+    },
+    {
+      "lat": -35.5,
+      "lon": 91.22226482292612,
+      "log_likelihood": -966.9028253390695,
+      "normalized_prob": 1.6542203982889702e-159,
+      "contributing_items": 6
+    },
+    {
+      "lat": -35.4,
+      "lon": 91.22226482292612,
+      "log_likelihood": -981.3537321716115,
+      "normalized_prob": 8.7628277715274e-166,
+      "contributing_items": 6
+    },
+    {
+      "lat": -35.3,
+      "lon": 91.22226482292612,
+      "log_likelihood": -996.8957011872069,
+      "normalized_prob": 1.5590243363671205e-172,
+      "contributing_items": 6
+    },
+    {
+      "lat": -35.2,
+      "lon": 91.86041238555636,
+      "log_likelihood": -1001.3332643931953,
+      "normalized_prob": 1.843502288712709e-174,
+      "contributing_items": 6
+    },
+    {
+      "lat": -35.1,
+      "lon": 91.86041238555636,
+      "log_likelihood": -1016.6827087652302,
+      "normalized_prob": 3.976167672745333e-181,
+      "contributing_items": 6
+    },
+    {
+      "lat": -35.0,
+      "lon": 91.86041238555636,
+      "log_likelihood": -1030.2173435567724,
+      "normalized_prob": 5.265595399625765e-187,
+      "contributing_items": 6
+    },
+    {
+      "lat": -34.9,
+      "lon": 91.86041238555636,
+      "log_likelihood": -1067.451982005008,
+      "normalized_prob": 3.5534439685881326e-203,
+      "contributing_items": 5
+    },
+    {
+      "lat": -34.8,
+      "lon": 91.86041238555636,
+      "log_likelihood": -1105.3363851392373,
+      "normalized_prob": 1.252166960583323e-219,
+      "contributing_items": 5
+    },
+    {
+      "lat": -34.7,
+      "lon": 92.4843862199281,
+      "log_likelihood": -1132.3131482637489,
+      "normalized_prob": 2.4088118323365695e-231,
+      "contributing_items": 5
+    },
+    {
+      "lat": -34.6,
+      "lon": 92.4843862199281,
+      "log_likelihood": -1170.9847898292155,
+      "normalized_prob": 3.862978915998266e-248,
+      "contributing_items": 5
+    },
+    {
+      "lat": -34.5,
+      "lon": 92.4843862199281,
+      "log_likelihood": -1210.2576174719356,
+      "normalized_prob": 3.3958617702093854e-265,
+      "contributing_items": 5
+    },
+    {
+      "lat": -34.4,
+      "lon": 92.4843862199281,
+      "log_likelihood": -1250.1175575348586,
+      "normalized_prob": 1.6595792093458675e-282,
+      "contributing_items": 4
+    },
+    {
+      "lat": -34.3,
+      "lon": 93.0942140810822,
+      "log_likelihood": -1277.6702730482446,
+      "normalized_prob": 1.7947570856101013e-294,
+      "contributing_items": 4
+    },
+    {
+      "lat": -34.2,
+      "lon": 93.0942140810822,
+      "log_likelihood": -1318.23121554095,
+      "normalized_prob": 4.35123131349e-312,
+      "contributing_items": 2
+    },
+    {
+      "lat": -34.1,
+      "lon": 93.0942140810822,
+      "log_likelihood": -1359.2877817197577,
+      "normalized_prob": 0.0,
+      "contributing_items": 2
+    },
+    {
+      "lat": -34.0,
+      "lon": 93.0942140810822,
+      "log_likelihood": -1400.7865539574855,
+      "normalized_prob": 0.0,
+      "contributing_items": 2
+    },
+    {
+      "lat": -33.9,
+      "lon": 93.0942140810822,
+      "log_likelihood": -1442.7150571295763,
+      "normalized_prob": 0.0,
+      "contributing_items": 2
+    },
+    {
+      "lat": -33.8,
+      "lon": 93.68993993977514,
+      "log_likelihood": -1470.5214001149611,
+      "normalized_prob": 0.0,
+      "contributing_items": 2
+    },
+    {
+      "lat": -33.7,
+      "lon": 93.68993993977514,
+      "log_likelihood": -1512.8599755953207,
+      "normalized_prob": 0.0,
+      "contributing_items": 2
+    },
+    {
+      "lat": -33.6,
+      "lon": 93.68993993977514,
+      "log_likelihood": -1555.5388621308837,
+      "normalized_prob": 0.0,
+      "contributing_items": 2
+    },
+    {
+      "lat": -33.5,
+      "lon": 93.68993993977514,
+      "log_likelihood": -1598.4015542056343,
+      "normalized_prob": 0.0,
+      "contributing_items": 2
+    },
+    {
+      "lat": -33.4,
+      "lon": 93.68993993977514,
+      "log_likelihood": -1641.3481036370024,
+      "normalized_prob": 0.0,
+      "contributing_items": 1
+    },
+    {
+      "lat": -33.3,
+      "lon": 94.27162262655673,
+      "log_likelihood": -1668.2284431053474,
+      "normalized_prob": 0.0,
+      "contributing_items": 1
+    },
+    {
+      "lat": -33.2,
+      "lon": 94.27162262655673,
+      "log_likelihood": -1710.629937286752,
+      "normalized_prob": 0.0,
+      "contributing_items": 1
+    },
+    {
+      "lat": -33.1,
+      "lon": 94.27162262655673,
+      "log_likelihood": -1752.8862309363553,
+      "normalized_prob": 0.0,
+      "contributing_items": 1
+    },
+    {
+      "lat": -33.0,
+      "lon": 94.27162262655673,
+      "log_likelihood": -1794.9497467208896,
+      "normalized_prob": 0.0,
+      "contributing_items": 1
+    },
+    {
+      "lat": -32.9,
+      "lon": 94.27162262655673,
+      "log_likelihood": -1836.7760900191847,
+      "normalized_prob": 0.0,
+      "contributing_items": 1
+    },
+    {
+      "lat": -32.8,
+      "lon": 94.83933451403375,
+      "log_likelihood": -1860.9902649870146,
+      "normalized_prob": 0.0,
+      "contributing_items": 1
+    },
+    {
+      "lat": -32.7,
+      "lon": 94.83933451403375,
+      "log_likelihood": -1901.7707159112392,
+      "normalized_prob": 0.0,
+      "contributing_items": 1
+    },
+    {
+      "lat": -32.6,
+      "lon": 94.83933451403375,
+      "log_likelihood": -1942.1390542507843,
+      "normalized_prob": 0.0,
+      "contributing_items": 1
+    },
+    {
+      "lat": -32.5,
+      "lon": 94.83933451403375,
+      "log_likelihood": -1982.07114075888,
+      "normalized_prob": 0.0,
+      "contributing_items": 0
+    },
+    {
+      "lat": -32.4,
+      "lon": 94.83933451403375,
+      "log_likelihood": -2021.545558521657,
+      "normalized_prob": 0.0,
+      "contributing_items": 0
+    },
+    {
+      "lat": -32.3,
+      "lon": 95.39316024259115,
+      "log_likelihood": -2042.2216903876304,
+      "normalized_prob": 0.0,
+      "contributing_items": 0
+    },
+    {
+      "lat": -32.2,
+      "lon": 95.39316024259115,
+      "log_likelihood": -2080.426644090075,
+      "normalized_prob": 0.0,
+      "contributing_items": 0
+    },
+    {
+      "lat": -32.1,
+      "lon": 95.39316024259115,
+      "log_likelihood": -2118.1277829376027,
+      "normalized_prob": 0.0,
+      "contributing_items": 0
+    },
+    {
+      "lat": -32.0,
+      "lon": 95.39316024259115,
+      "log_likelihood": -2155.3096939321968,
+      "normalized_prob": 0.0,
+      "contributing_items": 0
+    },
+    {
+      "lat": -31.9,
+      "lon": 95.39316024259115,
+      "log_likelihood": -2191.9604386275464,
+      "normalized_prob": 0.0,
+      "contributing_items": 0
+    },
+    {
+      "lat": -31.8,
+      "lon": 95.9331954938056,
+      "log_likelihood": -2208.9562636357687,
+      "normalized_prob": 0.0,
+      "contributing_items": 0
+    },
+    {
+      "lat": -31.7,
+      "lon": 95.9331954938056,
+      "log_likelihood": -2244.250063879234,
+      "normalized_prob": 0.0,
+      "contributing_items": 0
+    },
+    {
+      "lat": -31.6,
+      "lon": 95.9331954938056,
+      "log_likelihood": -2278.986744065804,
+      "normalized_prob": 0.0,
+      "contributing_items": 0
+    },
+    {
+      "lat": -31.5,
+      "lon": 95.9331954938056,
+      "log_likelihood": -2313.159389479302,
+      "normalized_prob": 0.0,
+      "contributing_items": 0
+    },
+    {
+      "lat": -31.4,
+      "lon": 95.9331954938056,
+      "log_likelihood": -2346.7595942063685,
+      "normalized_prob": 0.0,
+      "contributing_items": 0
+    },
+    {
+      "lat": -31.3,
+      "lon": 95.9331954938056,
+      "log_likelihood": -2379.7816202764343,
+      "normalized_prob": 0.0,
+      "contributing_items": 0
+    },
+    {
+      "lat": -31.2,
+      "lon": 96.45954581483048,
+      "log_likelihood": -2392.2929469280207,
+      "normalized_prob": 0.0,
+      "contributing_items": 0
+    },
+    {
+      "lat": -31.1,
+      "lon": 96.45954581483048,
+      "log_likelihood": -2423.922376909163,
+      "normalized_prob": 0.0,
+      "contributing_items": 0
+    },
+    {
+      "lat": -31.0,
+      "lon": 96.45954581483048,
+      "log_likelihood": -2454.9231998674995,
+      "normalized_prob": 0.0,
+      "contributing_items": 0
+    },
+    {
+      "lat": -30.9,
+      "lon": 96.45954581483048,
+      "log_likelihood": -2485.267558065353,
+      "normalized_prob": 0.0,
+      "contributing_items": 0
+    },
+    {
+      "lat": -30.8,
+      "lon": 96.45954581483048,
+      "log_likelihood": -2514.95240276185,
+      "normalized_prob": 0.0,
+      "contributing_items": 0
+    },
+    {
+      "lat": -30.7,
+      "lon": 96.97232549616406,
+      "log_likelihood": -2523.6695529880553,
+      "normalized_prob": 0.0,
+      "contributing_items": 0
+    },
+    {
+      "lat": -30.6,
+      "lon": 96.97232549616406,
+      "log_likelihood": -2551.8385407036676,
+      "normalized_prob": 0.0,
+      "contributing_items": 0
+    },
+    {
+      "lat": -30.5,
+      "lon": 96.97232549616406,
+      "log_likelihood": -2579.346377645457,
+      "normalized_prob": 0.0,
+      "contributing_items": 0
+    },
+    {
+      "lat": -30.4,
+      "lon": 96.97232549616406,
+      "log_likelihood": -2606.1930294413573,
+      "normalized_prob": 0.0,
+      "contributing_items": 0
+    },
+    {
+      "lat": -30.3,
+      "lon": 96.97232549616406,
+      "log_likelihood": -2632.3778833223414,
+      "normalized_prob": 0.0,
+      "contributing_items": 0
+    },
+    {
+      "lat": -30.2,
+      "lon": 97.47165650442983,
+      "log_likelihood": -2637.380317962587,
+      "normalized_prob": 0.0,
+      "contributing_items": 0
+    },
+    {
+      "lat": -30.1,
+      "lon": 97.47165650442983,
+      "log_likelihood": -2662.0816011697275,
+      "normalized_prob": 0.0,
+      "contributing_items": 0
+    },
+    {
+      "lat": -30.0,
+      "lon": 97.47165650442983,
+      "log_likelihood": -2686.12831529693,
+      "normalized_prob": 0.0,
+      "contributing_items": 0
+    },
+    {
+      "lat": -29.9,
+      "lon": 97.47165650442983,
+      "log_likelihood": -2709.519681880592,
+      "normalized_prob": 0.0,
+      "contributing_items": 0
+    },
+    {
+      "lat": -29.8,
+      "lon": 97.47165650442983,
+      "log_likelihood": -2732.2610569590734,
+      "normalized_prob": 0.0,
+      "contributing_items": 0
+    },
+    {
+      "lat": -29.7,
+      "lon": 97.47165650442983,
+      "log_likelihood": -2754.352224993289,
+      "normalized_prob": 0.0,
+      "contributing_items": 0
+    },
+    {
+      "lat": -29.6,
+      "lon": 97.95766747110302,
+      "log_likelihood": -2755.0691299801642,
+      "normalized_prob": 0.0,
+      "contributing_items": 0
+    },
+    {
+      "lat": -29.5,
+      "lon": 97.95766747110302,
+      "log_likelihood": -2775.7387440622338,
+      "normalized_prob": 0.0,
+      "contributing_items": 0
+    },
+    {
+      "lat": -29.4,
+      "lon": 97.95766747110302,
+      "log_likelihood": -2795.7722522117083,
+      "normalized_prob": 0.0,
+      "contributing_items": 0
+    },
+    {
+      "lat": -29.3,
+      "lon": 97.95766747110302,
+      "log_likelihood": -2815.1737350370795,
+      "normalized_prob": 0.0,
+      "contributing_items": 0
+    },
+    {
+      "lat": -29.2,
+      "lon": 97.95766747110302,
+      "log_likelihood": -2833.9469266784413,
+      "normalized_prob": 0.0,
+      "contributing_items": 0
+    },
+    {
+      "lat": -29.1,
+      "lon": 98.4304927375049,
+      "log_likelihood": -2831.4405299603077,
+      "normalized_prob": 0.0,
+      "contributing_items": 0
+    },
+    {
+      "lat": -29.0,
+      "lon": 98.4304927375049,
+      "log_likelihood": -2848.859537001305,
+      "normalized_prob": 0.0,
+      "contributing_items": 0
+    },
+    {
+      "lat": -28.9,
+      "lon": 98.4304927375049,
+      "log_likelihood": -2865.6663923952397,
+      "normalized_prob": 0.0,
+      "contributing_items": 1
+    },
+    {
+      "lat": -28.8,
+      "lon": 98.4304927375049,
+      "log_likelihood": -2881.8654613377266,
+      "normalized_prob": 0.0,
+      "contributing_items": 1
+    },
+    {
+      "lat": -28.7,
+      "lon": 98.4304927375049,
+      "log_likelihood": -2897.463617218247,
+      "normalized_prob": 0.0,
+      "contributing_items": 1
+    },
+    {
+      "lat": -28.6,
+      "lon": 98.4304927375049,
+      "log_likelihood": -2912.4643792988077,
+      "normalized_prob": 0.0,
+      "contributing_items": 1
+    },
+    {
+      "lat": -28.5,
+      "lon": 98.890271455853,
+      "log_likelihood": -2906.318963523341,
+      "normalized_prob": 0.0,
+      "contributing_items": 1
+    },
+    {
+      "lat": -28.4,
+      "lon": 98.890271455853,
+      "log_likelihood": -2920.083354810988,
+      "normalized_prob": 0.0,
+      "contributing_items": 1
+    },
+    {
+      "lat": -28.3,
+      "lon": 98.890271455853,
+      "log_likelihood": -2933.2867213541986,
+      "normalized_prob": 0.0,
+      "contributing_items": 1
+    },
+    {
+      "lat": -28.2,
+      "lon": 98.890271455853,
+      "log_likelihood": -2945.9328035863227,
+      "normalized_prob": 0.0,
+      "contributing_items": 1
+    },
+    {
+      "lat": -28.1,
+      "lon": 98.890271455853,
+      "log_likelihood": -2958.024519093911,
+      "normalized_prob": 0.0,
+      "contributing_items": 1
+    },
+    {
+      "lat": -28.0,
+      "lon": 99.33714674569916,
+      "log_likelihood": -2949.293543543119,
+      "normalized_prob": 0.0,
+      "contributing_items": 1
+    },
+    {
+      "lat": -27.9,
+      "lon": 99.33714674569916,
+      "log_likelihood": -2960.2255671096195,
+      "normalized_prob": 0.0,
+      "contributing_items": 1
+    },
+    {
+      "lat": -27.8,
+      "lon": 99.33714674569916,
+      "log_likelihood": -2970.622423520735,
+      "normalized_prob": 0.0,
+      "contributing_items": 1
+    },
+    {
+      "lat": -27.7,
+      "lon": 99.33714674569916,
+      "log_likelihood": -2980.489291171699,
+      "normalized_prob": 0.0,
+      "contributing_items": 1
+    },
+    {
+      "lat": -27.6,
+      "lon": 99.33714674569916,
+      "log_likelihood": -2989.8312366744735,
+      "normalized_prob": 0.0,
+      "contributing_items": 1
+    },
+    {
+      "lat": -27.5,
+      "lon": 99.33714674569916,
+      "log_likelihood": -2998.6524354258668,
+      "normalized_prob": 0.0,
+      "contributing_items": 1
+    },
+    {
+      "lat": -27.4,
+      "lon": 99.77126490470069,
+      "log_likelihood": -2987.011697377125,
+      "normalized_prob": 0.0,
+      "contributing_items": 1
+    },
+    {
+      "lat": -27.3,
+      "lon": 99.77126490470069,
+      "log_likelihood": -2994.7625804924514,
+      "normalized_prob": 0.0,
+      "contributing_items": 1
+    },
+    {
+      "lat": -27.2,
+      "lon": 99.77126490470069,
+      "log_likelihood": -3002.011612183089,
+      "normalized_prob": 0.0,
+      "contributing_items": 1
+    },
+    {
+      "lat": -27.1,
+      "lon": 99.77126490470069,
+      "log_likelihood": -3008.766998148529,
+      "normalized_prob": 0.0,
+      "contributing_items": 1
+    },
+    {
+      "lat": -27.0,
+      "lon": 99.77126490470069,
+      "log_likelihood": -3015.0326714684697,
+      "normalized_prob": 0.0,
+      "contributing_items": 1
+    },
+    {
+      "lat": -26.9,
+      "lon": 99.77126490470069,
+      "log_likelihood": -3020.816277568307,
+      "normalized_prob": 0.0,
+      "contributing_items": 1
+    },
+    {
+      "lat": -26.8,
+      "lon": 100.19277467234609,
+      "log_likelihood": -3006.6033661832666,
+      "normalized_prob": 0.0,
+      "contributing_items": 1
+    },
+    {
+      "lat": -26.7,
+      "lon": 100.19277467234609,
+      "log_likelihood": -3011.4054450465674,
+      "normalized_prob": 0.0,
+      "contributing_items": 1
+    },
+    {
+      "lat": -26.6,
+      "lon": 100.19277467234609,
+      "log_likelihood": -3015.7449142683245,
+      "normalized_prob": 0.0,
+      "contributing_items": 1
+    },
+    {
+      "lat": -26.5,
+      "lon": 100.19277467234609,
+      "log_likelihood": -3019.626097934767,
+      "normalized_prob": 0.0,
+      "contributing_items": 1
+    },
+    {
+      "lat": -26.4,
+      "lon": 100.19277467234609,
+      "log_likelihood": -3023.055911176711,
+      "normalized_prob": 0.0,
+      "contributing_items": 1
+    },
+    {
+      "lat": -26.3,
+      "lon": 100.19277467234609,
+      "log_likelihood": -3026.040619296827,
+      "normalized_prob": 0.0,
+      "contributing_items": 1
+    },
+    {
+      "lat": -26.2,
+      "lon": 100.6018265449966,
+      "log_likelihood": -3009.586630058188,
+      "normalized_prob": 0.0,
+      "contributing_items": 1
+    },
+    {
+      "lat": -26.1,
+      "lon": 100.6018265449966,
+      "log_likelihood": -3011.6817406232462,
+      "normalized_prob": 0.0,
+      "contributing_items": 1
+    },
+    {
+      "lat": -26.0,
+      "lon": 100.6018265449966,
+      "log_likelihood": -3013.3518542245292,
+      "normalized_prob": 0.0,
+      "contributing_items": 1
+    },
+    {
+      "lat": -25.9,
+      "lon": 100.6018265449966,
+      "log_likelihood": -3014.6030852153153,
+      "normalized_prob": 0.0,
+      "contributing_items": 1
+    },
+    {
+      "lat": -25.8,
+      "lon": 100.6018265449966,
+      "log_likelihood": -3015.441621104073,
+      "normalized_prob": 0.0,
+      "contributing_items": 1
+    },
+    {
+      "lat": -25.7,
+      "lon": 100.6018265449966,
+      "log_likelihood": -3015.8718499887245,
+      "normalized_prob": 0.0,
+      "contributing_items": 1
+    },
+    {
+      "lat": -25.6,
+      "lon": 100.99857214039359,
+      "log_likelihood": -2997.4920525228003,
+      "normalized_prob": 0.0,
+      "contributing_items": 1
+    },
+    {
+      "lat": -25.5,
+      "lon": 100.99857214039359,
+      "log_likelihood": -2997.123158317082,
+      "normalized_prob": 0.0,
+      "contributing_items": 1
+    },
+    {
+      "lat": -25.4,
+      "lon": 100.99857214039359,
+      "log_likelihood": -2996.3672525714514,
+      "normalized_prob": 0.0,
+      "contributing_items": 1
+    },
+    {
+      "lat": -25.3,
+      "lon": 100.99857214039359,
+      "log_likelihood": -2995.2295379806815,
+      "normalized_prob": 0.0,
+      "contributing_items": 1
+    },
+    {
+      "lat": -25.2,
+      "lon": 100.99857214039359,
+      "log_likelihood": -2993.718520709686,
+      "normalized_prob": 0.0,
+      "contributing_items": 1
+    },
+    {
+      "lat": -25.1,
+      "lon": 100.99857214039359,
+      "log_likelihood": -2991.8364963330546,
+      "normalized_prob": 0.0,
+      "contributing_items": 1
+    },
+    {
+      "lat": -25.0,
+      "lon": 101.38316360962246,
+      "log_likelihood": -2971.8332951485545,
+      "normalized_prob": 0.0,
+      "contributing_items": 1
+    },
+    {
+      "lat": -24.9,
+      "lon": 101.38316360962246,
+      "log_likelihood": -2969.39589290507,
+      "normalized_prob": 0.0,
+      "contributing_items": 1
+    },
+    {
+      "lat": -24.8,
+      "lon": 101.38316360962246,
+      "log_likelihood": -2966.976633462296,
+      "normalized_prob": 0.0,
+      "contributing_items": 1
+    },
+    {
+      "lat": -24.7,
+      "lon": 101.38316360962246,
+      "log_likelihood": -2964.5754814576744,
+      "normalized_prob": 0.0,
+      "contributing_items": 1
+    },
+    {
+      "lat": -24.6,
+      "lon": 101.38316360962246,
+      "log_likelihood": -2962.1924016887,
+      "normalized_prob": 0.0,
+      "contributing_items": 1
+    },
+    {
+      "lat": -24.5,
+      "lon": 101.38316360962246,
+      "log_likelihood": -2959.827359111855,
+      "normalized_prob": 0.0,
+      "contributing_items": 1
+    },
+    {
+      "lat": -24.4,
+      "lon": 101.75575309440416,
+      "log_likelihood": -2940.3875588510646,
+      "normalized_prob": 0.0,
+      "contributing_items": 1
+    },
+    {
+      "lat": -24.3,
+      "lon": 101.75575309440416,
+      "log_likelihood": -2938.0645572782482,
+      "normalized_prob": 0.0,
+      "contributing_items": 1
+    },
+    {
+      "lat": -24.2,
+      "lon": 101.75575309440416,
+      "log_likelihood": -2935.759504537078,
+      "normalized_prob": 0.0,
+      "contributing_items": 1
+    },
+    {
+      "lat": -24.1,
+      "lon": 101.75575309440416,
+      "log_likelihood": -2933.4723661157686,
+      "normalized_prob": 0.0,
+      "contributing_items": 1
+    },
+    {
+      "lat": -24.0,
+      "lon": 101.75575309440416,
+      "log_likelihood": -2931.203107656998,
+      "normalized_prob": 0.0,
+      "contributing_items": 1
+    },
+    {
+      "lat": -23.9,
+      "lon": 101.75575309440416,
+      "log_likelihood": -2928.95169495691,
+      "normalized_prob": 0.0,
+      "contributing_items": 1
+    },
+    {
+      "lat": -23.8,
+      "lon": 102.11649222750542,
+      "log_likelihood": -2910.2775816987564,
+      "normalized_prob": 0.0,
+      "contributing_items": 1
+    },
+    {
+      "lat": -23.7,
+      "lon": 102.11649222750542,
+      "log_likelihood": -2908.067780606033,
+      "normalized_prob": 0.0,
+      "contributing_items": 1
+    },
+    {
+      "lat": -23.6,
+      "lon": 102.11649222750542,
+      "log_likelihood": -2905.8757379322515,
+      "normalized_prob": 0.0,
+      "contributing_items": 1
+    },
+    {
+      "lat": -23.5,
+      "lon": 102.11649222750542,
+      "log_likelihood": -2903.701419989096,
+      "normalized_prob": 0.0,
+      "contributing_items": 1
+    },
+    {
+      "lat": -23.4,
+      "lon": 102.11649222750542,
+      "log_likelihood": -2901.5447932374586,
+      "normalized_prob": 0.0,
+      "contributing_items": 1
+    },
+    {
+      "lat": -23.3,
+      "lon": 102.11649222750542,
+      "log_likelihood": -2899.4058242865112,
+      "normalized_prob": 0.0,
+      "contributing_items": 0
+    },
+    {
+      "lat": -23.2,
+      "lon": 102.46553167401011,
+      "log_likelihood": -2881.4811041067064,
+      "normalized_prob": 0.0,
+      "contributing_items": 0
+    },
+    {
+      "lat": -23.1,
+      "lon": 102.46553167401011,
+      "log_likelihood": -2879.383307747117,
+      "normalized_prob": 0.0,
+      "contributing_items": 0
+    },
+    {
+      "lat": -23.0,
+      "lon": 102.46553167401011,
+      "log_likelihood": -2877.303082883301,
+      "normalized_prob": 0.0,
+      "contributing_items": 0
+    },
+    {
+      "lat": -22.9,
+      "lon": 102.46553167401011,
+      "log_likelihood": -2875.2403966248726,
+      "normalized_prob": 0.0,
+      "contributing_items": 0
+    },
+    {
+      "lat": -22.8,
+      "lon": 102.46553167401011,
+      "log_likelihood": -2873.195216225688,
+      "normalized_prob": 0.0,
+      "contributing_items": 0
+    },
+    {
+      "lat": -22.7,
+      "lon": 102.46553167401011,
+      "log_likelihood": -2871.167509082943,
+      "normalized_prob": 0.0,
+      "contributing_items": 0
+    },
+    {
+      "lat": -22.6,
+      "lon": 102.80302071117463,
+      "log_likelihood": -2853.976145819875,
+      "normalized_prob": 0.0,
+      "contributing_items": 0
+    },
+    {
+      "lat": -22.5,
+      "lon": 102.80302071117463,
+      "log_likelihood": -2851.9891639145762,
+      "normalized_prob": 0.0,
+      "contributing_items": 0
+    },
+    {
+      "lat": -22.4,
+      "lon": 102.80302071117463,
+      "log_likelihood": -2850.0195700120858,
+      "normalized_prob": 0.0,
+      "contributing_items": 0
+    },
+    {
+      "lat": -22.3,
+      "lon": 102.80302071117463,
+      "log_likelihood": -2848.06733199601,
+      "normalized_prob": 0.0,
+      "contributing_items": 0
+    },
+    {
+      "lat": -22.2,
+      "lon": 102.80302071117463,
+      "log_likelihood": -2846.132417889474,
+      "normalized_prob": 0.0,
+      "contributing_items": 0
+    },
+    {
+      "lat": -22.1,
+      "lon": 102.80302071117463,
+      "log_likelihood": -2844.2147958542737,
+      "normalized_prob": 0.0,
+      "contributing_items": 0
+    },
+    {
+      "lat": -22.0,
+      "lon": 103.12910684459357,
+      "log_likelihood": -2827.7410357101135,
+      "normalized_prob": 0.0,
+      "contributing_items": 0
+    },
+    {
+      "lat": -21.9,
+      "lon": 103.12910684459357,
+      "log_likelihood": -2825.863684448408,
+      "normalized_prob": 0.0,
+      "contributing_items": 0
+    },
+    {
+      "lat": -21.8,
+      "lon": 103.12910684459357,
+      "log_likelihood": -2824.0035410739424,
+      "normalized_prob": 0.0,
+      "contributing_items": 0
+    },
+    {
+      "lat": -21.7,
+      "lon": 103.12910684459357,
+      "log_likelihood": -2822.160574221802,
+      "normalized_prob": 0.0,
+      "contributing_items": 0
+    },
+    {
+      "lat": -21.6,
+      "lon": 103.12910684459357,
+      "log_likelihood": -2820.3347526621114,
+      "normalized_prob": 0.0,
+      "contributing_items": 0
+    },
+    {
+      "lat": -21.5,
+      "lon": 103.12910684459357,
+      "log_likelihood": -2818.52604529924,
+      "normalized_prob": 0.0,
+      "contributing_items": 0
+    },
+    {
+      "lat": -21.4,
+      "lon": 103.4439354584268,
+      "log_likelihood": -2802.75443857544,
+      "normalized_prob": 0.0,
+      "contributing_items": 0
+    },
+    {
+      "lat": -21.3,
+      "lon": 103.4439354584268,
+      "log_likelihood": -2800.98554158487,
+      "normalized_prob": 0.0,
+      "contributing_items": 0
+    },
+    {
+      "lat": -21.2,
+      "lon": 103.4439354584268,
+      "log_likelihood": -2799.233675696106,
+      "normalized_prob": 0.0,
+      "contributing_items": 0
+    },
+    {
+      "lat": -21.1,
+      "lon": 103.4439354584268,
+      "log_likelihood": -2797.4988102745147,
+      "normalized_prob": 0.0,
+      "contributing_items": 0
+    },
+    {
+      "lat": -21.0,
+      "lon": 103.4439354584268,
+      "log_likelihood": -2795.7809148162496,
+      "normalized_prob": 0.0,
+      "contributing_items": 0
+    },
+    {
+      "lat": -20.9,
+      "lon": 103.4439354584268,
+      "log_likelihood": -2794.0799589475196,
+      "normalized_prob": 0.0,
+      "contributing_items": 0
+    },
+    {
+      "lat": -20.8,
+      "lon": 103.4439354584268,
+      "log_likelihood": -2792.395912423801,
+      "normalized_prob": 0.0,
+      "contributing_items": 0
+    },
+    {
+      "lat": -20.7,
+      "lon": 103.74764949747929,
+      "log_likelihood": -2777.3337684060907,
+      "normalized_prob": 0.0,
+      "contributing_items": 0
+    },
+    {
+      "lat": -20.6,
+      "lon": 103.74764949747929,
+      "log_likelihood": -2775.689015291663,
+      "normalized_prob": 0.0,
+      "contributing_items": 0
+    },
+    {
+      "lat": -20.5,
+      "lon": 103.74764949747929,
+      "log_likelihood": -2774.0610898568416,
+      "normalized_prob": 0.0,
+      "contributing_items": 0
+    },
+    {
+      "lat": -20.4,
+      "lon": 103.74764949747929,
+      "log_likelihood": -2772.449962304019,
+      "normalized_prob": 0.0,
+      "contributing_items": 0
+    },
+    {
+      "lat": -20.3,
+      "lon": 103.74764949747929,
+      "log_likelihood": -2770.8556029616443,
+      "normalized_prob": 0.0,
+      "contributing_items": 0
+    },
+    {
+      "lat": -20.2,
+      "lon": 103.74764949747929,
+      "log_likelihood": -2769.2779822834436,
+      "normalized_prob": 0.0,
+      "contributing_items": 0
+    },
+    {
+      "lat": -20.1,
+      "lon": 104.0403891789806,
+      "log_likelihood": -2754.887780148638,
+      "normalized_prob": 0.0,
+      "contributing_items": 0
+    },
+    {
+      "lat": -20.0,
+      "lon": 104.0403891789806,
+      "log_likelihood": -2753.3489843283487,
+      "normalized_prob": 0.0,
+      "contributing_items": 0
+    }
+  ],
+  "peak_lat": -40.0,
+  "peak_lon": 82.4771130497192,
+  "confidence_interval_68": [
+    -40.0,
+    -39.9
+  ],
+  "confidence_interval_95": [
+    -40.0,
+    -39.8
+  ],
+  "satellite_peak_lat": -34.23,
+  "intersection_lat": -39.47545454545455,
+  "items_used": 21,
+  "items_excluded": 0,
+  "validation_ok": true,
+  "validation_message": "✓ Drift model validated against Réunion flaperon find"
+}
