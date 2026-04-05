@@ -29,16 +29,37 @@ export function setupPopups(map: MapboxMap): void {
   // --- Arc rings: click to show BTO/BFO ---
   if (map.getLayer("arcs-lines")) {
     map.on("mouseenter", "arcs-lines", () => setCursor(map, "pointer"));
-    map.on("mouseleave", "arcs-lines", () => setCursor(map, ""));
-    map.on("click", "arcs-lines", (e) => {
+    map.on("mousemove", "arcs-lines", (e) => {
       const props = e.features?.[0]?.properties;
       if (!props) return;
+      const residual = props.bfo_residual_hz === null || props.bfo_residual_hz === undefined
+        ? "BFO residual unavailable for current best path"
+        : `BFO residual: ${Number(props.bfo_residual_hz).toFixed(1)} Hz<br/>Weight: ${Number(props.bfo_weight).toFixed(2)}<br/>Fit: ${props.bfo_fit_label}`;
       showPopup(
         map,
         e,
         `<strong>Arc ${props.arc}</strong><br/>
          Time: ${props.time} UTC<br/>
-         Range: ${props.range_km} km`
+         Range: ${props.range_km} km<br/>
+         <br/>${residual}`
+      );
+    });
+    map.on("mouseleave", "arcs-lines", () => {
+      setCursor(map, "");
+      if (popup) popup.remove();
+    });
+    map.on("click", "arcs-lines", (e) => {
+      const props = e.features?.[0]?.properties;
+      if (!props) return;
+      const residualLine = props.bfo_residual_hz === null || props.bfo_residual_hz === undefined
+        ? ""
+        : `<br/>BFO residual: ${Number(props.bfo_residual_hz).toFixed(1)} Hz`;
+      showPopup(
+        map,
+        e,
+        `<strong>Arc ${props.arc}</strong><br/>
+         Time: ${props.time} UTC<br/>
+         Range: ${props.range_km} km${residualLine}`
       );
     });
   }

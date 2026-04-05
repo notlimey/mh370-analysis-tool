@@ -1,9 +1,12 @@
 import type { Map as MapboxMap } from "mapbox-gl";
 import { getArcRings, type BackendArcRing } from "../lib/backend";
 
+let latestArcRings: BackendArcRing[] = [];
+
 /** Draw BTO arc rings on the map */
 export async function loadArcsLayer(map: MapboxMap): Promise<void> {
   const rings: BackendArcRing[] = await getArcRings();
+  latestArcRings = rings;
 
   map.addSource("arcs-source", {
     type: "geojson",
@@ -15,6 +18,9 @@ export async function loadArcsLayer(map: MapboxMap): Promise<void> {
           arc: ring.arc,
           time: ring.time_utc,
           range_km: Math.round(ring.range_km),
+          bfo_residual_hz: null,
+          bfo_weight: null,
+          bfo_fit_label: null,
         },
         geometry: {
           type: "LineString" as const,
@@ -52,4 +58,29 @@ export async function loadArcsLayer(map: MapboxMap): Promise<void> {
       "text-halo-width": 1,
     },
   });
+}
+
+export function getArcRingByArc(arc: number): BackendArcRing | undefined {
+  return latestArcRings.find((ring) => ring.arc === arc);
+}
+
+export function highlightArc(map: MapboxMap, arcNum: number): void {
+  if (!map.getLayer("arcs-lines")) return;
+
+  if (arcNum > 0) {
+    map.setPaintProperty("arcs-lines", "line-color", [
+      "case", ["==", ["get", "arc"], arcNum], "#facc15", "#ffffff",
+    ]);
+    map.setPaintProperty("arcs-lines", "line-opacity", [
+      "case", ["==", ["get", "arc"], arcNum], 1.0, 0.25,
+    ]);
+    map.setPaintProperty("arcs-lines", "line-width", [
+      "case", ["==", ["get", "arc"], arcNum], 3, 1,
+    ]);
+    return;
+  }
+
+  map.setPaintProperty("arcs-lines", "line-color", "#ffffff");
+  map.setPaintProperty("arcs-lines", "line-opacity", 0.6);
+  map.setPaintProperty("arcs-lines", "line-width", 1.5);
 }

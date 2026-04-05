@@ -250,7 +250,7 @@ impl BfoModel {
         }
 
         // Convert residual to score: Gaussian with σ ≈ 7 Hz (typical BFO noise)
-        let sigma = 7.0;
+        let sigma = config.bfo_sigma_hz;
         Ok((-best_residual.powi(2) / (2.0 * sigma * sigma)).exp())
     }
 }

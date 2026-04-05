@@ -38,7 +38,7 @@ export function renderInversionSection(mode: "standard" | "drift"): string {
   }
 
   return `
-    <div class="sidebar-section">
+    <div class="sidebar-section-inner">
       <div class="section-heading"><h2>Inversion Analysis</h2><button class="info-icon-button" type="button" data-info-id="section:inversion" aria-label="About Inversion Analysis">i</button></div>
       <label class="toggle-row">
         <span class="toggle-main">

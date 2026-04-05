@@ -7,19 +7,10 @@ export interface DebrisSummaryState {
 const PANEL_ID = "model-summary-panel";
 
 export function ensureModelSummaryPanel(): void {
-  if (document.getElementById(PANEL_ID)) {
+  const panel = document.getElementById(PANEL_ID);
+  if (!panel) {
     return;
   }
-
-  const sidebar = document.getElementById("sidebar");
-  if (!sidebar) {
-    return;
-  }
-
-  const panel = document.createElement("div");
-  panel.id = PANEL_ID;
-  panel.className = "sidebar-section model-summary-panel";
-  sidebar.appendChild(panel);
   updateModelSummaryPanel({});
 }
 

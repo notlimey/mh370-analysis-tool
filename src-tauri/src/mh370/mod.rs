@@ -2,6 +2,7 @@ pub mod airspaces;
 pub mod anomalies;
 pub mod arcs;
 pub mod bfo;
+pub mod config;
 pub mod data;
 pub mod debris_inversion;
 pub mod drift;

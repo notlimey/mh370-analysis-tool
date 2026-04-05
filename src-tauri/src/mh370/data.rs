@@ -9,7 +9,6 @@ pub const ANALYSIS_EPOCH_HOUR_UTC: u32 = 16;
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct AnalysisConfig {
     pub dataset_path: String,
-    pub satellite_ephemeris_path: String,
     pub ring_points: usize,
     pub min_speed_kts: f64,
     pub max_speed_kts: f64,
@@ -19,6 +18,8 @@ pub struct AnalysisConfig {
     pub ring_sample_step: usize,
     pub speed_consistency_sigma_kts: f64,
     pub heading_change_sigma_deg: f64,
+    pub bfo_sigma_hz: f64,
+    pub bfo_score_weight: f64,
     pub satellite_nominal_lon_deg: f64,
     pub satellite_nominal_lat_deg: f64,
     pub satellite_drift_start_lat_offset_deg: f64,
@@ -45,16 +46,17 @@ impl Default for AnalysisConfig {
     fn default() -> Self {
         Self {
             dataset_path: DEFAULT_DATASET_PATH.to_string(),
-            satellite_ephemeris_path: String::new(),
-            ring_points: 360,
+            ring_points: 720,
             min_speed_kts: 350.0,
             max_speed_kts: 520.0,
             cruise_altitude_ft: 35_000.0,
             calibration_altitude_ft: 0.0,
             beam_width: 256,
-            ring_sample_step: 10,
+            ring_sample_step: 1,
             speed_consistency_sigma_kts: 35.0,
             heading_change_sigma_deg: 80.0,
+            bfo_sigma_hz: 7.0,
+            bfo_score_weight: 1.0,
             satellite_nominal_lon_deg: 64.5,
             satellite_nominal_lat_deg: 0.0,
             satellite_drift_start_lat_offset_deg: 0.0,

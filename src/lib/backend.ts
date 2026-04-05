@@ -4,6 +4,54 @@ export { IS_TAURI };
 
 import type { AnalysisConfig } from "../model/config";
 
+export type ConfigSource = "CompiledDefault" | "DefaultToml" | "LocalToml" | "UiOverride";
+
+export interface BackendResolvedConfig {
+  config: AnalysisConfig;
+  sources: Record<string, ConfigSource>;
+}
+
+const BROWSER_FALLBACK_CONFIG: AnalysisConfig = {
+  dataset_path: "",
+  ring_points: 720,
+  min_speed_kts: 350,
+  max_speed_kts: 520,
+  cruise_altitude_ft: 35000,
+  calibration_altitude_ft: 0,
+  beam_width: 256,
+  ring_sample_step: 1,
+  speed_consistency_sigma_kts: 35,
+  heading_change_sigma_deg: 80,
+  bfo_sigma_hz: 7,
+  bfo_score_weight: 1,
+  satellite_nominal_lon_deg: 64.5,
+  satellite_nominal_lat_deg: 0,
+  satellite_drift_start_lat_offset_deg: 0,
+  satellite_drift_amplitude_deg: 1.6,
+  satellite_drift_end_time_utc: "00:19:29.416",
+  fuel_remaining_at_arc1_kg: 33500,
+  fuel_baseline_kg_per_hr: 6500,
+  fuel_baseline_speed_kts: 471,
+  fuel_baseline_altitude_ft: 35000,
+  fuel_speed_exponent: 1.35,
+  fuel_low_altitude_penalty_per_10kft: 0.12,
+  post_arc7_low_speed_kts: 420,
+  max_post_arc7_minutes: 57,
+  arc7_grid_min_lat: -45,
+  arc7_grid_max_lat: -10,
+  arc7_grid_points: 180,
+  debris_weight_min_lat: -38,
+  debris_weight_max_lat: -32,
+  slow_family_max_speed_kts: 390,
+  perpendicular_family_tolerance_deg: 20,
+};
+
+function compiledDefaultSources(): Record<string, ConfigSource> {
+  return Object.fromEntries(
+    Object.keys(BROWSER_FALLBACK_CONFIG).map((key) => [key, "CompiledDefault"]),
+  );
+}
+
 export interface BackendHandshake {
   arc: number;
   time_utc: string;
@@ -23,9 +71,32 @@ export interface BackendCandidatePath {
   points: [number, number][];
   score: number;
   initial_heading: number;
+  headings_deg?: number[];
   family: string;
   fuel_feasible: boolean;
   fuel_remaining_at_arc7_kg: number;
+  extra_endurance_minutes?: number;
+  extra_range_nm?: number;
+  bfo_summary?: BackendBfoSummary;
+  bfo_diagnostics?: BackendBfoDiagnostic[];
+}
+
+export interface BackendBfoSummary {
+  used_count: number;
+  total_count: number;
+  mean_abs_residual_hz?: number;
+  max_abs_residual_hz?: number;
+}
+
+export interface BackendBfoDiagnostic {
+  arc: number;
+  time_utc: string;
+  measured_bfo_hz: number | null;
+  predicted_bfo_hz: number | null;
+  residual_hz: number | null;
+  reliability?: string;
+  used_in_score: boolean;
+  skip_reason?: string;
 }
 
 export interface BackendProbPoint {
@@ -139,6 +210,14 @@ export async function getHandshakes(): Promise<BackendHandshake[]> {
     : fetchSnapshot("handshakes.json");
 }
 
+export async function getResolvedConfig(): Promise<BackendResolvedConfig> {
+  if (IS_TAURI) return tauriInvoke("get_resolved_config");
+  return {
+    config: { ...BROWSER_FALLBACK_CONFIG },
+    sources: compiledDefaultSources(),
+  };
+}
+
 export async function getArcRings(): Promise<BackendArcRing[]> {
   if (IS_TAURI) return tauriInvoke("get_arc_rings");
   const geojson = await fetchSnapshot<GeoJSON.FeatureCollection>("arc_rings.geojson");
@@ -150,21 +229,26 @@ export async function getArcRings(): Promise<BackendArcRing[]> {
   }));
 }
 
-export async function getCandidatePaths(n = 500): Promise<BackendCandidatePath[]> {
-  if (IS_TAURI) return tauriInvoke("get_candidate_paths", { n });
+export async function getCandidatePaths(n = 500, config?: AnalysisConfig): Promise<BackendCandidatePath[]> {
+  if (IS_TAURI) return tauriInvoke("get_candidate_paths", config ? { n, config } : { n });
   const geojson = await fetchSnapshot<GeoJSON.FeatureCollection>("candidate_paths.geojson");
   return geojson.features.map((feature) => ({
     points: (feature.geometry as GeoJSON.LineString).coordinates as [number, number][],
     score: Number(feature.properties?.score ?? 0),
     initial_heading: Number(feature.properties?.initial_heading ?? headingFromPoints((feature.geometry as GeoJSON.LineString).coordinates as [number, number][])),
+    headings_deg: [],
     family: String(feature.properties?.family ?? "other"),
     fuel_feasible: Boolean(feature.properties?.fuel_feasible),
     fuel_remaining_at_arc7_kg: Number(feature.properties?.fuel_remaining_at_arc7_kg ?? 0),
+    extra_endurance_minutes: 0,
+    extra_range_nm: 0,
+    bfo_summary: undefined,
+    bfo_diagnostics: [],
   }));
 }
 
-export async function getProbabilityHeatmap(): Promise<BackendProbPoint[]> {
-  if (IS_TAURI) return tauriInvoke("get_probability_heatmap");
+export async function getProbabilityHeatmap(config?: AnalysisConfig): Promise<BackendProbPoint[]> {
+  if (IS_TAURI) return tauriInvoke("get_probability_heatmap", config ? { config } : undefined);
   const geojson = await fetchSnapshot<GeoJSON.FeatureCollection>("probability_heatmap.geojson");
   return geojson.features.map((feature) => ({
     position: (feature.geometry as GeoJSON.Point).coordinates as [number, number],
@@ -220,14 +304,14 @@ export async function getAirspaces(): Promise<GeoJSON.FeatureCollection> {
     : fetchSnapshot("airspaces.geojson");
 }
 
-export async function exportProbabilityGeojson(path: string) {
+export async function exportProbabilityGeojson(path: string, config?: AnalysisConfig) {
   if (!IS_TAURI) return;
-  return tauriInvoke("export_probability_geojson", { path });
+  return tauriInvoke("export_probability_geojson", config ? { path, config } : { path });
 }
 
-export async function exportPathsGeojson(path: string) {
+export async function exportPathsGeojson(path: string, config?: AnalysisConfig) {
   if (!IS_TAURI) return;
-  return tauriInvoke("export_paths_geojson", { path });
+  return tauriInvoke("export_paths_geojson", config ? { path, config } : { path });
 }
 
 export async function runDebrisInversion(config?: AnalysisConfig): Promise<InversionResult> {

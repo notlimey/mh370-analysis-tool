@@ -10,8 +10,6 @@ use super::geometry::{bearing, haversine, LatLon};
 use super::satellite::{satellite_subpoint, SatelliteModel};
 
 const KTS_TO_KM_PER_HR: f64 = 1.852;
-const BFO_SIGMA_HZ: f64 = 7.0;
-const BFO_SCORE_WEIGHT: f64 = 1.0;
 
 pub const LAST_RADAR: LatLon = LatLon {
     lat: 6.8,
@@ -42,6 +40,28 @@ pub struct FlightPath {
     pub fuel_remaining_at_arc7_kg: f64,
     pub extra_endurance_minutes: f64,
     pub extra_range_nm: f64,
+    pub bfo_summary: BfoSummary,
+    pub bfo_diagnostics: Vec<BfoDiagnostic>,
+}
+
+#[derive(Debug, Clone, Serialize)]
+pub struct BfoSummary {
+    pub used_count: usize,
+    pub total_count: usize,
+    pub mean_abs_residual_hz: Option<f64>,
+    pub max_abs_residual_hz: Option<f64>,
+}
+
+#[derive(Debug, Clone, Serialize)]
+pub struct BfoDiagnostic {
+    pub arc: u8,
+    pub time_utc: String,
+    pub measured_bfo_hz: Option<f64>,
+    pub predicted_bfo_hz: Option<f64>,
+    pub residual_hz: Option<f64>,
+    pub reliability: Option<String>,
+    pub used_in_score: bool,
+    pub skip_reason: Option<String>,
 }
 
 #[derive(Debug, Clone, Serialize)]
@@ -71,6 +91,23 @@ pub struct FuelSummary {
     pub low_speed_reference_minutes: f64,
     pub low_speed_reference_range_nm: f64,
     pub paths: Vec<FlightPath>,
+}
+
+#[derive(Debug, Clone, Serialize)]
+pub struct PathSamplingStep {
+    pub arc: u8,
+    pub time_utc: String,
+    pub input_states: usize,
+    pub ring_point_count: usize,
+    pub min_speed_kts: Option<f64>,
+    pub max_speed_kts: Option<f64>,
+    pub speed_feasible_candidates: usize,
+    pub output_states: usize,
+}
+
+#[derive(Debug, Clone, Serialize)]
+pub struct PathSamplingDebug {
+    pub steps: Vec<PathSamplingStep>,
 }
 
 pub fn sample_candidate_paths(
@@ -124,11 +161,16 @@ pub fn sample_candidate_paths_from_dataset(
 ) -> Result<Vec<FlightPath>, String> {
     let calibration = calibrate_bto_offset_from_dataset(satellite, dataset, config)?;
     let primary_handshakes = primary_arc_handshakes(dataset);
+    let path_handshakes: Vec<&super::data::InmarsatHandshake> = primary_handshakes
+        .iter()
+        .copied()
+        .filter(|handshake| handshake.arc >= 2)
+        .collect();
     let last_radar_time_s = parse_time_utc_seconds(LAST_RADAR_TIME_UTC)?;
     let bfo_model = BfoModel::calibrate(satellite, config)?;
 
-    if primary_handshakes.len() < 7 {
-        return Err("expected seven primary BTO arcs in dataset".to_string());
+    if path_handshakes.len() < 6 {
+        return Err("expected six path-constraining primary arcs in dataset".to_string());
     }
 
     let mut states = vec![PathState {
@@ -139,7 +181,7 @@ pub fn sample_candidate_paths_from_dataset(
     }];
 
     let mut current_time_s = last_radar_time_s;
-    for handshake in &primary_handshakes {
+    for handshake in &path_handshakes {
         let ring = build_arc_ring(satellite, handshake, calibration.offset_us, config)?;
         let dt_hours = (ring.time_s - current_time_s) / 3600.0;
         if dt_hours <= 0.0 {
@@ -193,7 +235,7 @@ pub fn sample_candidate_paths_from_dataset(
                 next_state.headings_deg.push(heading_deg);
                 next_state.log_score += speed_score.ln()
                     + 0.35 * heading_score.ln()
-                    + BFO_SCORE_WEIGHT * bfo_score.ln();
+                    + config.bfo_score_weight * bfo_score.ln();
                 next_states.push(next_state);
             }
         }
@@ -208,7 +250,7 @@ pub fn sample_candidate_paths_from_dataset(
         current_time_s = ring.time_s;
     }
 
-    let arc7_handshake = primary_handshakes
+    let arc7_handshake = path_handshakes
         .last()
         .ok_or_else(|| "missing arc 7 handshake".to_string())?;
     let arc7_time_s = parse_time_utc_seconds(&arc7_handshake.time_utc)?;
@@ -220,7 +262,7 @@ pub fn sample_candidate_paths_from_dataset(
 
     let mut paths: Vec<FlightPath> = states
         .into_iter()
-        .map(|state| {
+        .map(|state| -> Result<FlightPath, String> {
             let initial_heading = state.headings_deg.first().copied().unwrap_or(0.0);
             let total_distance_km = state
                 .points
@@ -230,8 +272,11 @@ pub fn sample_candidate_paths_from_dataset(
             let fuel = evaluate_fuel(&state.speeds_kts, total_distance_km, config);
             let arc67_metrics = compute_arc67_metrics(&state, arc7_satellite);
             let family = classify_arc7_family(&state, &arc67_metrics, arc7_slant_range_km, config);
+            let bfo_diagnostics =
+                build_bfo_diagnostics(&bfo_model, satellite, &path_handshakes, &state, config)?;
+            let bfo_summary = summarize_bfo_diagnostics(&bfo_diagnostics);
 
-            FlightPath {
+            Ok(FlightPath {
                 points: state
                     .points
                     .iter()
@@ -249,14 +294,137 @@ pub fn sample_candidate_paths_from_dataset(
                 fuel_remaining_at_arc7_kg: fuel.fuel_remaining_at_arc7_kg,
                 extra_endurance_minutes: fuel.extra_endurance_minutes,
                 extra_range_nm: fuel.extra_range_nm,
-            }
+                bfo_summary,
+                bfo_diagnostics,
+            })
         })
-        .collect();
+        .collect::<Result<Vec<_>, _>>()?;
 
     paths.sort_by(|left, right| right.score.partial_cmp(&left.score).unwrap());
     paths.truncate(n.max(1));
     normalize_scores(&mut paths);
     Ok(paths)
+}
+
+pub fn debug_path_sampling(
+    satellite: &SatelliteModel,
+    config: Option<AnalysisConfig>,
+) -> Result<PathSamplingDebug, String> {
+    let config = resolve_config(config);
+    let dataset = load_dataset(&config)?;
+    let calibration = calibrate_bto_offset_from_dataset(satellite, &dataset, &config)?;
+    let primary_handshakes = primary_arc_handshakes(&dataset);
+    let path_handshakes: Vec<&super::data::InmarsatHandshake> = primary_handshakes
+        .iter()
+        .copied()
+        .filter(|handshake| handshake.arc >= 2)
+        .collect();
+    let last_radar_time_s = parse_time_utc_seconds(LAST_RADAR_TIME_UTC)?;
+    let bfo_model = BfoModel::calibrate(satellite, &config)?;
+
+    if path_handshakes.len() < 6 {
+        return Err("expected six path-constraining primary arcs in dataset".to_string());
+    }
+
+    let mut steps = Vec::new();
+    let mut states = vec![PathState {
+        points: vec![LAST_RADAR],
+        speeds_kts: Vec::new(),
+        headings_deg: Vec::new(),
+        log_score: 0.0,
+    }];
+    let mut current_time_s = last_radar_time_s;
+
+    for handshake in &path_handshakes {
+        let ring = build_arc_ring(satellite, handshake, calibration.offset_us, &config)?;
+        let dt_hours = (ring.time_s - current_time_s) / 3600.0;
+        if dt_hours <= 0.0 {
+            return Err(format!("non-positive leg duration for {}", ring.time_utc));
+        }
+
+        let ring_points = sampled_points(&ring.points, config.ring_sample_step);
+        let input_states = states.len();
+        let mut speed_feasible_candidates = 0;
+        let mut min_speed_kts = None;
+        let mut max_speed_kts = None;
+        let mut next_states = Vec::new();
+
+        for state in &states {
+            let from = *state.points.last().unwrap_or(&LAST_RADAR);
+            for [lon, lat] in &ring_points {
+                let candidate = LatLon::new(*lat, *lon);
+                let leg_distance_km = haversine(from, candidate);
+                let speed_kts = leg_distance_km / (dt_hours * KTS_TO_KM_PER_HR);
+                min_speed_kts =
+                    Some(min_speed_kts.map_or(speed_kts, |value: f64| value.min(speed_kts)));
+                max_speed_kts =
+                    Some(max_speed_kts.map_or(speed_kts, |value: f64| value.max(speed_kts)));
+                if speed_kts < config.min_speed_kts || speed_kts > config.max_speed_kts {
+                    continue;
+                }
+                speed_feasible_candidates += 1;
+
+                let heading_deg = bearing(from, candidate);
+                let speed_score = if let Some(previous_speed_kts) = state.speeds_kts.last() {
+                    gaussian_score(
+                        speed_kts - previous_speed_kts,
+                        config.speed_consistency_sigma_kts,
+                    )
+                } else {
+                    1.0
+                };
+                let heading_score = if let Some(previous_heading_deg) = state.headings_deg.last() {
+                    gaussian_score(
+                        heading_difference_deg(heading_deg, *previous_heading_deg),
+                        config.heading_change_sigma_deg,
+                    )
+                } else {
+                    1.0
+                };
+                let bfo_score = score_bfo_handshake(
+                    &bfo_model,
+                    satellite,
+                    handshake,
+                    candidate,
+                    heading_deg,
+                    speed_kts,
+                    ring.time_s,
+                    &config,
+                )?;
+
+                let mut next_state = state.clone();
+                next_state.points.push(candidate);
+                next_state.speeds_kts.push(speed_kts);
+                next_state.headings_deg.push(heading_deg);
+                next_state.log_score += speed_score.ln()
+                    + 0.35 * heading_score.ln()
+                    + config.bfo_score_weight * bfo_score.ln();
+                next_states.push(next_state);
+            }
+        }
+
+        next_states.sort_by(|left, right| right.log_score.partial_cmp(&left.log_score).unwrap());
+        next_states.truncate(config.beam_width.max(1));
+        steps.push(PathSamplingStep {
+            arc: handshake.arc,
+            time_utc: ring.time_utc.clone(),
+            input_states,
+            ring_point_count: ring_points.len(),
+            min_speed_kts,
+            max_speed_kts,
+            speed_feasible_candidates,
+            output_states: next_states.len(),
+        });
+
+        if next_states.is_empty() {
+            break;
+        }
+
+        states = next_states;
+        current_time_s = ring.time_s;
+    }
+
+    Ok(PathSamplingDebug { steps })
 }
 
 #[derive(Debug, Clone, Copy)]
@@ -440,7 +608,80 @@ fn score_bfo_handshake(
             config,
         )?
         .abs();
-    Ok(gaussian_score(residual, BFO_SIGMA_HZ))
+    Ok(gaussian_score(residual, config.bfo_sigma_hz))
+}
+
+fn build_bfo_diagnostics(
+    model: &BfoModel,
+    satellite: &SatelliteModel,
+    handshakes: &[&super::data::InmarsatHandshake],
+    state: &PathState,
+    config: &AnalysisConfig,
+) -> Result<Vec<BfoDiagnostic>, String> {
+    handshakes
+        .iter()
+        .zip(state.points.iter().skip(1))
+        .zip(state.headings_deg.iter())
+        .zip(state.speeds_kts.iter())
+        .map(|(((handshake, pos), heading_deg), speed_kts)| {
+            let reliability = handshake.reliability.clone();
+            let used_in_score = matches!(handshake.reliability.as_deref(), Some("GOOD"))
+                && handshake.bfo_hz.is_some();
+            let skip_reason = if handshake.bfo_hz.is_none() {
+                Some("No measured BFO".to_string())
+            } else if !used_in_score {
+                Some(match handshake.reliability.as_deref() {
+                    Some(reliability) => format!("Excluded by reliability: {reliability}"),
+                    None => "Excluded by reliability: unknown".to_string(),
+                })
+            } else {
+                None
+            };
+            let time_s = parse_time_utc_seconds(&handshake.time_utc)?;
+            let predicted_bfo_hz = if handshake.bfo_hz.is_some() {
+                Some(model.predict(satellite, *pos, *heading_deg, *speed_kts, time_s, config)?)
+            } else {
+                None
+            };
+            let residual_hz = match (predicted_bfo_hz, handshake.bfo_hz) {
+                (Some(predicted), Some(measured)) => Some(predicted - measured),
+                _ => None,
+            };
+
+            Ok(BfoDiagnostic {
+                arc: handshake.arc,
+                time_utc: handshake.time_utc.clone(),
+                measured_bfo_hz: handshake.bfo_hz,
+                predicted_bfo_hz,
+                residual_hz,
+                reliability,
+                used_in_score,
+                skip_reason,
+            })
+        })
+        .collect()
+}
+
+fn summarize_bfo_diagnostics(diagnostics: &[BfoDiagnostic]) -> BfoSummary {
+    let used_residuals: Vec<f64> = diagnostics
+        .iter()
+        .filter(|diagnostic| diagnostic.used_in_score)
+        .filter_map(|diagnostic| diagnostic.residual_hz.map(f64::abs))
+        .collect();
+
+    let mean_abs_residual_hz = if used_residuals.is_empty() {
+        None
+    } else {
+        Some(used_residuals.iter().sum::<f64>() / used_residuals.len() as f64)
+    };
+    let max_abs_residual_hz = used_residuals.iter().copied().reduce(f64::max);
+
+    BfoSummary {
+        used_count: used_residuals.len(),
+        total_count: diagnostics.len(),
+        mean_abs_residual_hz,
+        max_abs_residual_hz,
+    }
 }
 
 fn sampled_points(points: &[[f64; 2]], sample_step: usize) -> Vec<[f64; 2]> {
@@ -491,6 +732,16 @@ mod tests {
 
     fn test_satellite() -> SatelliteModel {
         SatelliteModel::load().unwrap()
+    }
+
+    #[test]
+    fn default_sampler_produces_candidate_paths() {
+        let satellite = test_satellite();
+        let paths =
+            sample_candidate_paths(&satellite, 10, Some(AnalysisConfig::default())).unwrap();
+
+        assert!(!paths.is_empty());
+        assert!(paths[0].bfo_summary.total_count > 0);
     }
 
     fn base_state(speed_kts: f64, heading_deg: f64, arc7_point: LatLon) -> PathState {
@@ -588,5 +839,72 @@ mod tests {
 
         assert!(weighted < 1.0);
         assert_eq!(skipped, 1.0);
+    }
+
+    #[test]
+    fn bfo_diagnostics_capture_used_and_skipped_handshakes() {
+        let config = AnalysisConfig::default();
+        let satellite = test_satellite();
+        let model = BfoModel::calibrate(&satellite, &config).unwrap();
+        let handshakes = vec![
+            InmarsatHandshake {
+                arc: 2,
+                time_utc: "19:41:02.906".to_string(),
+                bto_us: Some(14_060.0),
+                bfo_hz: Some(182.0),
+                message_type: "Hourly handshake".to_string(),
+                note: None,
+                position_known: false,
+                lat: None,
+                lon: None,
+                reliability: Some("GOOD".to_string()),
+                flag: None,
+            },
+            InmarsatHandshake {
+                arc: 3,
+                time_utc: "20:41:05.000".to_string(),
+                bto_us: Some(14_400.0),
+                bfo_hz: Some(170.0),
+                message_type: "Hourly handshake".to_string(),
+                note: None,
+                position_known: false,
+                lat: None,
+                lon: None,
+                reliability: Some("UNRELIABLE_BFO".to_string()),
+                flag: None,
+            },
+        ];
+        let state = PathState {
+            points: vec![
+                LAST_RADAR,
+                LatLon::new(-30.0, 94.0),
+                LatLon::new(-35.0, 93.0),
+            ],
+            speeds_kts: vec![470.0, 465.0],
+            headings_deg: vec![190.0, 185.0],
+            log_score: 0.0,
+        };
+
+        let handshake_refs: Vec<&InmarsatHandshake> = handshakes.iter().collect();
+        let diagnostics =
+            build_bfo_diagnostics(&model, &satellite, &handshake_refs, &state, &config).unwrap();
+        let summary = summarize_bfo_diagnostics(&diagnostics);
+
+        assert_eq!(diagnostics.len(), 2);
+        assert!(diagnostics[0].used_in_score);
+        assert!(diagnostics[0].predicted_bfo_hz.is_some());
+        assert!(diagnostics[0].residual_hz.is_some());
+        assert_eq!(diagnostics[0].skip_reason, None);
+
+        assert!(!diagnostics[1].used_in_score);
+        assert_eq!(
+            diagnostics[1].skip_reason.as_deref(),
+            Some("Excluded by reliability: UNRELIABLE_BFO")
+        );
+
+        assert_eq!(summary.used_count, 1);
+        assert_eq!(summary.total_count, 2);
+        assert!(summary.mean_abs_residual_hz.is_some());
+        assert!(summary.max_abs_residual_hz.is_some());
     }
 }

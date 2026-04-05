@@ -1,6 +1,6 @@
 import "./style.css";
 import { applyLayerVisibility, initMap } from "./map";
-import { loadArcsLayer } from "./layers/arcs";
+import { highlightArc, loadArcsLayer } from "./layers/arcs";
 import { loadAnomaliesLayer } from "./layers/anomalies";
 import { loadAirspacesLayer } from "./layers/airspaces";
 import { loadHolidaysLayer } from "./layers/holidays";
@@ -13,13 +13,30 @@ import { loadDebrisLayer } from "./layers/debris";
 import { loadPointsLayer } from "./layers/points";
 import { loadFlightPathLayer } from "./layers/flightpath";
 import { initDriftCloudsLayer } from "./layers/drift_clouds";
-import { initSidebar, renderFamilyLegend, updateConfidence, updateModelSummary } from "./ui/sidebar";
+import { initSidebar, renderFamilyLegend, updateConfidence, updateModelResultsSummary, updateModelRunStatus, updateModelSummary } from "./ui/sidebar";
 import { getSelectedAnomalyId, initEvidencePanel, openAnomalyDetail } from "./ui/evidencePanel";
 import { initTimeline } from "./ui/timeline";
 import { setupPopups } from "./popups";
 import type { Map as MapboxMap } from "mapbox-gl";
 import { getProbabilityHeatmap, IS_TAURI, type BackendProbPoint } from "./lib/backend";
 import { setSelectedAnomaly } from "./layers/anomalies";
+import { getAnalysisConfig, initConfig } from "./model/config";
+import { SEARCHED_2014_2017, SEARCHED_2018, SEARCHED_2025_2026 } from "./constants";
+
+interface LayerLoadSummary {
+  pathCount: number;
+  heatmapCount: number;
+  bestFamily?: string;
+  bfoDiagnosticCount: number;
+  bfoAvailable: boolean;
+}
+
+interface FamilySummary {
+  counts: Record<string, number>;
+  familySpreadKm?: number;
+  firsByFamily: Record<string, string[]>;
+  endpointNarrative?: string;
+}
 
 function createLoader(): HTMLElement {
   const el = document.createElement("div");
@@ -28,6 +45,11 @@ function createLoader(): HTMLElement {
   el.innerHTML = '<div class="loader-content"><div class="loader-spinner"></div><span class="loader-text">Loading analysis data</span></div>';
   document.getElementById("app")!.appendChild(el);
   return el;
+}
+
+function setLoaderText(text: string): void {
+  const el = document.querySelector<HTMLElement>("#loader .loader-text");
+  if (el) el.textContent = text;
 }
 
 const LAYER_PREFIXES = [
@@ -72,13 +94,14 @@ function removeAllLayers(map: MapboxMap): void {
  * searched areas → heatmap → arcs → candidate paths → debris → flight path → key points
  */
 
-async function loadAllLayers(map: MapboxMap): Promise<void> {
+async function loadAllLayers(map: MapboxMap): Promise<LayerLoadSummary> {
   // Static layers first (no async)
   loadPointsLayer(map);
+  const config = getAnalysisConfig();
 
   const [heatmap, paths] = await Promise.all([
-    getProbabilityHeatmap(),
-    fetchCandidatePaths(120),
+    getProbabilityHeatmap(config),
+    fetchCandidatePaths(120, config),
   ]) as [BackendProbPoint[], FlightPath[]];
   const pathAnnotations = await annotatePaths(paths);
 
@@ -123,7 +146,26 @@ async function loadAllLayers(map: MapboxMap): Promise<void> {
 
   const bestPath = paths[0];
   const summary = summarizeFamilies(pathAnnotations);
+  const peakPoint = heatmap
+    .slice()
+    .sort((left, right) => right.probability - left.probability)[0];
+  const fuelFeasibleCount = paths.filter((path) => path.fuel_feasible).length;
+  const overlapSummary = summarizeEndpointOverlap(paths);
+  const continuationSummary = summarizeContinuationContribution(paths);
   renderFamilyLegend(summary);
+  updateModelResultsSummary({
+    bestFamily: bestPath?.family,
+    bestScore: bestPath?.score,
+    endpointCounts: summary.counts,
+    fuelFeasiblePercent: paths.length > 0 ? (fuelFeasibleCount / paths.length) * 100 : undefined,
+    bfoMeanAbsResidualHz: bestPath?.bfo_summary?.mean_abs_residual_hz,
+    peakLat: peakPoint?.position[1],
+    peakLon: peakPoint?.position[0],
+    searchedOverlapLabel: overlapSummary,
+    continuationLabel: continuationSummary,
+    pathCount: paths.length,
+    heatmapCount: heatmap.length,
+  });
   if (bestPath) {
     updateModelSummary({
       family: bestPath.family,
@@ -131,25 +173,41 @@ async function loadAllLayers(map: MapboxMap): Promise<void> {
         ? `${Math.round(bestPath.fuel_remaining_at_arc7_kg)} kg @ arc 7`
         : undefined,
       familySpreadKm: summary.familySpreadKm,
+      bfoSummary: bestPath.bfo_summary,
+      bfoDiagnostics: bestPath.bfo_diagnostics,
     });
+  } else {
+    updateModelSummary({ noPaths: true });
   }
+
+  return {
+    pathCount: paths.length,
+    heatmapCount: heatmap.length,
+    bestFamily: bestPath?.family,
+    bfoDiagnosticCount: bestPath?.bfo_diagnostics?.length ?? 0,
+    bfoAvailable: Boolean(bestPath?.bfo_summary),
+  };
 }
 
-function summarizeFamilies(pathAnnotations: PathAnnotation[]): {
-  counts: Record<string, number>;
-  familySpreadKm?: number;
-  firsByFamily: Record<string, string[]>;
-} {
+function summarizeFamilies(pathAnnotations: PathAnnotation[]): FamilySummary {
   const paths = pathAnnotations.map(({ path }) => path);
   const counts: Record<string, number> = {};
   const firsByFamily: Record<string, Set<string>> = {};
+  const endpointsByFamily: Record<string, [number, number][]> = {};
   for (const { path, firs } of pathAnnotations) {
     counts[path.family] = (counts[path.family] ?? 0) + 1;
     if (!firsByFamily[path.family]) {
       firsByFamily[path.family] = new Set<string>();
     }
+    if (!endpointsByFamily[path.family]) {
+      endpointsByFamily[path.family] = [];
+    }
     for (const fir of firs) {
       firsByFamily[path.family].add(fir);
+    }
+    const endpoint = path.points[path.points.length - 1];
+    if (endpoint) {
+      endpointsByFamily[path.family].push(endpoint);
     }
   }
 
@@ -159,13 +217,73 @@ function summarizeFamilies(pathAnnotations: PathAnnotation[]): {
     ? haversineKm(slow.points[slow.points.length - 1], perpendicular.points[perpendicular.points.length - 1])
     : undefined;
 
+  const endpointNarrative = describeEndpointShape(counts, endpointsByFamily);
+
   return {
     counts,
     familySpreadKm,
     firsByFamily: Object.fromEntries(
       Object.entries(firsByFamily).map(([family, firs]) => [family, Array.from(firs).sort()]),
     ),
+    endpointNarrative,
   };
+}
+
+function describeEndpointShape(
+  counts: Record<string, number>,
+  endpointsByFamily: Record<string, [number, number][]>,
+): string | undefined {
+  const rankedFamilies = Object.entries(counts)
+    .filter(([, count]) => count > 0)
+    .sort((left, right) => right[1] - left[1]);
+  if (rankedFamilies.length === 0) return undefined;
+
+  const dominantFamily = rankedFamilies[0][0];
+  const dominantCentroid = centroid(endpointsByFamily[dominantFamily] ?? []);
+  if (!dominantCentroid) return undefined;
+
+  let northeastTail:
+    | { family: string; distanceKm: number; eastKm: number; northKm: number }
+    | undefined;
+  for (const [family] of rankedFamilies.slice(1)) {
+    const familyCentroid = centroid(endpointsByFamily[family] ?? []);
+    if (!familyCentroid) continue;
+    const eastKm = longitudinalKm(dominantCentroid, familyCentroid);
+    const northKm = latitudinalKm(dominantCentroid, familyCentroid);
+    if (eastKm <= 0 || northKm <= 0) continue;
+    const distanceKm = Math.hypot(eastKm, northKm);
+    if (!northeastTail || distanceKm > northeastTail.distanceKm) {
+      northeastTail = { family, distanceKm, eastKm, northKm };
+    }
+  }
+
+  if (northeastTail && northeastTail.distanceKm >= 15) {
+    return `${capitalize(northeastTail.family)} endpoints form the visible northeast tail, centered about ${Math.round(northeastTail.distanceKm)} km from the main ${dominantFamily} cluster.`;
+  }
+
+  return `${capitalize(dominantFamily)} endpoints dominate this run, so the visible stretch is mostly spread within one family rather than a separate branch.`;
+}
+
+function centroid(points: [number, number][]): [number, number] | undefined {
+  if (points.length === 0) return undefined;
+  const sums = points.reduce<[number, number]>(
+    (acc, [lon, lat]) => [acc[0] + lon, acc[1] + lat],
+    [0, 0],
+  );
+  return [sums[0] / points.length, sums[1] / points.length];
+}
+
+function longitudinalKm(from: [number, number], to: [number, number]): number {
+  const averageLatRad = ((from[1] + to[1]) / 2) * Math.PI / 180;
+  return (to[0] - from[0]) * 111.32 * Math.cos(averageLatRad);
+}
+
+function latitudinalKm(from: [number, number], to: [number, number]): number {
+  return (to[1] - from[1]) * 111.32;
+}
+
+function capitalize(value: string): string {
+  return value.charAt(0).toUpperCase() + value.slice(1);
 }
 
 function haversineKm(a: [number, number], b: [number, number]): number {
@@ -178,25 +296,47 @@ function haversineKm(a: [number, number], b: [number, number]): number {
   return 2 * 6371 * Math.asin(Math.sqrt(h));
 }
 
-/** Highlight a specific arc ring (or clear highlight if arcNum is 0) */
-function highlightArc(map: MapboxMap, arcNum: number): void {
-  if (!map.getLayer("arcs-lines")) return;
+function summarizeEndpointOverlap(paths: FlightPath[]): string {
+  const searchPolygons = [SEARCHED_2014_2017, SEARCHED_2018, SEARCHED_2025_2026];
+  const endpoints = paths
+    .filter((path) => path.fuel_feasible)
+    .map((path) => path.points[path.points.length - 1])
+    .filter((point): point is [number, number] => Array.isArray(point));
 
-  if (arcNum > 0) {
-    map.setPaintProperty("arcs-lines", "line-color", [
-      "case", ["==", ["get", "arc"], arcNum], "#facc15", "#ffffff",
-    ]);
-    map.setPaintProperty("arcs-lines", "line-opacity", [
-      "case", ["==", ["get", "arc"], arcNum], 1.0, 0.25,
-    ]);
-    map.setPaintProperty("arcs-lines", "line-width", [
-      "case", ["==", ["get", "arc"], arcNum], 3, 1,
-    ]);
-  } else {
-    map.setPaintProperty("arcs-lines", "line-color", "#ffffff");
-    map.setPaintProperty("arcs-lines", "line-opacity", 0.6);
-    map.setPaintProperty("arcs-lines", "line-width", 1.5);
+  if (endpoints.length === 0) {
+    return "No fuel-feasible endpoints";
   }
+
+  const insideCount = endpoints.filter((point) => searchPolygons.some((polygon) => pointInPolygon(point, polygon))).length;
+  return `${insideCount}/${endpoints.length} fuel-feasible endpoints in searched area (${Math.round((insideCount / endpoints.length) * 100)}%)`;
+}
+
+function summarizeContinuationContribution(paths: FlightPath[]): string {
+  const endpoints = paths.filter((path) => Array.isArray(path.points[path.points.length - 1]));
+  if (endpoints.length === 0) {
+    return "No visible endpoints";
+  }
+
+  const continuationCount = endpoints.filter((path) => (path.extra_endurance_minutes ?? 0) > 0 || (path.extra_range_nm ?? 0) > 0).length;
+  const constrainedCount = endpoints.length - continuationCount;
+  return `${continuationCount}/${endpoints.length} visible endpoints include post-Arc-7 continuation (${Math.round((continuationCount / endpoints.length) * 100)}%); ${constrainedCount} remain handshake-constrained.`;
+}
+
+function pointInPolygon(point: [number, number], polygon: [number, number][]): boolean {
+  const [x, y] = point;
+  let inside = false;
+
+  for (let i = 0, j = polygon.length - 1; i < polygon.length; j = i++) {
+    const [xi, yi] = polygon[i];
+    const [xj, yj] = polygon[j];
+    const intersects = ((yi > y) !== (yj > y))
+      && (x < (xj - xi) * (y - yi) / ((yj - yi) || Number.EPSILON) + xi);
+    if (intersects) {
+      inside = !inside;
+    }
+  }
+
+  return inside;
 }
 
 async function main(): Promise<void> {
@@ -207,6 +347,8 @@ async function main(): Promise<void> {
     banner.innerHTML = 'Read-only snapshot — download the desktop app to adjust model parameters and recompute <a href="https://github.com/notlimey/mh370-analysis-tool" target="_blank" rel="noreferrer">GitHub repo</a>';
     document.body.appendChild(banner);
   }
+
+  await initConfig();
 
   const map = initMap();
 
@@ -223,10 +365,25 @@ async function main(): Promise<void> {
 
   map.on("load", async () => {
     try {
-      await loadAllLayers(map);
+      setLoaderText("Loading analysis data");
+      const summary = await loadAllLayers(map);
       setupPopups(map);
+      updateModelRunStatus({
+        state: "completed",
+        finishedAt: new Date(),
+        pathCount: summary.pathCount,
+        heatmapCount: summary.heatmapCount,
+        bestFamily: summary.bestFamily,
+        bfoDiagnosticCount: summary.bfoDiagnosticCount,
+        bfoAvailable: summary.bfoAvailable,
+      });
     } catch (err) {
       console.error("Failed to load layers:", err);
+      updateModelRunStatus({
+        state: "failed",
+        finishedAt: new Date(),
+        error: err instanceof Error ? err.message : String(err),
+      });
     }
 
     loader?.classList.add("hidden");
@@ -240,13 +397,34 @@ async function main(): Promise<void> {
   initSidebar({
     onRunModel: async () => {
       const runLoader = document.getElementById("loader") ?? createLoader();
+      const startedAt = new Date();
+      updateModelRunStatus({ state: "running", startedAt });
+      setLoaderText("Running model");
       runLoader.classList.remove("hidden");
       try {
         removeAllLayers(map);
-        await loadAllLayers(map);
+        const summary = await loadAllLayers(map);
         setupPopups(map);
+        updateModelRunStatus({
+          state: "completed",
+          startedAt,
+          finishedAt: new Date(),
+          durationMs: Date.now() - startedAt.getTime(),
+          pathCount: summary.pathCount,
+          heatmapCount: summary.heatmapCount,
+          bestFamily: summary.bestFamily,
+          bfoDiagnosticCount: summary.bfoDiagnosticCount,
+          bfoAvailable: summary.bfoAvailable,
+        });
       } catch (err) {
         console.error("Failed to reload layers:", err);
+        updateModelRunStatus({
+          state: "failed",
+          startedAt,
+          finishedAt: new Date(),
+          durationMs: Date.now() - startedAt.getTime(),
+          error: err instanceof Error ? err.message : String(err),
+        });
       }
       runLoader.classList.add("hidden");
     },

@@ -16,7 +16,7 @@ pub fn export_probability_geojson(
     let config = resolve_config(config);
     let dataset = load_dataset(&config)?;
     let points = generate_probability_heatmap_from_dataset(satellite, &dataset, &config)?;
-    let geojson = probability_to_geojson(&points);
+    let geojson = probability_to_geojson(&points, &config);
     let serialized = serde_json::to_string_pretty(&geojson)
         .map_err(|err| format!("serialization failed: {err}"))?;
     std::fs::write(&path, serialized).map_err(|err| format!("write failed: {err}"))?;
@@ -36,7 +36,7 @@ pub fn export_paths_geojson(
     let config = resolve_config(config);
     let dataset = load_dataset(&config)?;
     let paths = sample_candidate_paths_from_dataset(satellite, &dataset, n, &config)?;
-    let geojson = paths_to_geojson(&paths);
+    let geojson = paths_to_geojson(&paths, &config);
     let serialized = serde_json::to_string_pretty(&geojson)
         .map_err(|err| format!("serialization failed: {err}"))?;
     std::fs::write(&path, serialized).map_err(|err| format!("write failed: {err}"))?;
@@ -60,9 +60,10 @@ pub fn export_debris_inversion_snapshot(
     std::fs::write(path, serialized).map_err(|err| format!("write failed: {err}"))
 }
 
-pub fn probability_to_geojson(points: &[ProbPoint]) -> serde_json::Value {
+pub fn probability_to_geojson(points: &[ProbPoint], config: &AnalysisConfig) -> serde_json::Value {
     json!({
         "type": "FeatureCollection",
+        "config": config,
         "features": points.iter().map(|point| {
             json!({
                 "type": "Feature",
@@ -86,9 +87,10 @@ pub fn probability_to_geojson(points: &[ProbPoint]) -> serde_json::Value {
     })
 }
 
-pub fn paths_to_geojson(paths: &[FlightPath]) -> serde_json::Value {
+pub fn paths_to_geojson(paths: &[FlightPath], config: &AnalysisConfig) -> serde_json::Value {
     json!({
         "type": "FeatureCollection",
+        "config": config,
         "features": paths.iter().enumerate().map(|(index, path)| {
             let average_speed_kts = if path.speeds_kts.is_empty() {
                 0.0
@@ -136,8 +138,9 @@ mod tests {
                 debris_weight: 0.2,
             },
         ];
-        let json = probability_to_geojson(&points);
+        let json = probability_to_geojson(&points, &AnalysisConfig::default());
         assert_eq!(json["type"], "FeatureCollection");
+        assert!(json["config"].is_object());
         assert_eq!(json["features"].as_array().unwrap().len(), 2);
         assert!(json["features"][0]["properties"]["probability"].is_number());
     }
