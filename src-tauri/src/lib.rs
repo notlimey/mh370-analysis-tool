@@ -1,5 +1,6 @@
 pub mod mh370;
 
+use std::cmp::Ordering as CmpOrdering;
 use std::sync::atomic::{AtomicU64, Ordering};
 use std::sync::Mutex;
 
@@ -79,7 +80,12 @@ pub fn run_model_probe(
     let sampling_debug = run_debug_path_sampling(&satellite, config)?;
     let heatmap_peak = heatmap
         .iter()
-        .max_by(|left, right| left.probability.partial_cmp(&right.probability).unwrap())
+        .filter(|point| point.probability.is_finite())
+        .max_by(|left, right| {
+            left.probability
+                .partial_cmp(&right.probability)
+                .unwrap_or(CmpOrdering::Equal)
+        })
         .map(|point| (point.position[1], point.position[0]));
     let best_path = paths.first();
 
@@ -101,7 +107,12 @@ pub fn run_model_probe(
 fn update_heatmap_peak(state: &AppState, points: &[ProbPoint]) {
     if let Some(lat) = points
         .iter()
-        .max_by(|left, right| left.probability.partial_cmp(&right.probability).unwrap())
+        .filter(|point| point.probability.is_finite())
+        .max_by(|left, right| {
+            left.probability
+                .partial_cmp(&right.probability)
+                .unwrap_or(CmpOrdering::Equal)
+        })
         .map(|point| point.position[1])
     {
         state

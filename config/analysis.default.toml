@@ -42,6 +42,9 @@ bfo_sigma_hz = 7.0
 bfo_score_weight = 1.0
 # effect: linear scale weight of BFO term in path score
 
+arc7_vertical_speed_fpm = 0.0
+# effect: scenario-specific vertical speed applied to Arc 7 BFO scoring
+
 
 # Aircraft state
 

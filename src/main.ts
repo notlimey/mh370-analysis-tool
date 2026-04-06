@@ -9,6 +9,7 @@ import { loadSonarLayers } from "./layers/sonar";
 import { annotatePaths, fetchCandidatePaths, loadPathsLayer, type FlightPath, type PathAnnotation } from "./layers/paths";
 import { loadPriorityGapsLayer } from "./layers/priority";
 import { loadHeatmapLayer } from "./layers/heatmap";
+import { hasEofComparisonOverlays, loadEofComparisonOverlay } from "./layers/eofComparison";
 import { loadDebrisLayer } from "./layers/debris";
 import { loadPointsLayer } from "./layers/points";
 import { loadPinsLayer } from "./layers/pins";
@@ -93,6 +94,7 @@ const LAYER_PREFIXES = [
   "points-",
   "pins-",
   "searched-",
+  "eof-compare-",
   "flightpath-",
   "drift-clouds-",
 ];
@@ -146,6 +148,9 @@ async function loadAllLayers(map: MapboxMap): Promise<LayerLoadSummary> {
   loadSonarLayers(map);
   await loadPathsLayer(map, paths, pathAnnotations);
   await loadHeatmapLayer(map, heatmap);
+  if (hasEofComparisonOverlays()) {
+    loadEofComparisonOverlay(map);
+  }
   loadPriorityGapsLayer(map, heatmap);
   await loadDebrisLayer(map);
   initDriftCloudsLayer(map);
@@ -185,6 +190,7 @@ async function loadAllLayers(map: MapboxMap): Promise<LayerLoadSummary> {
     bestFamily: bestPath?.family,
     bestScore: bestPath?.score,
     endpointCounts: summary.counts,
+    fuelFeasibleCount,
     fuelFeasiblePercent: paths.length > 0 ? (fuelFeasibleCount / paths.length) * 100 : undefined,
     bfoMeanAbsResidualHz: bestPath?.bfo_summary?.mean_abs_residual_hz,
     bestEndpointLat: bestEndpoint?.[1],

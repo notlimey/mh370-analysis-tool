@@ -17,9 +17,11 @@ export interface ModelRunStatus {
 }
 
 export interface ModelResultSummary {
+  scenarioLabel?: string;
   bestFamily?: string;
   bestScore?: number;
   endpointCounts: Record<string, number>;
+  fuelFeasibleCount?: number;
   fuelFeasiblePercent?: number;
   bfoMeanAbsResidualHz?: number;
   bestEndpointLat?: number;

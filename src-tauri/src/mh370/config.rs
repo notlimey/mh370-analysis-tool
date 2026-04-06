@@ -26,6 +26,7 @@ macro_rules! analysis_config_fields {
             northward_penalty_weight: f64,
             bfo_sigma_hz: f64,
             bfo_score_weight: f64,
+            arc7_vertical_speed_fpm: f64,
             satellite_nominal_lon_deg: f64,
             satellite_nominal_lat_deg: f64,
             satellite_drift_start_lat_offset_deg: f64,
@@ -100,6 +101,7 @@ pub fn get_config_field(config: &AnalysisConfig, field_name: &str) -> Result<f64
         "northward_penalty_weight" => Ok(config.northward_penalty_weight),
         "bfo_sigma_hz" => Ok(config.bfo_sigma_hz),
         "bfo_score_weight" => Ok(config.bfo_score_weight),
+        "arc7_vertical_speed_fpm" => Ok(config.arc7_vertical_speed_fpm),
         "satellite_nominal_lon_deg" => Ok(config.satellite_nominal_lon_deg),
         "satellite_nominal_lat_deg" => Ok(config.satellite_nominal_lat_deg),
         "satellite_drift_start_lat_offset_deg" => Ok(config.satellite_drift_start_lat_offset_deg),
@@ -133,38 +135,138 @@ pub fn set_config_field(
     value: f64,
 ) -> Result<f64, String> {
     match field_name {
-        "ring_points" => { config.ring_points = value as usize; Ok(value) }
-        "beam_width" => { config.beam_width = value as usize; Ok(value) }
-        "ring_sample_step" => { config.ring_sample_step = value as usize; Ok(value) }
-        "arc7_grid_points" => { config.arc7_grid_points = value as usize; Ok(value) }
-        "min_speed_kts" => { config.min_speed_kts = value; Ok(value) }
-        "max_speed_kts" => { config.max_speed_kts = value; Ok(value) }
-        "cruise_altitude_ft" => { config.cruise_altitude_ft = value; Ok(value) }
-        "calibration_altitude_ft" => { config.calibration_altitude_ft = value; Ok(value) }
-        "speed_consistency_sigma_kts" => { config.speed_consistency_sigma_kts = value; Ok(value) }
-        "heading_change_sigma_deg" => { config.heading_change_sigma_deg = value; Ok(value) }
-        "northward_leg_sigma_deg" => { config.northward_leg_sigma_deg = value; Ok(value) }
-        "northward_penalty_weight" => { config.northward_penalty_weight = value; Ok(value) }
-        "bfo_sigma_hz" => { config.bfo_sigma_hz = value; Ok(value) }
-        "bfo_score_weight" => { config.bfo_score_weight = value; Ok(value) }
-        "satellite_nominal_lon_deg" => { config.satellite_nominal_lon_deg = value; Ok(value) }
-        "satellite_nominal_lat_deg" => { config.satellite_nominal_lat_deg = value; Ok(value) }
-        "satellite_drift_start_lat_offset_deg" => { config.satellite_drift_start_lat_offset_deg = value; Ok(value) }
-        "satellite_drift_amplitude_deg" => { config.satellite_drift_amplitude_deg = value; Ok(value) }
-        "fuel_remaining_at_arc1_kg" => { config.fuel_remaining_at_arc1_kg = value; Ok(value) }
-        "fuel_baseline_kg_per_hr" => { config.fuel_baseline_kg_per_hr = value; Ok(value) }
-        "fuel_baseline_speed_kts" => { config.fuel_baseline_speed_kts = value; Ok(value) }
-        "fuel_baseline_altitude_ft" => { config.fuel_baseline_altitude_ft = value; Ok(value) }
-        "fuel_speed_exponent" => { config.fuel_speed_exponent = value; Ok(value) }
-        "fuel_low_altitude_penalty_per_10kft" => { config.fuel_low_altitude_penalty_per_10kft = value; Ok(value) }
-        "post_arc7_low_speed_kts" => { config.post_arc7_low_speed_kts = value; Ok(value) }
-        "max_post_arc7_minutes" => { config.max_post_arc7_minutes = value; Ok(value) }
-        "arc7_grid_min_lat" => { config.arc7_grid_min_lat = value; Ok(value) }
-        "arc7_grid_max_lat" => { config.arc7_grid_max_lat = value; Ok(value) }
-        "debris_weight_min_lat" => { config.debris_weight_min_lat = value; Ok(value) }
-        "debris_weight_max_lat" => { config.debris_weight_max_lat = value; Ok(value) }
-        "slow_family_max_speed_kts" => { config.slow_family_max_speed_kts = value; Ok(value) }
-        "perpendicular_family_tolerance_deg" => { config.perpendicular_family_tolerance_deg = value; Ok(value) }
+        "ring_points" => {
+            config.ring_points = value as usize;
+            Ok(value)
+        }
+        "beam_width" => {
+            config.beam_width = value as usize;
+            Ok(value)
+        }
+        "ring_sample_step" => {
+            config.ring_sample_step = value as usize;
+            Ok(value)
+        }
+        "arc7_grid_points" => {
+            config.arc7_grid_points = value as usize;
+            Ok(value)
+        }
+        "min_speed_kts" => {
+            config.min_speed_kts = value;
+            Ok(value)
+        }
+        "max_speed_kts" => {
+            config.max_speed_kts = value;
+            Ok(value)
+        }
+        "cruise_altitude_ft" => {
+            config.cruise_altitude_ft = value;
+            Ok(value)
+        }
+        "calibration_altitude_ft" => {
+            config.calibration_altitude_ft = value;
+            Ok(value)
+        }
+        "speed_consistency_sigma_kts" => {
+            config.speed_consistency_sigma_kts = value;
+            Ok(value)
+        }
+        "heading_change_sigma_deg" => {
+            config.heading_change_sigma_deg = value;
+            Ok(value)
+        }
+        "northward_leg_sigma_deg" => {
+            config.northward_leg_sigma_deg = value;
+            Ok(value)
+        }
+        "northward_penalty_weight" => {
+            config.northward_penalty_weight = value;
+            Ok(value)
+        }
+        "bfo_sigma_hz" => {
+            config.bfo_sigma_hz = value;
+            Ok(value)
+        }
+        "bfo_score_weight" => {
+            config.bfo_score_weight = value;
+            Ok(value)
+        }
+        "arc7_vertical_speed_fpm" => {
+            config.arc7_vertical_speed_fpm = value;
+            Ok(value)
+        }
+        "satellite_nominal_lon_deg" => {
+            config.satellite_nominal_lon_deg = value;
+            Ok(value)
+        }
+        "satellite_nominal_lat_deg" => {
+            config.satellite_nominal_lat_deg = value;
+            Ok(value)
+        }
+        "satellite_drift_start_lat_offset_deg" => {
+            config.satellite_drift_start_lat_offset_deg = value;
+            Ok(value)
+        }
+        "satellite_drift_amplitude_deg" => {
+            config.satellite_drift_amplitude_deg = value;
+            Ok(value)
+        }
+        "fuel_remaining_at_arc1_kg" => {
+            config.fuel_remaining_at_arc1_kg = value;
+            Ok(value)
+        }
+        "fuel_baseline_kg_per_hr" => {
+            config.fuel_baseline_kg_per_hr = value;
+            Ok(value)
+        }
+        "fuel_baseline_speed_kts" => {
+            config.fuel_baseline_speed_kts = value;
+            Ok(value)
+        }
+        "fuel_baseline_altitude_ft" => {
+            config.fuel_baseline_altitude_ft = value;
+            Ok(value)
+        }
+        "fuel_speed_exponent" => {
+            config.fuel_speed_exponent = value;
+            Ok(value)
+        }
+        "fuel_low_altitude_penalty_per_10kft" => {
+            config.fuel_low_altitude_penalty_per_10kft = value;
+            Ok(value)
+        }
+        "post_arc7_low_speed_kts" => {
+            config.post_arc7_low_speed_kts = value;
+            Ok(value)
+        }
+        "max_post_arc7_minutes" => {
+            config.max_post_arc7_minutes = value;
+            Ok(value)
+        }
+        "arc7_grid_min_lat" => {
+            config.arc7_grid_min_lat = value;
+            Ok(value)
+        }
+        "arc7_grid_max_lat" => {
+            config.arc7_grid_max_lat = value;
+            Ok(value)
+        }
+        "debris_weight_min_lat" => {
+            config.debris_weight_min_lat = value;
+            Ok(value)
+        }
+        "debris_weight_max_lat" => {
+            config.debris_weight_max_lat = value;
+            Ok(value)
+        }
+        "slow_family_max_speed_kts" => {
+            config.slow_family_max_speed_kts = value;
+            Ok(value)
+        }
+        "perpendicular_family_tolerance_deg" => {
+            config.perpendicular_family_tolerance_deg = value;
+            Ok(value)
+        }
         "dataset_path" | "satellite_drift_end_time_utc" => {
             Err(format!("field {field_name} is not numeric"))
         }

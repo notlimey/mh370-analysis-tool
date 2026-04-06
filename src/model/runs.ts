@@ -1,12 +1,15 @@
 import type { AnalysisConfig } from "./config";
 
 export interface SavedRunSummary {
+  scenarioLabel?: string;
   bestFamily?: string;
   bestScore?: number;
   peakLat?: number;
   peakLon?: number;
   pathCount: number;
   heatmapCount: number;
+  fuelFeasibleCount?: number;
+  fuelFeasiblePercent?: number;
   searchedOverlapLabel?: string;
   continuationLabel?: string;
   bfoMeanAbsResidualHz?: number;
@@ -14,6 +17,8 @@ export interface SavedRunSummary {
 
 export interface SavedRun {
   id: string;
+  scenarioId?: string;
+  label?: string;
   timestamp: string;
   config: AnalysisConfig;
   summary: SavedRunSummary;

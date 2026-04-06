@@ -18,6 +18,7 @@ export const DEFAULT_LAYER_VISIBILITY: Record<string, boolean> = {
   points: true,
   pins: true,
   searched: true,
+  "eof-compare": false,
   "drift-clouds": false,
 };
 

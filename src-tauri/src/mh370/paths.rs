@@ -512,10 +512,8 @@ fn evaluate_fuel(
     // Weight-sensitivity coefficient: fuel flow decreases ~0.045 kg/hr per kg
     // of weight reduction, derived from Boeing reference points:
     //   6,500 kg/hr at 207,000 kg → 5,000 kg/hr at 174,000 kg.
-    let initial_weight_kg = config.fuel_remaining_at_arc1_kg
-        + super::performance::airframe::ZFW_KG;
-    let nominal_burn_rate =
-        config.fuel_baseline_kg_per_hr * speed_factor * altitude_factor;
+    let initial_weight_kg = config.fuel_remaining_at_arc1_kg + super::performance::airframe::ZFW_KG;
+    let nominal_burn_rate = config.fuel_baseline_kg_per_hr * speed_factor * altitude_factor;
 
     // Integrate fuel burn over N steps, adjusting for weight reduction each step.
     const N_STEPS: usize = 20;
@@ -683,6 +681,7 @@ fn score_bfo_handshake(
         return Ok(1.0);
     }
 
+    let vertical_speed_fpm = vertical_speed_for_handshake(handshake.arc, config);
     let residual = model
         .residual(
             satellite,
@@ -692,10 +691,18 @@ fn score_bfo_handshake(
             time_s,
             measured_bfo,
             config,
-            0.0,
+            vertical_speed_fpm,
         )?
         .abs();
     Ok(gaussian_score(residual, config.bfo_sigma_hz).powf(reliability_weight))
+}
+
+fn vertical_speed_for_handshake(arc: u8, config: &AnalysisConfig) -> f64 {
+    if arc == 7 {
+        config.arc7_vertical_speed_fpm
+    } else {
+        0.0
+    }
 }
 
 fn bfo_reliability_weight(handshake: &super::data::InmarsatHandshake) -> f64 {
@@ -733,6 +740,7 @@ fn build_bfo_diagnostics(
                 None
             };
             let time_s = parse_time_utc_seconds(&handshake.time_utc)?;
+            let vertical_speed_fpm = vertical_speed_for_handshake(handshake.arc, config);
             let predicted_bfo_hz = if handshake.bfo_hz.is_some() {
                 Some(model.predict(
                     satellite,
@@ -741,7 +749,7 @@ fn build_bfo_diagnostics(
                     *speed_kts,
                     time_s,
                     config,
-                    0.0,
+                    vertical_speed_fpm,
                 )?)
             } else {
                 None
@@ -1062,5 +1070,14 @@ mod tests {
         assert_eq!(summary.total_count, 2);
         assert!(summary.mean_abs_residual_hz.is_some());
         assert!(summary.max_abs_residual_hz.is_some());
+    }
+
+    #[test]
+    fn applies_vertical_speed_only_to_arc7() {
+        let mut config = AnalysisConfig::default();
+        config.arc7_vertical_speed_fpm = 2_000.0;
+
+        assert_eq!(vertical_speed_for_handshake(6, &config), 0.0);
+        assert_eq!(vertical_speed_for_handshake(7, &config), 2_000.0);
     }
 }

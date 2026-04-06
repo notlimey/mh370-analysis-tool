@@ -17,6 +17,7 @@ export interface AnalysisConfig {
   northward_penalty_weight: number;
   bfo_sigma_hz: number;
   bfo_score_weight: number;
+  arc7_vertical_speed_fpm: number;
   satellite_nominal_lon_deg: number;
   satellite_nominal_lat_deg: number;
   satellite_drift_start_lat_offset_deg: number;

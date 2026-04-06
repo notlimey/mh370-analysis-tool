@@ -1,6 +1,6 @@
 import { getMap, toggleLayer, layerVisibility } from "../map";
 import type { GeoJSONSource, LngLatBoundsLike } from "mapbox-gl";
-import { exportPathsGeojson, exportProbabilityGeojson } from "../lib/backend";
+import { exportPathsGeojson, exportProbabilityGeojson, getProbabilityHeatmap } from "../lib/backend";
 import type { BackendBfoDiagnostic, BackendBfoSummary } from "../lib/backend";
 import { getArcRingByArc, highlightArc } from "../layers/arcs";
 import { zoomToPriorityGaps } from "../layers/priority";
@@ -13,7 +13,7 @@ import {
   updateAnalysisConfig,
 } from "../model/config";
 import type { AnalysisConfig } from "../model/config";
-import { getFamilyColor } from "../layers/paths";
+import { fetchCandidatePaths, getFamilyColor, type FlightPath } from "../layers/paths";
 import { loadPinsLayer, refreshPinsLayer, setPinPlacementMode } from "../layers/pins";
 import { ensureModelSummaryPanel, updateModelSummaryPanel } from "./modelSummary";
 import { openInfoDetail } from "./evidencePanel";
@@ -25,6 +25,7 @@ import { applyScenario, clearScenario, getActiveScenarioId } from "../lib/scenar
 import { wireDriftPanel, renderDriftPanel } from "./sidebarDrift";
 import { initInversionControls, renderInversionSection } from "./sidebarInversion";
 import { generateComparisonReport, generateRunReport } from "./report";
+import { SEARCHED_2014_2017, SEARCHED_2018, SEARCHED_2025_2026 } from "../constants";
 
 interface LayerToggle {
   id: string;
@@ -58,9 +59,11 @@ interface ModelRunStatus {
 }
 
 interface ModelResultSummary {
+  scenarioLabel?: string;
   bestFamily?: string;
   bestScore?: number;
   endpointCounts: Record<string, number>;
+  fuelFeasibleCount?: number;
   fuelFeasiblePercent?: number;
   bfoMeanAbsResidualHz?: number;
   bestEndpointLat?: number;
@@ -174,6 +177,9 @@ let latestRunChanges: RunChange[] = [];
 let selectedComparisonLeft = "";
 let selectedComparisonRight = "";
 let pinPlacementArmed = false;
+let latestEofScenarioRuns: SavedRun[] = [];
+
+const EOF_SCENARIO_IDS = ["eof_spiral_dive", "eof_ghost_flight", "eof_active_glide"] as const;
 
 export function initSidebar(callbacks: SidebarCallbacks): void {
   sidebarCallbacks = callbacks;
@@ -404,6 +410,10 @@ function renderStandardPanels(): string {
       </div>
       <div class="sidebar-section-inner">
         <div class="section-heading"><h2>Run Comparison</h2></div>
+        <div class="button-row">
+          <button id="run-eof-comparison-btn" class="btn-secondary">Run EOF Scenario Set</button>
+        </div>
+        <div id="eof-scenario-comparison" class="run-comparison-table">Run the EOF scenario set to compare spiral, ghost, and glide outcomes.</div>
         <div class="compare-controls">
           <select id="compare-left-select" class="scenario-dropdown"></select>
           <select id="compare-right-select" class="scenario-dropdown"></select>
@@ -473,6 +483,7 @@ function wireStandardPanels(): void {
   renderModelResultsSummary();
   renderConfigInspector();
   renderSavedRuns();
+  renderEofScenarioComparison();
   renderSavedPins();
   updateModelRunStatus({ state: "idle" });
   updatePriorityHint();
@@ -492,6 +503,9 @@ function wireStandardPanels(): void {
   });
   document.getElementById("generate-report-btn")?.addEventListener("click", () => {
     renderGeneratedReport();
+  });
+  document.getElementById("run-eof-comparison-btn")?.addEventListener("click", () => {
+    void runEndOfFlightScenarioComparison();
   });
   document.getElementById("copy-report-btn")?.addEventListener("click", () => {
     void copyGeneratedReport();
@@ -670,7 +684,7 @@ function renderSavedRuns(): void {
   container.innerHTML = runs.map((run) => `
     <button class="saved-run-row" type="button" data-run-id="${run.id}">
       <span class="saved-run-time">${formatSavedRunTime(run.timestamp)}</span>
-      <span class="saved-run-title">${run.summary.bestFamily ?? "No viable path"}</span>
+      <span class="saved-run-title">${run.label ?? run.summary.scenarioLabel ?? run.summary.bestFamily ?? "No viable path"}</span>
       <span class="saved-run-meta">${run.summary.pathCount} paths · ${formatOptionalLatLon(run.summary.peakLat, run.summary.peakLon)}</span>
       <span class="saved-run-notes">${run.notes || "No notes"}</span>
     </button>
@@ -789,10 +803,12 @@ function buildComparisonTable(left: SavedRun | null, right: SavedRun | null): st
   }
 
   const summaryRows = [
+    ["Scenario", left.summary.scenarioLabel ?? left.label ?? left.id, right.summary.scenarioLabel ?? right.label ?? right.id],
     ["Best family", left.summary.bestFamily ?? "No viable path", right.summary.bestFamily ?? "No viable path"],
     ["Best score", left.summary.bestScore?.toFixed(3) ?? "--", right.summary.bestScore?.toFixed(3) ?? "--"],
     ["Peak", formatOptionalLatLon(left.summary.peakLat, left.summary.peakLon), formatOptionalLatLon(right.summary.peakLat, right.summary.peakLon)],
     ["Path count", String(left.summary.pathCount), String(right.summary.pathCount)],
+    ["Fuel-feasible", formatCountAndPercent(left.summary.fuelFeasibleCount, left.summary.fuelFeasiblePercent), formatCountAndPercent(right.summary.fuelFeasibleCount, right.summary.fuelFeasiblePercent)],
     ["BFO residual", formatOptionalHz(left.summary.bfoMeanAbsResidualHz), formatOptionalHz(right.summary.bfoMeanAbsResidualHz)],
     ["Searched overlap", left.summary.searchedOverlapLabel ?? "--", right.summary.searchedOverlapLabel ?? "--"],
     ["Continuation", left.summary.continuationLabel ?? "--", right.summary.continuationLabel ?? "--"],
@@ -837,7 +853,7 @@ function renderGeneratedReport(): void {
   }
   if (latestResultSummary) {
     report.value = generateRunReport(
-      "Current Run",
+      latestResultSummary.scenarioLabel ? `Current Run - ${latestResultSummary.scenarioLabel}` : "Current Run",
       getAnalysisConfig(),
       latestResultSummary,
       "Generated from the current in-app state.",
@@ -869,15 +885,20 @@ function saveCurrentRun(): void {
   const notes = window.prompt("Notes for this run:", "") ?? "";
   saveRun({
     id: `run-${Date.now()}`,
+    scenarioId: getActiveScenarioId() ?? undefined,
+    label: getCurrentScenarioLabel(),
     timestamp: new Date().toISOString(),
     config: getAnalysisConfig(),
     summary: {
+      scenarioLabel: getCurrentScenarioLabel(),
       bestFamily: latestResultSummary.bestFamily,
       bestScore: latestResultSummary.bestScore,
       peakLat: latestResultSummary.peakLat,
       peakLon: latestResultSummary.peakLon,
       pathCount: latestResultSummary.pathCount,
       heatmapCount: latestResultSummary.heatmapCount,
+      fuelFeasibleCount: latestResultSummary.fuelFeasibleCount,
+      fuelFeasiblePercent: latestResultSummary.fuelFeasiblePercent,
       searchedOverlapLabel: latestResultSummary.searchedOverlapLabel,
       continuationLabel: latestResultSummary.continuationLabel,
       bfoMeanAbsResidualHz: latestResultSummary.bfoMeanAbsResidualHz,
@@ -968,6 +989,7 @@ export function updateModelSummary(summary: {
 }
 
 export function updateModelResultsSummary(summary: ModelResultSummary): void {
+  summary.scenarioLabel ??= getCurrentScenarioLabel();
   latestResultSummary = summary;
   latestRunChanges = buildRunChanges(lastCompletedConfig, getAnalysisConfig(), lastCompletedResult, summary);
   renderModelResultsSummary();
@@ -995,7 +1017,7 @@ function renderModelResultsSummary(): void {
     .map(([family, count]) => `${family} ${count}`)
     .join(" · ") || "No endpoints";
   const fuelFeasible = latestResultSummary.fuelFeasiblePercent !== undefined
-    ? `${latestResultSummary.fuelFeasiblePercent.toFixed(0)}%`
+    ? formatCountAndPercent(latestResultSummary.fuelFeasibleCount, latestResultSummary.fuelFeasiblePercent)
     : "--";
   const bfoResidual = latestResultSummary.bfoMeanAbsResidualHz !== undefined
     ? `${latestResultSummary.bfoMeanAbsResidualHz.toFixed(1)} Hz`
@@ -1007,7 +1029,7 @@ function renderModelResultsSummary(): void {
   container.innerHTML = `
     <div class="model-results-grid">
       <div class="model-results-label">Best-fit family</div>
-      <div class="model-results-value">${latestResultSummary.bestFamily ?? "No viable path"} · score ${bestScore}</div>
+      <div class="model-results-value">${latestResultSummary.scenarioLabel ? `${latestResultSummary.scenarioLabel} · ` : ""}${latestResultSummary.bestFamily ?? "No viable path"} · score ${bestScore}</div>
       <div class="model-results-label">Endpoint count by family</div>
       <div class="model-results-value">${endpointCounts}</div>
       <div class="model-results-label">Fuel-feasible paths</div>
@@ -1102,9 +1124,182 @@ function formatOptionalPercent(value?: number): string {
   return `${value.toFixed(0)}%`;
 }
 
+function formatCountAndPercent(count?: number, percent?: number): string {
+  if (count == null && percent == null) return "--";
+  if (count != null && percent != null) return `${count} (${percent.toFixed(0)}%)`;
+  if (count != null) return String(count);
+  return formatOptionalPercent(percent);
+}
+
 function formatOptionalHz(value?: number): string {
   if (value === undefined) return "--";
   return `${value.toFixed(1)} Hz`;
+}
+
+function getCurrentScenarioLabel(): string | undefined {
+  const activeScenarioId = getActiveScenarioId();
+  return SCENARIOS.find((scenario) => scenario.id === activeScenarioId)?.name;
+}
+
+async function runEndOfFlightScenarioComparison(): Promise<void> {
+  const output = document.getElementById("eof-scenario-comparison");
+  const button = document.getElementById("run-eof-comparison-btn") as HTMLButtonElement | null;
+  if (!output || !button) return;
+
+  const scenarios = EOF_SCENARIO_IDS
+    .map((id) => SCENARIOS.find((scenario) => scenario.id === id) ?? null)
+    .filter((scenario): scenario is ScenarioPreset => scenario !== null);
+  if (scenarios.length === 0) {
+    output.textContent = "EOF scenarios are not configured.";
+    return;
+  }
+
+  button.disabled = true;
+  output.textContent = "Running EOF scenarios against the backend...";
+
+  try {
+    const runs: SavedRun[] = [];
+    for (const scenario of scenarios) {
+      const config: AnalysisConfig = { ...defaultAnalysisConfig, ...scenario.configOverrides };
+      const summary = await computeScenarioResultSummary(scenario, config);
+      const run: SavedRun = {
+        id: `scenario-${scenario.id}-${Date.now()}-${runs.length}`,
+        scenarioId: scenario.id,
+        label: scenario.name,
+        timestamp: new Date().toISOString(),
+        config,
+        summary,
+        notes: `Auto-generated from EOF scenario comparison: ${scenario.name}`,
+      };
+      saveRun(run);
+      runs.push(run);
+    }
+
+    latestEofScenarioRuns = runs;
+    selectedComparisonLeft = runs[0]?.id ?? "";
+    selectedComparisonRight = runs[1]?.id ?? "";
+    renderSavedRuns();
+    renderRunComparison();
+    renderEofScenarioComparison();
+    renderGeneratedReport();
+  } catch (error) {
+    output.textContent = error instanceof Error ? error.message : String(error);
+  } finally {
+    button.disabled = false;
+  }
+}
+
+async function computeScenarioResultSummary(
+  scenario: ScenarioPreset,
+  config: AnalysisConfig,
+): Promise<SavedRun["summary"]> {
+  const [paths, heatmap] = await Promise.all([
+    fetchCandidatePaths(120, config),
+    getProbabilityHeatmap(config),
+  ]);
+  const bestPath = paths[0];
+  const peakPoint = heatmap.slice().sort((left, right) => right.probability - left.probability)[0];
+  const fuelFeasibleCount = paths.filter((path) => path.fuel_feasible).length;
+  const fuelFeasiblePercent = paths.length > 0 ? (fuelFeasibleCount / paths.length) * 100 : undefined;
+
+  return {
+    scenarioLabel: scenario.name,
+    bestFamily: bestPath?.family,
+    bestScore: bestPath?.score,
+    peakLat: peakPoint?.position[1],
+    peakLon: peakPoint?.position[0],
+    pathCount: paths.length,
+    heatmapCount: heatmap.length,
+    fuelFeasibleCount,
+    fuelFeasiblePercent,
+    searchedOverlapLabel: summarizeScenarioEndpointOverlap(paths),
+    continuationLabel: summarizeScenarioContinuationContribution(paths),
+    bfoMeanAbsResidualHz: bestPath?.bfo_summary?.mean_abs_residual_hz,
+  };
+}
+
+function summarizeScenarioEndpointOverlap(paths: FlightPath[]): string {
+  const searchPolygons = [SEARCHED_2014_2017, SEARCHED_2018, SEARCHED_2025_2026];
+  const endpoints = paths
+    .filter((path) => path.fuel_feasible)
+    .map((path) => path.points[path.points.length - 1])
+    .filter((point): point is [number, number] => Array.isArray(point));
+
+  if (endpoints.length === 0) {
+    return "No fuel-feasible endpoints";
+  }
+
+  const insideCount = endpoints.filter((point) => searchPolygons.some((polygon) => pointInPolygon(point, polygon))).length;
+  return `${insideCount}/${endpoints.length} fuel-feasible endpoints in searched area (${Math.round((insideCount / endpoints.length) * 100)}%)`;
+}
+
+function summarizeScenarioContinuationContribution(paths: FlightPath[]): string {
+  const endpoints = paths.filter((path) => Array.isArray(path.points[path.points.length - 1]));
+  if (endpoints.length === 0) {
+    return "No visible endpoints";
+  }
+
+  const continuationCount = endpoints.filter((path) => (path.extra_endurance_minutes ?? 0) > 0 || (path.extra_range_nm ?? 0) > 0).length;
+  const constrainedCount = endpoints.length - continuationCount;
+  return `${continuationCount}/${endpoints.length} visible endpoints include post-Arc-7 continuation (${Math.round((continuationCount / endpoints.length) * 100)}%); ${constrainedCount} remain handshake-constrained.`;
+}
+
+function pointInPolygon(point: [number, number], polygon: [number, number][]): boolean {
+  const [x, y] = point;
+  let inside = false;
+
+  for (let i = 0, j = polygon.length - 1; i < polygon.length; j = i++) {
+    const [xi, yi] = polygon[i];
+    const [xj, yj] = polygon[j];
+    const intersects = ((yi > y) !== (yj > y))
+      && (x < (xj - xi) * (y - yi) / ((yj - yi) || Number.EPSILON) + xi);
+    if (intersects) {
+      inside = !inside;
+    }
+  }
+
+  return inside;
+}
+
+function renderEofScenarioComparison(): void {
+  const container = document.getElementById("eof-scenario-comparison");
+  if (!container) return;
+
+  if (latestEofScenarioRuns.length === 0) {
+    latestEofScenarioRuns = listSavedRuns().filter((run) => run.scenarioId != null && EOF_SCENARIO_IDS.includes(run.scenarioId as typeof EOF_SCENARIO_IDS[number])).slice(0, 3);
+  }
+
+  if (latestEofScenarioRuns.length === 0) {
+    container.textContent = "Run the EOF scenario set to compare spiral, ghost, and glide outcomes.";
+    return;
+  }
+
+  const rows = latestEofScenarioRuns.map((run) => {
+    const peak = formatOptionalLatLon(run.summary.peakLat, run.summary.peakLon);
+    const bfo = formatOptionalHz(run.summary.bfoMeanAbsResidualHz);
+    const fuel = formatCountAndPercent(run.summary.fuelFeasibleCount, run.summary.fuelFeasiblePercent);
+    return `
+      <div class="run-comparison-row">
+        <span class="run-comparison-label">${escapeHtml(run.summary.scenarioLabel ?? run.label ?? run.id)}</span>
+        <span class="run-comparison-value">${escapeHtml(run.summary.bestFamily ?? "No viable path")}</span>
+        <span class="run-comparison-value">${escapeHtml(peak)}</span>
+        <span class="run-comparison-value">${escapeHtml(fuel)}</span>
+        <span class="run-comparison-value">${escapeHtml(bfo)}</span>
+      </div>
+    `;
+  }).join("");
+
+  container.innerHTML = `
+    <div class="run-comparison-group-title">EOF Scenario Comparison</div>
+    <div class="run-comparison-row">
+      <span class="run-comparison-label">Scenario</span>
+      <span class="run-comparison-value">Best family</span>
+      <span class="run-comparison-value">Peak</span>
+      <span class="run-comparison-value">Fuel-feasible</span>
+      <span class="run-comparison-value">BFO residual</span>
+    </div>
+    ${rows}
+  `;
 }
 
 function renderBfoDiagnostics(

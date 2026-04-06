@@ -20,6 +20,7 @@ const LAYER_TOGGLES: LayerToggle[] = [
   { id: "magnetic", label: "EMAG2 Magnetic", infoId: "layer:magnetic" },
   { id: "arcs", label: "BTO Arc Rings", infoId: "layer:arcs" },
   { id: "heatmap", label: "Probability Heatmap", infoId: "layer:heatmap" },
+  { id: "eof-compare", label: "EOF Scenario Overlay", infoId: "layer:heatmap" },
   { id: "paths", label: "Candidate Paths", infoId: "layer:paths" },
   { id: "debris", label: "Debris & Drift", infoId: "layer:debris" },
   { id: "holidays", label: "Data Holidays", infoId: "layer:holidays" },

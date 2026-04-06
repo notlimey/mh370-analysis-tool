@@ -55,6 +55,120 @@ Key question: what assumptions would need to change to move the endpoint outside
     relevantAnomalyIds: [],
   },
   {
+    id: "eof_spiral_dive",
+    name: "EOF Spiral / Dive",
+    shortDescription: "High Arc 7 descent rate with near-immediate impact after fuel exhaustion.",
+    narrative: `This scenario applies the end-of-flight spiral/dive assumptions from the new planning notes. The aircraft stays in normal cruise before Arc 7, then enters a steep descent at the final handshake, consistent with Holland's interpretation of the late BFO jump.
+
+Model changes in this preset:
+• Arc 7 vertical speed: 8,000 fpm
+• Post-Arc-7 continuation: 0 minutes
+• Expected behavior: impact remains very close to the 7th arc, favouring a tight high-energy endpoint cluster.`,
+    configOverrides: {
+      arc7_vertical_speed_fpm: 8000,
+      max_post_arc7_minutes: 0,
+      post_arc7_low_speed_kts: 250,
+      debris_weight_min_lat: -38,
+      debris_weight_max_lat: -32,
+    },
+    layerVisibility: {
+      flightpath: true,
+      anomalies: false,
+      airspaces: false,
+      magnetic: false,
+      sonar: true,
+      holidays: false,
+      priority: false,
+      arcs: true,
+      paths: true,
+      heatmap: true,
+      debris: false,
+      points: true,
+      searched: true,
+    },
+    viewport: {
+      center: [95.5, -35.5],
+      zoom: 5,
+    },
+    relevantAnomalyIds: [],
+  },
+  {
+    id: "eof_ghost_flight",
+    name: "EOF Ghost Flight",
+    shortDescription: "Modest Arc 7 descent with a short unpowered continuation beyond the 7th arc.",
+    narrative: `This scenario keeps the pre-Arc-7 path close to a conventional autopilot cruise, then applies a smaller descent rate at Arc 7 and a limited continuation after fuel exhaustion.
+
+Model changes in this preset:
+• Arc 7 vertical speed: 2,000 fpm
+• Post-Arc-7 continuation: 12 minutes at 300 kts
+• Expected behavior: a moderate southward shift beyond the 7th arc without requiring a long controlled ditching glide.`,
+    configOverrides: {
+      arc7_vertical_speed_fpm: 2000,
+      max_post_arc7_minutes: 12,
+      post_arc7_low_speed_kts: 300,
+      debris_weight_min_lat: -38,
+      debris_weight_max_lat: -31,
+    },
+    layerVisibility: {
+      flightpath: true,
+      anomalies: false,
+      airspaces: false,
+      magnetic: false,
+      sonar: true,
+      holidays: true,
+      priority: false,
+      arcs: true,
+      paths: true,
+      heatmap: true,
+      debris: true,
+      points: true,
+      searched: true,
+    },
+    viewport: {
+      center: [95, -34.5],
+      zoom: 5,
+    },
+    relevantAnomalyIds: ["barnacle_large_specimens"],
+  },
+  {
+    id: "eof_active_glide",
+    name: "EOF Active Glide",
+    shortDescription: "Gentler Arc 7 descent with an extended post-fuel glide / ditching attempt.",
+    narrative: `This scenario represents the controlled end-of-flight case from the new notes. The aircraft begins a relatively gentle descent at Arc 7, then continues well beyond the 7th arc at a lower speed.
+
+Model changes in this preset:
+• Arc 7 vertical speed: 1,500 fpm
+• Post-Arc-7 continuation: 45 minutes at 250 kts
+• Expected behavior: the impact zone shifts furthest beyond the 7th arc and becomes the strongest test of a pilot-controlled ditching hypothesis.`,
+    configOverrides: {
+      arc7_vertical_speed_fpm: 1500,
+      max_post_arc7_minutes: 45,
+      post_arc7_low_speed_kts: 250,
+      debris_weight_min_lat: -38,
+      debris_weight_max_lat: -30,
+    },
+    layerVisibility: {
+      flightpath: true,
+      anomalies: false,
+      airspaces: false,
+      magnetic: false,
+      sonar: true,
+      holidays: true,
+      priority: false,
+      arcs: true,
+      paths: true,
+      heatmap: true,
+      debris: true,
+      points: true,
+      searched: true,
+    },
+    viewport: {
+      center: [95, -33.5],
+      zoom: 4.8,
+    },
+    relevantAnomalyIds: ["barnacle_large_specimens"],
+  },
+  {
     id: "controlled_ditching",
     name: "Controlled Ditching",
     shortDescription: "Extended glide after fuel exhaustion, lower-energy impact, wider debris scatter.",

@@ -26,6 +26,7 @@ const BROWSER_FALLBACK_CONFIG: AnalysisConfig = {
   northward_penalty_weight: 2,
   bfo_sigma_hz: 7,
   bfo_score_weight: 1,
+  arc7_vertical_speed_fpm: 0,
   satellite_nominal_lon_deg: 64.5,
   satellite_nominal_lat_deg: 0,
   satellite_drift_start_lat_offset_deg: 0,
