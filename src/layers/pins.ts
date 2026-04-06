@@ -1,4 +1,4 @@
-import type { Map as MapboxMap, GeoJSONSource, MapMouseEvent } from "mapbox-gl";
+import type { GeoJSONSource, Map as MapboxMap, MapMouseEvent } from "mapbox-gl";
 import { listSavedPins, type SavedPin } from "../model/pins";
 
 const SOURCE_ID = "pins-source";

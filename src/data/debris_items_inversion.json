@@ -24,7 +24,7 @@
     "confidence": 0.9,
     "status": "ALMOST CERTAINLY MH370 — no unique identifier but construction confirmed",
     "item_type": "panel",
-    "leeway_coeff": 0.020,
+    "leeway_coeff": 0.02,
     "source": "ATSB"
   },
   {
@@ -52,7 +52,7 @@
     "confidence": 0.9,
     "status": "ALMOST CERTAINLY MH370",
     "item_type": "panel",
-    "leeway_coeff": 0.020,
+    "leeway_coeff": 0.02,
     "source": "ATSB"
   },
   {
@@ -192,7 +192,7 @@
     "confidence": 0.9,
     "status": "ALMOST CERTAINLY MH370 — lightning strike protection evidence",
     "item_type": "panel",
-    "leeway_coeff": 0.020,
+    "leeway_coeff": 0.02,
     "source": "Blaine Gibson / Richard Godfrey 2023"
   },
   {
@@ -206,7 +206,7 @@
     "confidence": 0.9,
     "status": "ALMOST CERTAINLY MH370",
     "item_type": "panel",
-    "leeway_coeff": 0.020,
+    "leeway_coeff": 0.02,
     "source": "Malaysian Safety Investigation Report item 9"
   },
   {
@@ -220,7 +220,7 @@
     "confidence": 0.9,
     "status": "ALMOST CERTAINLY MH370",
     "item_type": "panel",
-    "leeway_coeff": 0.020,
+    "leeway_coeff": 0.02,
     "source": "Malaysian Safety Investigation Report item 15"
   },
   {

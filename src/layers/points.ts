@@ -1,12 +1,5 @@
 import type { Map as MapboxMap } from "mapbox-gl";
-import {
-  KLIA,
-  LAST_RADAR,
-  SATELLITE,
-  SEARCHED_2014_2017,
-  SEARCHED_2018,
-  SEARCHED_2025_2026,
-} from "../constants";
+import { KLIA, LAST_RADAR, SATELLITE, SEARCHED_2014_2017, SEARCHED_2018, SEARCHED_2025_2026 } from "../constants";
 
 interface KeyPoint {
   name: string;

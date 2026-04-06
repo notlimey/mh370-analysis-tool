@@ -1,5 +1,5 @@
 import type { FilterSpecification, Map as MapboxMap } from "mapbox-gl";
-import { getAnomalies, getAnomalyById, type Anomaly } from "../model/evidence";
+import { type Anomaly, getAnomalies, getAnomalyById } from "../model/evidence";
 
 function categoryColor(category: string): string {
   switch (category) {
@@ -16,10 +16,7 @@ function categoryColor(category: string): string {
   }
 }
 
-export async function loadAnomaliesLayer(
-  map: MapboxMap,
-  onSelectAnomaly: (id: string) => void,
-): Promise<void> {
+export async function loadAnomaliesLayer(map: MapboxMap, onSelectAnomaly: (id: string) => void): Promise<void> {
   const anomalies = await getAnomalies();
   const located = anomalies.filter((item) => item.lat !== null && item.lon !== null);
   const links = buildRelationshipFeatures(located);
@@ -173,14 +170,11 @@ export function setSelectedAnomaly(map: MapboxMap, id: string | null): void {
   const relatedIds = new Set([...(anomaly?.supports ?? []), ...(anomaly?.conflicts_with ?? [])]);
   map.setFilter("anomalies-active", ["==", ["get", "id"], id]);
   map.setFilter("anomalies-related", idsFilter([...relatedIds]));
-  map.setFilter(
-    "anomalies-links-active",
-    [
-      "any",
-      ["==", ["get", "sourceId"], id],
-      ["==", ["get", "targetId"], id],
-    ] as FilterSpecification,
-  );
+  map.setFilter("anomalies-links-active", [
+    "any",
+    ["==", ["get", "sourceId"], id],
+    ["==", ["get", "targetId"], id],
+  ] as FilterSpecification);
 }
 
 function buildRelationshipFeatures(anomalies: Anomaly[]) {

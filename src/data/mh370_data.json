@@ -142,57 +142,57 @@
       "arc": 1,
       "time_utc": "18:25:27.421",
       "bto_us": 12520,
-      "bfo_hz": 273,
+      "bfo_hz": 142,
       "message_type": "Log-on Request (SDU reboot)",
       "reliability": "UNRELIABLE_BFO",
-      "note": "SDU reboot after power cycle. BFO unreliable due to oscillator warm-up transient. This is the controversial ping - some analysts say BFO here implies northward heading, others southward. BTO implies aircraft ~1570 NM from satellite.",
+      "note": "SDU reboot after power cycle. BFO unreliable due to oscillator warm-up transient (Holland 2017 Sec V). First in settling sequence: 142, 273, 176, 175, 172, 144, 143 Hz. Low C/N0 and non-zero BER - deemed untrustworthy by SATCOM working group. BFO=142 Hz from joewragg/MH370 FinalData.csv and radiantphysics.com.",
       "flag": "HIGH_UNCERTAINTY"
     },
     {
       "arc": 1,
       "time_utc": "18:25:34.461",
       "bto_us": 11500,
-      "bfo_hz": 240,
+      "bfo_hz": 273,
       "message_type": "Log-on Acknowledge",
       "reliability": "UNRELIABLE_BFO",
-      "note": "7 seconds after reboot request. BFO still in warm-up transient. +130 Hz change in 7s is anomalous - no plausible maneuver explains this without warm-up transient. BTO here is inconsistent with 18:25:27 value - implies aircraft moved ~130 NM in 7 seconds, which is impossible. Likely measurement artifact.",
+      "note": "7 seconds after reboot request. BFO dominated by OCXO oscillator warm-up transient (Holland 2017 Sec V). +131 Hz change in 7s is anomalous - no plausible maneuver explains this without warm-up transient. BFO=273 Hz from joewragg/MH370 FinalData.csv. BTO here is inconsistent with 18:25:27 value.",
       "flag": "CRITICAL_ANOMALY"
     },
     {
       "arc": 2,
       "time_utc": "19:41:02.906",
       "bto_us": 14060,
-      "bfo_hz": 182,
+      "bfo_hz": 111,
       "message_type": "Hourly handshake",
       "reliability": "GOOD",
-      "note": "First clean data point with both BTO and BFO. BTO ring radius ~4740 NM from satellite. BFO implies aircraft moving away from satellite - consistent with southward heading at cruise speed."
+      "note": "First clean data point with both BTO and BFO. BFO=111 Hz from joewragg/MH370 FinalData.csv. Lowest BFO in the hourly sequence - consistent with aircraft heading nearly perpendicular to satellite LOS at this point."
     },
     {
       "arc": 3,
       "time_utc": "20:41:04.904",
       "bto_us": 15220,
-      "bfo_hz": 140,
+      "bfo_hz": 141,
       "message_type": "Hourly handshake",
       "reliability": "GOOD",
-      "note": "BTO ring radius ~5100 NM. Aircraft moving further from satellite. BFO lower - consistent with heading more perpendicular to satellite direction."
+      "note": "BFO=141 Hz from joewragg/MH370 FinalData.csv. BFO rising from Arc 2 minimum - aircraft LOS velocity toward satellite increasing as it tracks further south."
     },
     {
       "arc": 4,
       "time_utc": "21:41:26.905",
       "bto_us": 16540,
-      "bfo_hz": 111,
+      "bfo_hz": 168,
       "message_type": "Hourly handshake",
       "reliability": "GOOD",
-      "note": "BTO ring radius ~5540 NM. Still moving further from satellite. BFO continuing to decrease."
+      "note": "BFO=168 Hz from joewragg/MH370 FinalData.csv. BFO continuing to rise as aircraft moves further south."
     },
     {
       "arc": 5,
       "time_utc": "22:41:21.906",
       "bto_us": 17900,
-      "bfo_hz": 141,
+      "bfo_hz": 204,
       "message_type": "Hourly handshake",
       "reliability": "GOOD",
-      "note": "BTO ring radius ~5990 NM. BFO slight increase - possible minor heading change."
+      "note": "BFO=204 Hz from joewragg/MH370 FinalData.csv. BFO continues rising monotonically."
     },
     {
       "arc": 6,
@@ -207,10 +207,10 @@
       "arc": 6,
       "time_utc": "00:10:58.528",
       "bto_us": 18400,
-      "bfo_hz": 182,
+      "bfo_hz": 252,
       "message_type": "Hourly handshake",
       "reliability": "GOOD",
-      "note": "Final arc 6. BTO implies ~6150 NM from satellite. BFO 182 Hz - same as arc 2, suggesting similar speed/heading component toward/away from satellite."
+      "note": "BFO=252 Hz from joewragg/MH370 FinalData.csv. Highest BFO in the hourly sequence. Linear trend from Arc 2 (111 Hz) to here (252 Hz) extrapolates to ~254 Hz at 00:19Z (Holland 2017 Fig 5)."
     },
     {
       "arc": 7,
@@ -226,10 +226,10 @@
       "arc": 7,
       "time_utc": "00:19:37.443",
       "bto_us": null,
-      "bfo_hz": 252,
+      "bfo_hz": -2,
       "message_type": "Log-on Acknowledge (partial - interrupted)",
       "reliability": "BFO_DESCENT_SIGNATURE",
-      "note": "8 seconds after 00:19:29. BFO jumped +70 Hz. Official interpretation: aircraft in steep accelerating dive at ~14,800 fpm. Competing interpretation (Declination Model): aircraft descending more gently and turning eastward. This is the LAST TRANSMISSION. No BTO available - logon was never completed.",
+      "note": "BFO=-2 Hz from Holland 2017 Table III. 8 seconds after 00:19:29 (182 Hz). Drop of 184 Hz implies rapid descent at 2,900-14,800 fpm (Holland Table IV/VII). Also affected by OCXO warm-up drift: recorded BFO was 17-130 Hz higher than steady-state (Holland Sec V-B). This is the LAST TRANSMISSION.",
       "flag": "FINAL_TRANSMISSION"
     },
     {

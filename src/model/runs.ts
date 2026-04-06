@@ -34,9 +34,7 @@ export function listSavedRuns(): SavedRun[] {
 
   try {
     const parsed = JSON.parse(raw) as SavedRun[];
-    return Array.isArray(parsed)
-      ? parsed.sort((left, right) => right.timestamp.localeCompare(left.timestamp))
-      : [];
+    return Array.isArray(parsed) ? parsed.sort((left, right) => right.timestamp.localeCompare(left.timestamp)) : [];
   } catch {
     return [];
   }
@@ -52,7 +50,10 @@ export function getSavedRun(id: string): SavedRun | undefined {
   return listSavedRuns().find((run) => run.id === id);
 }
 
-export function listConfigDiffs(left: AnalysisConfig, right: AnalysisConfig): Array<{
+export function listConfigDiffs(
+  left: AnalysisConfig,
+  right: AnalysisConfig,
+): Array<{
   key: keyof AnalysisConfig;
   left: string;
   right: string;

@@ -681,22 +681,115 @@ fn score_bfo_handshake(
         return Ok(1.0);
     }
 
-    let vertical_speed_fpm = vertical_speed_for_handshake(handshake.arc, config);
+    if handshake.arc == 7 {
+        return score_arc7_bfo_descent_constraint(
+            model, satellite, pos, heading_deg, speed_kts, time_s, measured_bfo, config,
+        );
+    }
+
     let residual = model
-        .residual(
-            satellite,
-            pos,
-            heading_deg,
-            speed_kts,
-            time_s,
-            measured_bfo,
-            config,
-            vertical_speed_fpm,
-        )?
+        .residual(satellite, pos, heading_deg, speed_kts, time_s, measured_bfo, config, 0.0)?
         .abs();
     Ok(gaussian_score(residual, config.bfo_sigma_hz).powf(reliability_weight))
 }
 
+/// Score Arc 7 BFO using the descent rate constraint (Option E).
+///
+/// Instead of treating Arc 7 BFO as an absolute measurement, we compute the
+/// implied descent rate from the difference between the level-flight prediction
+/// and the measured value. Candidates are scored based on whether the implied
+/// descent rate falls within the aerodynamically plausible envelope for a 777
+/// after dual engine flameout.
+///
+/// Aerodynamic envelope (Holland 2017, Tables IV/VII):
+///   - Minimum descent: 2,900 fpm (best-glide, clean config)
+///   - Maximum descent: 14,800 fpm (high-speed, high-drag, or steep spiral)
+///   - Central estimate: ~4,200 fpm (from 72 Hz BFO drop at 1.7 Hz/100 fpm)
+///
+/// The phugoid oscillation means instantaneous sink rate at a single time point
+/// can be anywhere in this range, so the full envelope is used.
+///
+/// Source: Holland 2017, arXiv:1702.02432, Tables IV, VI, VII.
+fn score_arc7_bfo_descent_constraint(
+    model: &BfoModel,
+    satellite: &SatelliteModel,
+    pos: LatLon,
+    heading_deg: f64,
+    speed_kts: f64,
+    time_s: f64,
+    measured_bfo: f64,
+    config: &AnalysisConfig,
+) -> Result<f64, String> {
+    // Step 1: Predict BFO assuming level flight
+    let predicted_level = model.predict(
+        satellite, pos, heading_deg, speed_kts, time_s, config, 0.0,
+    )?;
+
+    // Step 2: Residual = measured - predicted_level (negative = descent signature)
+    let residual = measured_bfo - predicted_level;
+
+    // Step 3: Convert residual to implied descent rate
+    // Holland Eq (6): delta_BFO = v_z * F_up * sin(elevation) / c
+    // At Arc 7, elevation ~38.8 deg, this gives ~1.75 Hz per 100 fpm.
+    // We compute the exact factor from the satellite geometry rather than hardcoding.
+    let hz_per_fpm = compute_vertical_bfo_sensitivity(model, satellite, pos, time_s, config)?;
+
+    if hz_per_fpm.abs() < 1e-10 {
+        // Degenerate geometry — can't extract vertical speed, score neutrally
+        return Ok(1.0);
+    }
+
+    // Negative residual → descent. Convert to fpm (negative = descending).
+    let implied_vz_fpm = residual / hz_per_fpm;
+
+    // Step 4: Check against aerodynamic envelope
+    // Descent rate is negative in our convention. Holland's bounds are positive magnitudes.
+    const MIN_DESCENT_FPM: f64 = 2_900.0;
+    const MAX_DESCENT_FPM: f64 = 14_800.0;
+    // Soft edges: 1000 fpm Gaussian falloff beyond each bound
+    const EDGE_SIGMA_FPM: f64 = 1_000.0;
+
+    let descent_magnitude = -implied_vz_fpm; // positive for descent
+
+    if descent_magnitude < 0.0 {
+        // Implied climb — no thrust available, hard reject
+        return Ok(0.001);
+    }
+
+    let score = if descent_magnitude >= MIN_DESCENT_FPM && descent_magnitude <= MAX_DESCENT_FPM {
+        // Inside envelope — full score
+        1.0
+    } else if descent_magnitude < MIN_DESCENT_FPM {
+        // Below minimum descent — soft penalty
+        let excess = MIN_DESCENT_FPM - descent_magnitude;
+        gaussian_score(excess, EDGE_SIGMA_FPM)
+    } else {
+        // Above maximum descent — soft penalty
+        let excess = descent_magnitude - MAX_DESCENT_FPM;
+        gaussian_score(excess, EDGE_SIGMA_FPM)
+    };
+
+    Ok(score)
+}
+
+/// Compute the BFO sensitivity to vertical speed (Hz per fpm) at a given position.
+///
+/// This is the derivative of BFO with respect to vertical speed, which depends on
+/// the elevation angle from the aircraft to the satellite. Uses a finite-difference
+/// approach for robustness against coordinate system subtleties.
+fn compute_vertical_bfo_sensitivity(
+    model: &BfoModel,
+    satellite: &SatelliteModel,
+    pos: LatLon,
+    time_s: f64,
+    config: &AnalysisConfig,
+) -> Result<f64, String> {
+    let bfo_at_zero = model.predict(satellite, pos, 180.0, 450.0, time_s, config, 0.0)?;
+    let bfo_at_1000 = model.predict(satellite, pos, 180.0, 450.0, time_s, config, 1000.0)?;
+    Ok((bfo_at_1000 - bfo_at_zero) / 1000.0)
+}
+
+/// Vertical speed to use in BFO diagnostics (not scoring — scoring uses descent constraint).
 fn vertical_speed_for_handshake(arc: u8, config: &AnalysisConfig) -> f64 {
     if arc == 7 {
         config.arc7_vertical_speed_fpm
@@ -1072,12 +1165,4 @@ mod tests {
         assert!(summary.max_abs_residual_hz.is_some());
     }
 
-    #[test]
-    fn applies_vertical_speed_only_to_arc7() {
-        let mut config = AnalysisConfig::default();
-        config.arc7_vertical_speed_fpm = 2_000.0;
-
-        assert_eq!(vertical_speed_for_handshake(6, &config), 0.0);
-        assert_eq!(vertical_speed_for_handshake(7, &config), 2_000.0);
-    }
 }

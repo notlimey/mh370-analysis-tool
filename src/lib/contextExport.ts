@@ -1,16 +1,21 @@
-import { getMap, layerVisibility } from "../map";
-import { getAnalysisConfig, defaultAnalysisConfig } from "../model/config";
-import { getActiveScenarioId } from "./scenarioManager";
-import { getSelectedOriginIndex, getBeachingClouds } from "../layers/drift_clouds";
+import { getBeachingClouds, getSelectedOriginIndex } from "../layers/drift-clouds";
 import { listSavedPins } from "../model/pins";
-import { getLatestModelExportState } from "../ui/panels/modelPanel";
-import { getLatestInversionResult } from "../ui/sidebarInversion";
-import { getInversionVisibilityState } from "../ui/sidebarInversion";
-import { getStoredAnalystNotes } from "../model/session";
-import { getEvidenceSelection, getSelectedAnomalyId } from "../ui/evidencePanel";
-import { getCurrentPanel } from "../ui/flyoutShell";
 import { getScenarioById } from "../model/scenarios";
+import { getStoredAnalystNotes } from "../model/session";
+import { defaultConfig, getConfigSnapshot } from "../stores/analysis-config";
+import { evidenceSelection } from "../stores/evidence";
+import { getInversionVisibilityState, inversionResult } from "../stores/inversion";
+import { layerVisibility } from "../stores/layer-visibility";
+import { modelRunState } from "../stores/model-run";
+import { activeScenarioId } from "../stores/scenario";
+import { activePanel } from "../stores/ui";
 import { getWorkspaceFreshness } from "./workspaceState";
+
+let mapInstance: mapboxgl.Map | null = null;
+
+export function setContextExportMap(map: mapboxgl.Map): void {
+  mapInstance = map;
+}
 
 export async function copyAnalysisContextForAi(): Promise<string> {
   const markdown = buildAnalysisContextMarkdown();
@@ -65,37 +70,37 @@ export function buildAnalysisContextMarkdown(): string {
 }
 
 function buildConfigurationSection(): string[] {
-  const config = getAnalysisConfig();
-  const overrides = (Object.keys(defaultAnalysisConfig) as Array<keyof typeof defaultAnalysisConfig>)
-    .filter((key) => config[key] !== defaultAnalysisConfig[key]);
-
+  const config = getConfigSnapshot();
+  const overrides = (Object.keys(defaultConfig) as Array<keyof typeof defaultConfig>).filter(
+    (key) => config[key] !== defaultConfig[key],
+  );
   return overrides.map((key) => `- ${formatConfigLabel(String(key))}: ${formatConfigValue(config[key])}`);
 }
 
 function buildModelResultsSection(): string[] {
-  const model = getLatestModelExportState();
-  if (!model.resultSummary && !model.runStatus?.error && !model.confidence) {
+  const state = modelRunState;
+  if (!state.resultSummary && state.runStatus.state !== "failed" && state.summary.confidence === "\u2014") {
     return [];
   }
 
   const lines: string[] = [];
-  if (model.confidence && model.confidence !== "—") {
-    lines.push(`- Heatmap peak: ${model.confidence}`);
+  if (state.summary.confidence && state.summary.confidence !== "\u2014") {
+    lines.push(`- Heatmap peak: ${state.summary.confidence}`);
   }
-  if (model.resultSummary?.bestFamily) {
-    const score = model.resultSummary.bestScore != null ? ` (score: ${model.resultSummary.bestScore.toFixed(2)})` : "";
-    lines.push(`- Best path family: ${model.resultSummary.bestFamily}${score}`);
+  if (state.resultSummary?.bestFamily) {
+    const score = state.resultSummary.bestScore != null ? ` (score: ${state.resultSummary.bestScore.toFixed(2)})` : "";
+    lines.push(`- Best path family: ${state.resultSummary.bestFamily}${score}`);
   }
-  if (model.resultSummary) {
-    lines.push(`- Paths: ${model.resultSummary.pathCount}, Heatmap points: ${model.resultSummary.heatmapCount}`);
-    if (model.resultSummary.bfoMeanAbsResidualHz != null) {
-      lines.push(`- BFO mean residual: ${model.resultSummary.bfoMeanAbsResidualHz.toFixed(1)} Hz`);
+  if (state.resultSummary) {
+    lines.push(`- Paths: ${state.resultSummary.pathCount}, Heatmap points: ${state.resultSummary.heatmapCount}`);
+    if (state.resultSummary.bfoMeanAbsResidualHz != null) {
+      lines.push(`- BFO mean residual: ${state.resultSummary.bfoMeanAbsResidualHz.toFixed(1)} Hz`);
     }
-    if (model.resultSummary.searchedOverlapLabel) {
-      lines.push(`- Search overlap: ${model.resultSummary.searchedOverlapLabel}`);
+    if (state.resultSummary.searchedOverlapLabel) {
+      lines.push(`- Search overlap: ${state.resultSummary.searchedOverlapLabel}`);
     }
-    if (model.resultSummary.continuationLabel) {
-      lines.push(`- Continuation: ${model.resultSummary.continuationLabel}`);
+    if (state.resultSummary.continuationLabel) {
+      lines.push(`- Continuation: ${state.resultSummary.continuationLabel}`);
     }
   }
   const freshness = getWorkspaceFreshness().model;
@@ -104,8 +109,8 @@ function buildModelResultsSection(): string[] {
   } else if (freshness.isStale) {
     lines.push("- Model state: stale relative to current configuration");
   }
-  if (model.runStatus?.state === "failed" && model.runStatus.error) {
-    lines.push(`- Last run failed: ${model.runStatus.error}`);
+  if (state.runStatus.state === "failed" && state.runStatus.error) {
+    lines.push(`- Last run failed: ${state.runStatus.error}`);
   }
   return lines;
 }
@@ -115,7 +120,7 @@ function buildDriftSection(): string[] {
   if (clouds.length === 0) return [];
 
   const selectedIndex = getSelectedOriginIndex();
-  const selectedCloud = selectedIndex != null ? clouds[selectedIndex] ?? null : null;
+  const selectedCloud = selectedIndex != null ? (clouds[selectedIndex] ?? null) : null;
   const lines = [`- Candidate origins: ${clouds.length}`];
   const freshness = getWorkspaceFreshness().drift;
   if (freshness.isStale) {
@@ -132,7 +137,9 @@ function buildDriftSection(): string[] {
   if (coastBreakdown) {
     lines.push(`- Beaching: ${coastBreakdown}`);
   }
-  lines.push(`- Fit: ${selectedCloud.fit_score.toFixed(0)}/100, Spatial: ${selectedCloud.spatial_score.toFixed(0)}/100, Timing: ${selectedCloud.timing_score.toFixed(0)}/100`);
+  lines.push(
+    `- Fit: ${selectedCloud.fit_score.toFixed(0)}/100, Spatial: ${selectedCloud.spatial_score.toFixed(0)}/100, Timing: ${selectedCloud.timing_score.toFixed(0)}/100`,
+  );
   if (selectedCloud.matched_finds.length > 0) {
     lines.push(`- Matched debris: ${selectedCloud.matched_finds.join(", ")}`);
   }
@@ -140,7 +147,7 @@ function buildDriftSection(): string[] {
 }
 
 function buildInversionSection(): string[] {
-  const result = getLatestInversionResult();
+  const result = inversionResult();
   if (!result) return [];
 
   const freshness = getWorkspaceFreshness().inversion;
@@ -162,52 +169,56 @@ function buildInversionSection(): string[] {
 }
 
 function buildViewportSection(): string[] {
-  const map = getMap();
+  if (!mapInstance) return [];
+  const map = mapInstance;
   const bounds = map.getBounds();
   if (!bounds) return [];
-  const activeLayers = Object.keys(layerVisibility).filter((layerId) => layerVisibility[layerId]);
+  const activeLayers = Object.keys(layerVisibility).filter((id) => layerVisibility[id]);
   const pins = listSavedPins();
   const lines = [
     `- Bounds: [${formatLat(bounds.getSouth())} to ${formatLat(bounds.getNorth())}, ${formatLon(bounds.getWest())} to ${formatLon(bounds.getEast())}]`,
     `- Active layers: ${activeLayers.join(", ") || "none"}`,
   ];
 
-  const scenarioId = getActiveScenarioId();
+  const scenarioId = activeScenarioId();
   if (scenarioId) {
     const scenarioStatus = getScenarioWorkspaceStatus(scenarioId);
-    lines.push(`- Scenario: ${scenarioId}${scenarioStatus.matchesPreset ? " (matches preset)" : " (workspace diverged from preset)"}`);
+    lines.push(
+      `- Scenario: ${scenarioId}${scenarioStatus.matchesPreset ? " (matches preset)" : " (workspace diverged from preset)"}`,
+    );
   }
-  const panelId = getCurrentPanel();
+  const panelId = activePanel();
   if (panelId) {
     lines.push(`- Open panel: ${panelId}`);
   }
-  const evidenceSelection = getEvidenceSelection();
-  if (evidenceSelection.kind === "anomaly") {
-    lines.push(`- Selected anomaly: ${evidenceSelection.title ?? evidenceSelection.id}`);
+  const es = evidenceSelection();
+  if (es.kind === "anomaly") {
+    lines.push(`- Selected anomaly: ${es.title ?? es.id}`);
   }
-  if (evidenceSelection.kind === "info") {
-    lines.push(`- Open guide: ${evidenceSelection.title ?? evidenceSelection.id}`);
+  if (es.kind === "info") {
+    lines.push(`- Open guide: ${es.title ?? es.id}`);
   }
   if (pins.length > 0) {
-    lines.push(`- Pins: ${pins.map((pin) => `"${pin.label}" at ${formatLat(pin.coordinates[1])}, ${formatLon(pin.coordinates[0])}`).join("; ")}`);
+    lines.push(
+      `- Pins: ${pins.map((pin) => `"${pin.label}" at ${formatLat(pin.coordinates[1])}, ${formatLon(pin.coordinates[0])}`).join("; ")}`,
+    );
   }
   return lines;
 }
 
 function buildRawDataSection(): string {
-  const model = getLatestModelExportState();
-  const inversion = getLatestInversionResult();
+  const result = inversionResult();
   const selectedOriginIndex = getSelectedOriginIndex();
   const clouds = getBeachingClouds();
-  const selectedCloud = selectedOriginIndex != null ? clouds[selectedOriginIndex] ?? null : null;
+  const selectedCloud = selectedOriginIndex != null ? (clouds[selectedOriginIndex] ?? null) : null;
 
   const payload = {
-    scenarioId: getActiveScenarioId(),
+    scenarioId: activeScenarioId(),
     analystNotes: getStoredAnalystNotes(),
     configOverrides: getNonDefaultConfigObject(),
-    model: model.resultSummary,
-    runStatus: model.runStatus,
-    familySummary: model.familySummary,
+    model: modelRunState.resultSummary,
+    runStatus: modelRunState.runStatus,
+    familySummary: modelRunState.familySummary,
     drift: selectedCloud
       ? {
           selectedOriginIndex,
@@ -220,37 +231,37 @@ function buildRawDataSection(): string {
           matchedFinds: selectedCloud.matched_finds,
         }
       : { candidateOriginCount: clouds.length },
-    inversion: inversion
+    inversion: result
       ? {
-          peakLat: inversion.peak_lat,
-          peakLon: inversion.peak_lon,
-          confidenceInterval68: inversion.confidence_interval_68,
-          confidenceInterval95: inversion.confidence_interval_95,
-          intersectionLat: inversion.intersection_lat,
-          itemsUsed: inversion.items_used,
-          topItemContributions: inversion.item_contributions.slice(0, 8),
-          topCandidates: inversion.candidates.slice(0, 8),
+          peakLat: result.peak_lat,
+          peakLon: result.peak_lon,
+          confidenceInterval68: result.confidence_interval_68,
+          confidenceInterval95: result.confidence_interval_95,
+          intersectionLat: result.intersection_lat,
+          itemsUsed: result.items_used,
+          topItemContributions: result.item_contributions.slice(0, 8),
+          topCandidates: result.candidates.slice(0, 8),
           visibility: getInversionVisibilityState(),
         }
       : null,
     freshness: getWorkspaceFreshness(),
     viewport: {
-      activeLayers: Object.keys(layerVisibility).filter((layerId) => layerVisibility[layerId]),
+      activeLayers: Object.keys(layerVisibility).filter((id) => layerVisibility[id]),
       pins: listSavedPins(),
-      currentPanel: getCurrentPanel(),
-      evidenceSelection: getEvidenceSelection(),
-      selectedAnomalyId: getSelectedAnomalyId(),
+      currentPanel: activePanel(),
+      evidenceSelection: evidenceSelection(),
+      selectedAnomalyId: evidenceSelection().kind === "anomaly" ? evidenceSelection().id : null,
     },
   };
 
   return JSON.stringify(payload, null, 2);
 }
 
-function getNonDefaultConfigObject(): Partial<ReturnType<typeof getAnalysisConfig>> {
-  const config = getAnalysisConfig();
+function getNonDefaultConfigObject(): Partial<Record<string, unknown>> {
+  const config = getConfigSnapshot();
   return Object.fromEntries(
-    (Object.keys(defaultAnalysisConfig) as Array<keyof typeof defaultAnalysisConfig>)
-      .filter((key) => config[key] !== defaultAnalysisConfig[key])
+    (Object.keys(defaultConfig) as Array<keyof typeof defaultConfig>)
+      .filter((key) => config[key] !== defaultConfig[key])
       .map((key) => [key, config[key]]),
   );
 }
@@ -261,7 +272,7 @@ function summarizeCoasts(cloud: ReturnType<typeof getBeachingClouds>[number]): s
     counts.set(particle.coast, (counts.get(particle.coast) ?? 0) + 1);
   }
   return Array.from(counts.entries())
-    .sort((left, right) => right[1] - left[1])
+    .sort((a, b) => b[1] - a[1])
     .slice(0, 5)
     .map(([coast, count]) => `${count} ${coast}`)
     .join(", ");
@@ -284,20 +295,20 @@ function formatConfigValue(value: unknown): string {
 }
 
 function formatLat(lat: number): string {
-  return `${Math.abs(lat).toFixed(1)}°${lat < 0 ? "S" : "N"}`;
+  return `${Math.abs(lat).toFixed(1)}\u00b0${lat < 0 ? "S" : "N"}`;
 }
 
 function formatLon(lon: number): string {
-  return `${Math.abs(lon).toFixed(1)}°${lon < 0 ? "W" : "E"}`;
+  return `${Math.abs(lon).toFixed(1)}\u00b0${lon < 0 ? "W" : "E"}`;
 }
 
 function buildWarningsSection(): string[] {
   const warnings: string[] = [];
-  const scenarioId = getActiveScenarioId();
+  const scenarioId = activeScenarioId();
   const freshness = getWorkspaceFreshness();
-  const result = getLatestModelExportState().resultSummary;
-  const inversion = getLatestInversionResult();
-  const inversionVisibility = getInversionVisibilityState();
+  const result = modelRunState.resultSummary;
+  const invResult = inversionResult();
+  const invVis = getInversionVisibilityState();
   const clouds = getBeachingClouds();
   const selectedOriginIndex = getSelectedOriginIndex();
 
@@ -320,10 +331,9 @@ function buildWarningsSection(): string[] {
   if (freshness.model.hasResult && !layerVisibility.paths && !layerVisibility.heatmap) {
     warnings.push("- Model results are loaded, but both paths and heatmap layers are currently hidden.");
   }
-  if (inversion && !inversionVisibility.visible && !inversionVisibility.comparisonVisible) {
+  if (invResult && !invVis.visible && !invVis.comparisonVisible) {
     warnings.push("- Inversion results are loaded, but inversion overlays are currently hidden.");
   }
-
   if (freshness.model.isStale) {
     warnings.push("- Model results are stale relative to the current configuration.");
   }
@@ -334,22 +344,20 @@ function buildWarningsSection(): string[] {
     warnings.push("- Inversion results are stale relative to the current configuration.");
   }
   if (result?.bfoMeanAbsResidualHz != null && result.bfoMeanAbsResidualHz > 50) {
-    warnings.push(`- BFO residual is very high (${result.bfoMeanAbsResidualHz.toFixed(1)} Hz), so the current best path fit is weak.`);
+    warnings.push(
+      `- BFO residual is very high (${result.bfoMeanAbsResidualHz.toFixed(1)} Hz), so the current best path fit is weak.`,
+    );
   }
-
   return warnings;
 }
 
 function getScenarioWorkspaceStatus(scenarioId: string): { matchesPreset: boolean } {
   const scenario = getScenarioById(scenarioId);
-  if (!scenario) {
-    return { matchesPreset: false };
-  }
-
-  const config = getAnalysisConfig();
-  const configMismatch = Object.entries(scenario.configOverrides).some(([key, value]) => config[key as keyof typeof config] !== value);
+  if (!scenario) return { matchesPreset: false };
+  const config = getConfigSnapshot();
+  const configMismatch = Object.entries(scenario.configOverrides).some(
+    ([key, value]) => config[key as keyof typeof config] !== value,
+  );
   const layerMismatch = Object.entries(scenario.layerVisibility).some(([key, value]) => layerVisibility[key] !== value);
-  return {
-    matchesPreset: !configMismatch && !layerMismatch,
-  };
+  return { matchesPreset: !configMismatch && !layerMismatch };
 }

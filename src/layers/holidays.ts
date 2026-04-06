@@ -14,15 +14,7 @@ export function loadHolidaysLayer(map: MapboxMap): void {
     type: "fill",
     source: HOLIDAYS_SOURCE_ID,
     paint: {
-      "fill-color": [
-        "match",
-        ["get", "priority"],
-        "HIGH",
-        "#f59e0b",
-        "MEDIUM",
-        "#fbbf24",
-        "#fcd34d",
-      ],
+      "fill-color": ["match", ["get", "priority"], "HIGH", "#f59e0b", "MEDIUM", "#fbbf24", "#fcd34d"],
       "fill-opacity": 0.18,
     },
   });

@@ -27,10 +27,10 @@ interface DebrisLogItem {
 }
 
 export async function loadDebrisLayer(map: MapboxMap): Promise<void> {
-  const [debris, debrisLog] = await Promise.all([
-    getDebrisDrift(),
-    getDebrisLog(),
-  ]) as [DebrisDriftItem[], DebrisLogItem[]];
+  const [debris, debrisLog] = (await Promise.all([getDebrisDrift(), getDebrisLog()])) as [
+    DebrisDriftItem[],
+    DebrisLogItem[],
+  ];
 
   map.addSource("debris-drift-source", {
     type: "geojson",

@@ -40,15 +40,7 @@ export async function loadAirspacesLayer(map: MapboxMap): Promise<void> {
     source: SOURCE_ID,
     paint: {
       "line-color": ["get", "color"],
-      "line-width": [
-        "match",
-        ["get", "type"],
-        "ADIZ",
-        2,
-        "FIR",
-        1.5,
-        1,
-      ],
+      "line-width": ["match", ["get", "type"], "ADIZ", 2, "FIR", 1.5, 1],
       "line-dasharray": [
         "match",
         ["get", "type"],

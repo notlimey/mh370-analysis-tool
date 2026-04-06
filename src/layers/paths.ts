@@ -1,10 +1,6 @@
 import type { Map as MapboxMap } from "mapbox-gl";
+import { type BackendBfoDiagnostic, type BackendBfoSummary, getCandidatePaths } from "../lib/backend";
 import { getFIRsForPath } from "../model/airspaces";
-import {
-  getCandidatePaths,
-  type BackendBfoDiagnostic,
-  type BackendBfoSummary,
-} from "../lib/backend";
 import type { AnalysisConfig } from "../model/config";
 
 export interface FlightPath {
@@ -56,8 +52,8 @@ export async function loadPathsLayer(
   providedPaths?: FlightPath[],
   providedAnnotations?: PathAnnotation[],
 ): Promise<void> {
-  const paths = providedPaths ?? await fetchCandidatePaths(120);
-  const annotations = providedAnnotations ?? await annotatePaths(paths);
+  const paths = providedPaths ?? (await fetchCandidatePaths(120));
+  const annotations = providedAnnotations ?? (await annotatePaths(paths));
   const endpointAreaFeatures = buildEndpointAreaFeatures(annotations);
   const continuationAreaFeatures = buildContinuationAreaFeatures(annotations);
   const continuationLineFeatures = buildContinuationLineFeatures(annotations);
@@ -189,15 +185,7 @@ export async function loadPathsLayer(
           1,
           family === "mixed" ? 0.22 : 0.28,
         ],
-        "line-width": [
-          "interpolate",
-          ["linear"],
-          ["get", "score"],
-          0,
-          0.5,
-          1,
-          2.5,
-        ],
+        "line-width": ["interpolate", ["linear"], ["get", "score"], 0, 0.5, 1, 2.5],
       },
     });
   }
@@ -221,18 +209,20 @@ function buildEndpointAreaFeatures(
     const hull = convexHull(endpoints);
     if (!hull) return [];
 
-    return [{
-      type: "Feature",
-      properties: {
-        family,
-        color: getFamilyColor(family),
-        count: endpoints.length,
+    return [
+      {
+        type: "Feature",
+        properties: {
+          family,
+          color: getFamilyColor(family),
+          count: endpoints.length,
+        },
+        geometry: {
+          type: "Polygon",
+          coordinates: [[...hull, hull[0]]],
+        },
       },
-      geometry: {
-        type: "Polygon",
-        coordinates: [[...hull, hull[0]]],
-      },
-    }];
+    ];
   });
 }
 
@@ -240,50 +230,54 @@ function buildContinuationAreaFeatures(
   annotations: PathAnnotation[],
 ): GeoJSON.Feature<GeoJSON.Polygon, { family: string; color: string; count: number }>[] {
   return FAMILY_ORDER.flatMap((family) => {
-    const points = topFamilyPaths(annotations, family)
-      .flatMap(({ path }) => {
-        const continuation = getContinuation(path);
-        if (!continuation) return [];
-        return [continuation.from, continuation.to];
-      });
+    const points = topFamilyPaths(annotations, family).flatMap(({ path }) => {
+      const continuation = getContinuation(path);
+      if (!continuation) return [];
+      return [continuation.from, continuation.to];
+    });
     const hull = convexHull(points);
     if (!hull) return [];
 
-    return [{
-      type: "Feature",
-      properties: {
-        family,
-        color: getFamilyColor(family),
-        count: points.length,
+    return [
+      {
+        type: "Feature",
+        properties: {
+          family,
+          color: getFamilyColor(family),
+          count: points.length,
+        },
+        geometry: {
+          type: "Polygon",
+          coordinates: [[...hull, hull[0]]],
+        },
       },
-      geometry: {
-        type: "Polygon",
-        coordinates: [[...hull, hull[0]]],
-      },
-    }];
+    ];
   });
 }
 
 function buildContinuationLineFeatures(
   annotations: PathAnnotation[],
 ): GeoJSON.Feature<GeoJSON.LineString, { family: string; color: string; score: number }>[] {
-  return FAMILY_ORDER.flatMap((family) => topFamilyPaths(annotations, family)
-    .flatMap(({ path }) => {
+  return FAMILY_ORDER.flatMap((family) =>
+    topFamilyPaths(annotations, family).flatMap(({ path }) => {
       const continuation = getContinuation(path);
       if (!continuation) return [];
-      return [{
-        type: "Feature" as const,
-        properties: {
-          family,
-          color: getFamilyColor(family),
-          score: path.score,
+      return [
+        {
+          type: "Feature" as const,
+          properties: {
+            family,
+            color: getFamilyColor(family),
+            score: path.score,
+          },
+          geometry: {
+            type: "LineString" as const,
+            coordinates: [continuation.from, continuation.to],
+          },
         },
-        geometry: {
-          type: "LineString" as const,
-          coordinates: [continuation.from, continuation.to],
-        },
-      }];
-    }));
+      ];
+    }),
+  );
 }
 
 function topFamilyPaths(annotations: PathAnnotation[], family: string): PathAnnotation[] {
@@ -308,20 +302,21 @@ function destinationPoint(origin: [number, number], bearingDeg: number, distance
   const earthRadiusKm = 6371;
   const [lon, lat] = origin;
   const angularDistance = distanceKm / earthRadiusKm;
-  const bearingRad = bearingDeg * Math.PI / 180;
-  const lat1 = lat * Math.PI / 180;
-  const lon1 = lon * Math.PI / 180;
+  const bearingRad = (bearingDeg * Math.PI) / 180;
+  const lat1 = (lat * Math.PI) / 180;
+  const lon1 = (lon * Math.PI) / 180;
 
   const lat2 = Math.asin(
-    Math.sin(lat1) * Math.cos(angularDistance)
-      + Math.cos(lat1) * Math.sin(angularDistance) * Math.cos(bearingRad),
+    Math.sin(lat1) * Math.cos(angularDistance) + Math.cos(lat1) * Math.sin(angularDistance) * Math.cos(bearingRad),
   );
-  const lon2 = lon1 + Math.atan2(
-    Math.sin(bearingRad) * Math.sin(angularDistance) * Math.cos(lat1),
-    Math.cos(angularDistance) - Math.sin(lat1) * Math.sin(lat2),
-  );
+  const lon2 =
+    lon1 +
+    Math.atan2(
+      Math.sin(bearingRad) * Math.sin(angularDistance) * Math.cos(lat1),
+      Math.cos(angularDistance) - Math.sin(lat1) * Math.sin(lat2),
+    );
 
-  return [((lon2 * 180 / Math.PI + 540) % 360) - 180, lat2 * 180 / Math.PI];
+  return [(((lon2 * 180) / Math.PI + 540) % 360) - 180, (lat2 * 180) / Math.PI];
 }
 
 function convexHull(points: [number, number][]): [number, number][] | undefined {
@@ -333,9 +328,8 @@ function convexHull(points: [number, number][]): [number, number][] | undefined 
     return undefined;
   }
 
-  const cross = (origin: [number, number], a: [number, number], b: [number, number]): number => (
-    (a[0] - origin[0]) * (b[1] - origin[1]) - (a[1] - origin[1]) * (b[0] - origin[0])
-  );
+  const cross = (origin: [number, number], a: [number, number], b: [number, number]): number =>
+    (a[0] - origin[0]) * (b[1] - origin[1]) - (a[1] - origin[1]) * (b[0] - origin[0]);
 
   const lower: [number, number][] = [];
   for (const point of uniquePoints) {

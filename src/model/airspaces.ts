@@ -15,7 +15,7 @@ export async function getAirspacesGeoJson(): Promise<GeoJSON.FeatureCollection> 
   if (airspacesCache) {
     return airspacesCache;
   }
-  airspacesCache = await getAirspaces() as GeoJSON.FeatureCollection;
+  airspacesCache = (await getAirspaces()) as GeoJSON.FeatureCollection;
   return airspacesCache;
 }
 

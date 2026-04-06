@@ -1,5 +1,5 @@
-import { getResolvedConfig } from "../lib/backend";
 import type { BackendResolvedConfig, ConfigSource } from "../lib/backend";
+import { getResolvedConfig } from "../lib/backend";
 import { getStoredAnalysisConfig, setStoredAnalysisConfig } from "./session";
 
 export interface AnalysisConfig {

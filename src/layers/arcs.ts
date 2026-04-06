@@ -1,5 +1,5 @@
 import type { Map as MapboxMap } from "mapbox-gl";
-import { getArcRings, type BackendArcRing } from "../lib/backend";
+import { type BackendArcRing, getArcRings } from "../lib/backend";
 
 let latestArcRings: BackendArcRing[] = [];
 
@@ -68,15 +68,9 @@ export function highlightArc(map: MapboxMap, arcNum: number): void {
   if (!map.getLayer("arcs-lines")) return;
 
   if (arcNum > 0) {
-    map.setPaintProperty("arcs-lines", "line-color", [
-      "case", ["==", ["get", "arc"], arcNum], "#facc15", "#ffffff",
-    ]);
-    map.setPaintProperty("arcs-lines", "line-opacity", [
-      "case", ["==", ["get", "arc"], arcNum], 1.0, 0.25,
-    ]);
-    map.setPaintProperty("arcs-lines", "line-width", [
-      "case", ["==", ["get", "arc"], arcNum], 3, 1,
-    ]);
+    map.setPaintProperty("arcs-lines", "line-color", ["case", ["==", ["get", "arc"], arcNum], "#facc15", "#ffffff"]);
+    map.setPaintProperty("arcs-lines", "line-opacity", ["case", ["==", ["get", "arc"], arcNum], 1.0, 0.25]);
+    map.setPaintProperty("arcs-lines", "line-width", ["case", ["==", ["get", "arc"], arcNum], 3, 1]);
     return;
   }
 

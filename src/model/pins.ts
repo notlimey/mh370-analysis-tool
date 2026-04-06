@@ -31,7 +31,7 @@ export function savePin(coordinates: [number, number], label?: string): SavedPin
 }
 
 export function updatePin(id: string, updates: Partial<Pick<SavedPin, "label" | "coordinates">>): void {
-  const pins = listSavedPins().map((pin) => pin.id === id ? { ...pin, ...updates } : pin);
+  const pins = listSavedPins().map((pin) => (pin.id === id ? { ...pin, ...updates } : pin));
   window.localStorage.setItem(STORAGE_KEY, JSON.stringify(pins));
 }
 

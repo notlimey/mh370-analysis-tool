@@ -1,4 +1,5 @@
-import { getAnalysisConfig, type AnalysisConfig } from "../model/config";
+import type { AnalysisConfig } from "../model/config";
+import { getConfigSnapshot } from "../stores/analysis-config";
 
 interface FreshnessState {
   hasResult: boolean;
@@ -22,7 +23,7 @@ let freshness: WorkspaceFreshnessSnapshot = {
   inversion: { hasResult: false, isStale: false, lastCompletedAt: null },
 };
 
-export function markModelRunCompleted(config: AnalysisConfig = getAnalysisConfig(), completedAt = new Date()): void {
+export function markModelRunCompleted(config: AnalysisConfig = getConfigSnapshot(), completedAt = new Date()): void {
   modelInputSignature = createConfigSignature(config);
   freshness.model = {
     hasResult: true,
@@ -31,7 +32,7 @@ export function markModelRunCompleted(config: AnalysisConfig = getAnalysisConfig
   };
 }
 
-export function markDriftRunCompleted(config: AnalysisConfig = getAnalysisConfig(), completedAt = new Date()): void {
+export function markDriftRunCompleted(config: AnalysisConfig = getConfigSnapshot(), completedAt = new Date()): void {
   driftInputSignature = createConfigSignature(config);
   freshness.drift = {
     hasResult: true,
@@ -40,7 +41,10 @@ export function markDriftRunCompleted(config: AnalysisConfig = getAnalysisConfig
   };
 }
 
-export function markInversionRunCompleted(config: AnalysisConfig = getAnalysisConfig(), completedAt = new Date()): void {
+export function markInversionRunCompleted(
+  config: AnalysisConfig = getConfigSnapshot(),
+  completedAt = new Date(),
+): void {
   inversionInputSignature = createConfigSignature(config);
   freshness.inversion = {
     hasResult: true,
@@ -49,7 +53,7 @@ export function markInversionRunCompleted(config: AnalysisConfig = getAnalysisCo
   };
 }
 
-export function markWorkspaceInputsChanged(config: AnalysisConfig = getAnalysisConfig()): void {
+export function markWorkspaceInputsChanged(config: AnalysisConfig = getConfigSnapshot()): void {
   const currentSignature = createConfigSignature(config);
   if (freshness.model.hasResult && modelInputSignature !== currentSignature) {
     freshness.model = { ...freshness.model, isStale: true };
@@ -70,7 +74,10 @@ export function getWorkspaceFreshness(): WorkspaceFreshnessSnapshot {
   };
 }
 
-export function restoreWorkspaceFreshness(next: WorkspaceFreshnessSnapshot, config: AnalysisConfig = getAnalysisConfig()): void {
+export function restoreWorkspaceFreshness(
+  next: WorkspaceFreshnessSnapshot,
+  config: AnalysisConfig = getConfigSnapshot(),
+): void {
   const signature = createConfigSignature(config);
   freshness = {
     model: { ...next.model },

@@ -276,9 +276,9 @@ const ATSB_CORRECTIONS: &[(f64, f64)] = &[
 
 /// ATSB constant bias (δf_bias): SDU oscillator offset.
 /// Source: ATSB via Holland 2017; independently confirmed by Duncan Steel
-/// and Richard Godfrey analyses.
-#[allow(dead_code)]
-const ATSB_BIAS_HZ: f64 = 152.5;
+/// and Richard Godfrey analyses. Published as ~150 Hz; some sources report
+/// 149.5-152.5 Hz depending on processing pipeline.
+const ATSB_BIAS_HZ: f64 = 150.0;
 
 /// Interpolate the δf_sat + δf_AFC correction at a given time.
 /// Uses linear interpolation between the tabulated ATSB values.
@@ -329,38 +329,20 @@ pub struct BfoModel {
 }
 
 impl BfoModel {
-    /// Calibrate using the 16:00:13 ground logon.
+    /// Create model using the ATSB/Holland published bias constant.
     ///
-    /// Computes the bias as the residual between the measured BFO and the
-    /// predicted BFO (Doppler + ATSB correction) at the ground calibration
-    /// point. This should be close to the ATSB constant of 152.5 Hz.
-    pub fn calibrate(satellite: &SatelliteModel, config: &AnalysisConfig) -> Result<Self, String> {
-        let dataset = load_dataset(config)?;
-        let handshake = dataset
-            .inmarsat_handshakes
-            .iter()
-            .find(|handshake| {
-                handshake.position_known
-                    && handshake.bto_us.is_some()
-                    && handshake.bfo_hz.is_some()
-                    && handshake.message_type == "R-Channel Log-on"
-            })
-            .ok_or_else(|| "missing ground BFO calibration handshake".to_string())?;
-        let lat = handshake
-            .lat
-            .ok_or_else(|| "missing lat for ground BFO calibration".to_string())?;
-        let lon = handshake
-            .lon
-            .ok_or_else(|| "missing lon for ground BFO calibration".to_string())?;
-        let time_s = parse_time_utc_seconds(&handshake.time_utc)?;
-        let measured_bfo = handshake.bfo_hz.unwrap_or_default();
-
-        let doppler = Self::total_doppler_hz(
-            satellite, lat, lon, 0.0, 0.0, 0.0, time_s, config,
-        )?;
-        let correction = interpolate_atsb_correction(time_s);
-        let bias = measured_bfo - doppler - correction;
-        Ok(BfoModel { bias })
+    /// The ATSB Flight Path Reconstruction Group determined the SDU oscillator
+    /// bias (δf_bias) to be approximately 150 Hz from analysis of 20 prior
+    /// flights of 9M-MRO. This value was independently confirmed by Duncan Steel
+    /// and Richard Godfrey.
+    ///
+    /// Using the published constant rather than calibrating from the ground logon
+    /// avoids uncertainty in the pre-flight BFO measurement, which comes from
+    /// raw SU log processing that varies across analysts by ±15 Hz.
+    ///
+    /// Source: Holland 2017 (arXiv:1702.02432); DSTG Book (Davey et al. 2016).
+    pub fn calibrate(_satellite: &SatelliteModel, _config: &AnalysisConfig) -> Result<Self, String> {
+        Ok(BfoModel { bias: ATSB_BIAS_HZ })
     }
 
     /// Total Doppler contribution (Hz) = Δf_up + Δf_comp + Δf_down.
@@ -390,6 +372,7 @@ impl BfoModel {
             config.satellite_nominal_lat_deg,
             config.satellite_nominal_lon_deg,
         );
+
         let delta_f_down = downlink_doppler_hz(sat_pos, sat_vel);
 
         Ok(delta_f_up + delta_f_comp + delta_f_down)

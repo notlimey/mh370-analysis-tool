@@ -50,9 +50,7 @@ const BROWSER_FALLBACK_CONFIG: AnalysisConfig = {
 };
 
 function compiledDefaultSources(): Record<string, ConfigSource> {
-  return Object.fromEntries(
-    Object.keys(BROWSER_FALLBACK_CONFIG).map((key) => [key, "CompiledDefault"]),
-  );
+  return Object.fromEntries(Object.keys(BROWSER_FALLBACK_CONFIG).map((key) => [key, "CompiledDefault"]));
 }
 
 export interface BackendHandshake {
@@ -257,19 +255,16 @@ function headingFromPoints(points: [number, number][]): number {
   if (points.length < 2) return 0;
   const [fromLon, fromLat] = points[0];
   const [toLon, toLat] = points[1];
-  const dLon = (toLon - fromLon) * Math.PI / 180;
-  const fromLatRad = fromLat * Math.PI / 180;
-  const toLatRad = toLat * Math.PI / 180;
+  const dLon = ((toLon - fromLon) * Math.PI) / 180;
+  const fromLatRad = (fromLat * Math.PI) / 180;
+  const toLatRad = (toLat * Math.PI) / 180;
   const y = Math.sin(dLon) * Math.cos(toLatRad);
-  const x = Math.cos(fromLatRad) * Math.sin(toLatRad)
-    - Math.sin(fromLatRad) * Math.cos(toLatRad) * Math.cos(dLon);
-  return (Math.atan2(y, x) * 180 / Math.PI + 360) % 360;
+  const x = Math.cos(fromLatRad) * Math.sin(toLatRad) - Math.sin(fromLatRad) * Math.cos(toLatRad) * Math.cos(dLon);
+  return ((Math.atan2(y, x) * 180) / Math.PI + 360) % 360;
 }
 
 export async function getHandshakes(): Promise<BackendHandshake[]> {
-  return IS_TAURI
-    ? tauriInvoke("get_handshakes")
-    : fetchSnapshot("handshakes.json");
+  return IS_TAURI ? tauriInvoke("get_handshakes") : fetchSnapshot("handshakes.json");
 }
 
 export async function getResolvedConfig(): Promise<BackendResolvedConfig> {
@@ -297,7 +292,10 @@ export async function getCandidatePaths(n = 500, config?: AnalysisConfig): Promi
   return geojson.features.map((feature) => ({
     points: (feature.geometry as GeoJSON.LineString).coordinates as [number, number][],
     score: Number(feature.properties?.score ?? 0),
-    initial_heading: Number(feature.properties?.initial_heading ?? headingFromPoints((feature.geometry as GeoJSON.LineString).coordinates as [number, number][])),
+    initial_heading: Number(
+      feature.properties?.initial_heading ??
+        headingFromPoints((feature.geometry as GeoJSON.LineString).coordinates as [number, number][]),
+    ),
     headings_deg: [],
     family: String(feature.properties?.family ?? "other"),
     fuel_feasible: Boolean(feature.properties?.fuel_feasible),
@@ -333,10 +331,18 @@ export async function getDebrisLog(): Promise<BackendDebrisLogItem[]> {
     lon: Number((feature.geometry as GeoJSON.Point).coordinates[0]),
     confirmation: String(feature.properties?.confirmation ?? "unverified"),
     confirmed_by: feature.properties?.confirmed_by ? String(feature.properties.confirmed_by) : undefined,
-    barnacle_analysis_done: String(feature.properties?.barnacle_analysis_done ?? "") === "true" || Boolean(feature.properties?.barnacle_analysis_done),
-    barnacle_analysis_available: String(feature.properties?.barnacle_analysis_available ?? "") === "true" || Boolean(feature.properties?.barnacle_analysis_available),
-    oldest_barnacle_age_estimate: feature.properties?.oldest_barnacle_age_estimate ? String(feature.properties.oldest_barnacle_age_estimate) : undefined,
-    initial_water_temp_from_barnacle: feature.properties?.initial_water_temp_from_barnacle ? Number(feature.properties.initial_water_temp_from_barnacle) : undefined,
+    barnacle_analysis_done:
+      String(feature.properties?.barnacle_analysis_done ?? "") === "true" ||
+      Boolean(feature.properties?.barnacle_analysis_done),
+    barnacle_analysis_available:
+      String(feature.properties?.barnacle_analysis_available ?? "") === "true" ||
+      Boolean(feature.properties?.barnacle_analysis_available),
+    oldest_barnacle_age_estimate: feature.properties?.oldest_barnacle_age_estimate
+      ? String(feature.properties.oldest_barnacle_age_estimate)
+      : undefined,
+    initial_water_temp_from_barnacle: feature.properties?.initial_water_temp_from_barnacle
+      ? Number(feature.properties.initial_water_temp_from_barnacle)
+      : undefined,
     used_in_drift_models: [],
     notes: String(feature.properties?.notes ?? ""),
   }));
@@ -355,15 +361,11 @@ export async function getDebrisDrift(): Promise<BackendDebrisDriftItem[]> {
 }
 
 export async function getAnomalies(): Promise<BackendAnomaly[]> {
-  return IS_TAURI
-    ? tauriInvoke("get_anomalies")
-    : fetchSnapshot("anomalies.json");
+  return IS_TAURI ? tauriInvoke("get_anomalies") : fetchSnapshot("anomalies.json");
 }
 
 export async function getAirspaces(): Promise<GeoJSON.FeatureCollection> {
-  return IS_TAURI
-    ? tauriInvoke("get_airspaces")
-    : fetchSnapshot("airspaces.geojson");
+  return IS_TAURI ? tauriInvoke("get_airspaces") : fetchSnapshot("airspaces.geojson");
 }
 
 export async function exportProbabilityGeojson(path: string, config?: AnalysisConfig) {
@@ -433,7 +435,10 @@ export interface DriftBeachingProgress {
   origin_lat: number;
 }
 
-export async function getDriftBeaching(params?: DriftSimParams, config?: AnalysisConfig): Promise<BackendBeachingCloud[]> {
+export async function getDriftBeaching(
+  params?: DriftSimParams,
+  config?: AnalysisConfig,
+): Promise<BackendBeachingCloud[]> {
   if (IS_TAURI) {
     return tauriInvoke("get_drift_beaching", {
       ...(params ? { params } : {}),

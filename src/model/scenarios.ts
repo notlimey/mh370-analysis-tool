@@ -18,7 +18,8 @@ export const SCENARIOS: ScenarioPreset[] = [
   {
     id: "atsb_baseline",
     name: "ATSB Baseline",
-    shortDescription: "Official search assumptions — 471 kts cruise, uncontrolled descent, narrow band around ~38\u00B0S.",
+    shortDescription:
+      "Official search assumptions — 471 kts cruise, uncontrolled descent, narrow band around ~38\u00B0S.",
     narrative: `This scenario reproduces the assumptions used by the ATSB and DSTG in defining the primary underwater search area (2014\u20132017). The aircraft is assumed to have flown a roughly constant heading at cruise speed after the last radar contact, with fuel exhaustion leading to an uncontrolled descent near the 7th arc.
 
 The ATSB search covered ~120,000 km\u00B2 along the 7th arc between 33\u00B0S and 39.4\u00B0S without locating the wreckage. This scenario is useful as a reference point — if the baseline assumptions were correct, the aircraft should have been found.
@@ -335,7 +336,8 @@ Watch for the gap between the satellite peak and debris peak — that tension is
   {
     id: "drift_analysis",
     name: "Drift Analysis",
-    shortDescription: "Focused view on debris drift modelling \u2014 particle clouds, find locations, and reverse-drift corridors.",
+    shortDescription:
+      "Focused view on debris drift modelling \u2014 particle clouds, find locations, and reverse-drift corridors.",
     narrative: `This view strips away the satellite/BTO layers and focuses entirely on what the debris tells us.
 
 The Monte Carlo drift model runs particle ensembles from candidate origin points along the 7th arc, simulating ocean currents and wind-driven leeway with randomised perturbations. Each particle cloud shows the probability envelope of where debris from that origin would end up after N days adrift.

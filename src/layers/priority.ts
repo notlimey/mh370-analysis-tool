@@ -54,9 +54,7 @@ export function loadPriorityGapsLayer(map: MapboxMap, heatmap: ProbPoint[]): voi
 
 export function zoomToPriorityGaps(map: MapboxMap): void {
   const sourceFeatures = map.querySourceFeatures("priority-source");
-  const polygonFeatures = sourceFeatures.filter(
-    (feature) => feature.geometry.type === "Polygon",
-  );
+  const polygonFeatures = sourceFeatures.filter((feature) => feature.geometry.type === "Polygon");
 
   if (polygonFeatures.length === 0) {
     return;
@@ -84,7 +82,10 @@ export function zoomToPriorityGaps(map: MapboxMap): void {
   }
 
   map.fitBounds(
-    [[minLon, minLat], [maxLon, maxLat]],
+    [
+      [minLon, minLat],
+      [maxLon, maxLat],
+    ],
     { padding: 60, duration: 900, maxZoom: 7 },
   );
 }
@@ -119,22 +120,20 @@ function isInsideSearchedArea(position: [number, number]): boolean {
   return SEARCHED_RINGS.some((ring) => pointInPolygon(lon, lat, ring));
 }
 
-const SEARCHED_RINGS: [number, number][][] = [
-  SEARCHED_2014_2017,
-  SEARCHED_2018,
-  SEARCHED_2025_2026,
-];
+const SEARCHED_RINGS: [number, number][][] = [SEARCHED_2014_2017, SEARCHED_2018, SEARCHED_2025_2026];
 
 function squareAround([lon, lat]: [number, number], sizeDeg: number): GeoJSON.Polygon {
   return {
     type: "Polygon",
-    coordinates: [[
-      [lon - sizeDeg, lat - sizeDeg],
-      [lon + sizeDeg, lat - sizeDeg],
-      [lon + sizeDeg, lat + sizeDeg],
-      [lon - sizeDeg, lat + sizeDeg],
-      [lon - sizeDeg, lat - sizeDeg],
-    ]],
+    coordinates: [
+      [
+        [lon - sizeDeg, lat - sizeDeg],
+        [lon + sizeDeg, lat - sizeDeg],
+        [lon + sizeDeg, lat + sizeDeg],
+        [lon - sizeDeg, lat + sizeDeg],
+        [lon - sizeDeg, lat - sizeDeg],
+      ],
+    ],
   };
 }
 

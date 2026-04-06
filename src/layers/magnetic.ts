@@ -1,6 +1,6 @@
-import mapboxgl from "mapbox-gl";
 import { fromUrl } from "geotiff";
 import type { Map as MapboxMap } from "mapbox-gl";
+import mapboxgl from "mapbox-gl";
 import emagTiffUrl from "../data/emag2_mh370.tiff";
 
 const WEST = 76;
@@ -49,7 +49,7 @@ async function renderMagneticOverlay(): Promise<string> {
   const image = await tiff.getImage();
   const width = image.getWidth();
   const height = image.getHeight();
-  const values = await image.readRasters({ interleave: true }) as Float32Array;
+  const values = (await image.readRasters({ interleave: true })) as Float32Array;
   const noDataValue = image.getGDALNoData();
   const noData = noDataValue === null ? null : Number(noDataValue);
 
@@ -112,7 +112,12 @@ function bindMagneticHover(map: MapboxMap): void {
     }
 
     if (!hoverPopup) {
-      hoverPopup = new mapboxgl.Popup({ closeButton: false, closeOnClick: false, className: "mh370-popup", maxWidth: "180px" });
+      hoverPopup = new mapboxgl.Popup({
+        closeButton: false,
+        closeOnClick: false,
+        className: "mh370-popup",
+        maxWidth: "180px",
+      });
     }
 
     hoverPopup

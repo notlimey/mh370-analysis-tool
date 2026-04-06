@@ -1,30 +1,16 @@
-import { getMap, toggleLayer, DEFAULT_LAYER_VISIBILITY, resetLayerVisibility } from "../map";
-import { updateAnalysisConfig, resetAnalysisConfig } from "../model/config";
-import type { ScenarioPreset } from "../model/scenarios";
 import { setSelectedAnomaly } from "../layers/anomalies";
-import { clearEvidenceSelection } from "../ui/evidencePanel";
-import { getStoredActiveScenarioId, setStoredActiveScenarioId } from "../model/session";
-
-let activeScenarioId: string | null = getStoredActiveScenarioId();
-const activeScenarioListeners: Array<(scenarioId: string | null) => void> = [];
-
-export function getActiveScenarioId(): string | null {
-  return activeScenarioId;
-}
-
-export function onActiveScenarioChange(listener: (scenarioId: string | null) => void): void {
-  activeScenarioListeners.push(listener);
-}
-
-export function setActiveScenarioId(scenarioId: string | null): void {
-  activeScenarioId = scenarioId;
-  setStoredActiveScenarioId(activeScenarioId);
-  for (const listener of activeScenarioListeners) {
-    listener(activeScenarioId);
-  }
-}
+import type { ScenarioPreset } from "../model/scenarios";
+import { resetConfig, updateConfig } from "../stores/analysis-config";
+import { clearEvidence } from "../stores/evidence";
+import {
+  DEFAULT_LAYER_VISIBILITY,
+  resetLayerVisibilityDefaults,
+  toggleLayerVisibility,
+} from "../stores/layer-visibility";
+import { setActiveScenarioId } from "../stores/scenario";
 
 export function applyScenario(
+  map: mapboxgl.Map,
   scenario: ScenarioPreset,
   callbacks: {
     onConfigChange?: () => void;
@@ -33,17 +19,26 @@ export function applyScenario(
   },
 ): void {
   setActiveScenarioId(scenario.id);
-  const map = getMap();
 
   // 1. Apply config overrides
-  resetAnalysisConfig();
-  updateAnalysisConfig(scenario.configOverrides);
+  resetConfig();
+  updateConfig(scenario.configOverrides);
   callbacks.syncModelControls?.();
 
-  // 2. Apply full layer visibility state so scenarios do not leak into each other.
+  // 2. Apply full layer visibility state
   for (const [layer, defaultVisible] of Object.entries(DEFAULT_LAYER_VISIBILITY)) {
     const visible = scenario.layerVisibility[layer] ?? defaultVisible;
-    toggleLayer(layer, visible);
+    toggleLayerVisibility(layer, visible);
+    // Apply to map
+    const style = map.getStyle();
+    if (style?.layers) {
+      const vis = visible ? "visible" : "none";
+      for (const mapLayer of style.layers) {
+        if (mapLayer.id.startsWith(`${layer}-`)) {
+          map.setLayoutProperty(mapLayer.id, "visibility", vis);
+        }
+      }
+    }
   }
   callbacks.syncLayerToggles?.();
 
@@ -54,27 +49,41 @@ export function applyScenario(
     duration: 1800,
   });
 
-  // 4. Highlight relevant anomalies (first one if any)
+  // 4. Highlight relevant anomalies
   if (scenario.relevantAnomalyIds.length > 0) {
     setSelectedAnomaly(map, scenario.relevantAnomalyIds[0]);
   } else {
     setSelectedAnomaly(map, null);
   }
 
-  // 5. Trigger config change so the model can rerun
+  // 5. Trigger config change
   callbacks.onConfigChange?.();
 }
 
-export function clearScenario(callbacks: {
-  syncModelControls?: () => void;
-  syncLayerToggles?: () => void;
-}): void {
+export function clearScenario(
+  map: mapboxgl.Map,
+  callbacks: {
+    syncModelControls?: () => void;
+    syncLayerToggles?: () => void;
+  },
+): void {
   setActiveScenarioId(null);
-  resetAnalysisConfig();
-  resetLayerVisibility();
-  const map = getMap();
+  resetConfig();
+  resetLayerVisibilityDefaults();
+  // Apply to map
+  const style = map.getStyle();
+  if (style?.layers) {
+    for (const [group, visible] of Object.entries(DEFAULT_LAYER_VISIBILITY)) {
+      const vis = visible ? "visible" : "none";
+      for (const layer of style.layers) {
+        if (layer.id.startsWith(`${group}-`)) {
+          map.setLayoutProperty(layer.id, "visibility", vis);
+        }
+      }
+    }
+  }
   setSelectedAnomaly(map, null);
-  clearEvidenceSelection();
+  clearEvidence();
   callbacks.syncModelControls?.();
   callbacks.syncLayerToggles?.();
 }

@@ -1,5 +1,5 @@
-import mapboxgl from "mapbox-gl";
 import type { Map as MapboxMap, MapMouseEvent } from "mapbox-gl";
+import mapboxgl from "mapbox-gl";
 
 let popup: mapboxgl.Popup | null = null;
 let popupsBound = false;
@@ -32,16 +32,17 @@ export function setupPopups(map: MapboxMap): void {
     map.on("mousemove", "arcs-lines", (e) => {
       const props = e.features?.[0]?.properties;
       if (!props) return;
-      const residual = props.bfo_residual_hz === null || props.bfo_residual_hz === undefined
-        ? "BFO residual unavailable for current best path"
-        : `BFO residual: ${Number(props.bfo_residual_hz).toFixed(1)} Hz<br/>Weight: ${Number(props.bfo_weight).toFixed(2)}<br/>Fit: ${props.bfo_fit_label}`;
+      const residual =
+        props.bfo_residual_hz === null || props.bfo_residual_hz === undefined
+          ? "BFO residual unavailable for current best path"
+          : `BFO residual: ${Number(props.bfo_residual_hz).toFixed(1)} Hz<br/>Weight: ${Number(props.bfo_weight).toFixed(2)}<br/>Fit: ${props.bfo_fit_label}`;
       showPopup(
         map,
         e,
         `<strong>Arc ${props.arc}</strong><br/>
          Time: ${props.time} UTC<br/>
          Range: ${props.range_km} km<br/>
-         <br/>${residual}`
+         <br/>${residual}`,
       );
     });
     map.on("mouseleave", "arcs-lines", () => {
@@ -51,15 +52,16 @@ export function setupPopups(map: MapboxMap): void {
     map.on("click", "arcs-lines", (e) => {
       const props = e.features?.[0]?.properties;
       if (!props) return;
-      const residualLine = props.bfo_residual_hz === null || props.bfo_residual_hz === undefined
-        ? ""
-        : `<br/>BFO residual: ${Number(props.bfo_residual_hz).toFixed(1)} Hz`;
+      const residualLine =
+        props.bfo_residual_hz === null || props.bfo_residual_hz === undefined
+          ? ""
+          : `<br/>BFO residual: ${Number(props.bfo_residual_hz).toFixed(1)} Hz`;
       showPopup(
         map,
         e,
         `<strong>Arc ${props.arc}</strong><br/>
          Time: ${props.time} UTC<br/>
-         Range: ${props.range_km} km${residualLine}`
+         Range: ${props.range_km} km${residualLine}`,
       );
     });
   }
@@ -78,17 +80,12 @@ export function setupPopups(map: MapboxMap): void {
          Found: ${props.date}<br/>
          Location: ${props.location}<br/>
          Status: ${props.confirmation}<br/>
-         Barnacles: ${props.barnacles}`
+         Barnacles: ${props.barnacles}`,
       );
     });
   }
 
-  const pathLayers = [
-    "paths-slow-lines",
-    "paths-perpendicular-lines",
-    "paths-mixed-lines",
-    "paths-other-lines",
-  ];
+  const pathLayers = ["paths-slow-lines", "paths-perpendicular-lines", "paths-mixed-lines", "paths-other-lines"];
   for (const layerId of pathLayers) {
     if (!map.getLayer(layerId)) continue;
     map.on("mouseenter", layerId, () => setCursor(map, "pointer"));
@@ -102,7 +99,7 @@ export function setupPopups(map: MapboxMap): void {
         `<strong>${props.family} family path</strong><br/>
          Score: ${props.score}<br/>
          Arc 7 fuel: ${props.fuel} kg<br/>
-         FIRs crossed: ${props.firs || "none"}`
+         FIRs crossed: ${props.firs || "none"}`,
       );
     });
   }
@@ -120,7 +117,7 @@ export function setupPopups(map: MapboxMap): void {
          ${props.icao} · ${props.type} · ${props.country}<br/>
          <br/><em>${props.detection_status}</em><br/>
          <br/>${props.radar_coverage}<br/>
-         <br/>${props.mh370_notes}`
+         <br/>${props.mh370_notes}`,
       );
     });
   }
@@ -139,7 +136,7 @@ export function setupPopups(map: MapboxMap): void {
          Area: ${props.area_km2} km²<br/>
          Issue: ${props.quality_issue}<br/>
          <br/>${props.description}<br/>
-         <br/><em>${props.source}</em>`
+         <br/><em>${props.source}</em>`,
       );
     });
   }
@@ -155,7 +152,7 @@ export function setupPopups(map: MapboxMap): void {
         e,
         `<strong>Priority gap</strong><br/>
          Probability: ${(Number(props.probability) * 100).toFixed(2)}%<br/>
-         ${props.label}`
+         ${props.label}`,
       );
     });
   }
@@ -197,7 +194,7 @@ export function setupPopups(map: MapboxMap): void {
         map,
         e,
         `<strong>${props.name}</strong><br/>
-         ${props.time} UTC`
+         ${props.time} UTC`,
       );
     });
   }

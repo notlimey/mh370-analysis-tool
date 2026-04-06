@@ -1,9 +1,8 @@
-import { getAnalysisConfig, defaultAnalysisConfig, updateAnalysisConfig } from "../model/config";
+import { getBeachingClouds, getSelectedOriginIndex, selectOrigin } from "../layers/drift-clouds";
 import type { AnalysisConfig } from "../model/config";
-import { getMap, layerVisibility, toggleLayer } from "../map";
-import { DEFAULT_LAYER_VISIBILITY } from "../map";
-import { getActiveScenarioId, setActiveScenarioId } from "./scenarioManager";
-import { getSelectedOriginIndex, getBeachingClouds, selectOrigin } from "../layers/drift_clouds";
+import { defaultConfig, getConfigSnapshot, updateConfig } from "../stores/analysis-config";
+import { DEFAULT_LAYER_VISIBILITY, layerVisibility, toggleLayerVisibility } from "../stores/layer-visibility";
+import { activeScenarioId, setActiveScenarioId } from "../stores/scenario";
 
 interface ParsedUrlState {
   lat?: number;
@@ -19,15 +18,20 @@ interface ParsedUrlState {
 
 let syncTimer: number | null = null;
 let applyingUrlState = false;
+let mapInstance: mapboxgl.Map | null = null;
+
+export function setUrlStateMap(map: mapboxgl.Map): void {
+  mapInstance = map;
+}
 
 export function applyUrlStateFromHash(): void {
   const parsed = parseUrlState(window.location.hash);
-  if (!parsed) return;
+  if (!parsed || !mapInstance) return;
 
   applyingUrlState = true;
   try {
     if (parsed.configOverrides && Object.keys(parsed.configOverrides).length > 0) {
-      updateAnalysisConfig(parsed.configOverrides);
+      updateConfig(parsed.configOverrides);
     }
 
     if (parsed.scenarioId !== undefined) {
@@ -37,11 +41,11 @@ export function applyUrlStateFromHash(): void {
     if (parsed.layers) {
       const requestedLayers = new Set(parsed.layers);
       for (const layerId of Object.keys(DEFAULT_LAYER_VISIBILITY)) {
-        toggleLayer(layerId, requestedLayers.has(layerId));
+        toggleLayerVisibility(layerId, requestedLayers.has(layerId));
       }
     }
 
-    const map = getMap();
+    const map = mapInstance;
     const nextView: {
       center?: [number, number];
       zoom?: number;
@@ -74,7 +78,9 @@ export function scheduleUrlStateSync(): void {
   }
   syncTimer = window.setTimeout(() => {
     syncTimer = null;
-    window.history.replaceState(null, "", buildShareableUrl());
+    if (mapInstance) {
+      window.history.replaceState(null, "", buildShareableUrl());
+    }
   }, 180);
 }
 
@@ -85,7 +91,8 @@ export async function copyCurrentUrlStateLink(): Promise<string> {
 }
 
 export function buildShareableUrl(): string {
-  const map = getMap();
+  if (!mapInstance) return window.location.href;
+  const map = mapInstance;
   const center = map.getCenter();
   const params = new URLSearchParams();
 
@@ -102,12 +109,12 @@ export function buildShareableUrl(): string {
     params.set("pitch", roundNumber(pitch, 1));
   }
 
-  const activeLayers = Object.keys(layerVisibility).filter((layerId) => layerVisibility[layerId]);
+  const activeLayers = Object.keys(layerVisibility).filter((id) => layerVisibility[id]);
   if (activeLayers.length > 0) {
     params.set("layers", activeLayers.join(","));
   }
 
-  const scenarioId = getActiveScenarioId();
+  const scenarioId = activeScenarioId();
   if (scenarioId) {
     params.set("scenario", scenarioId);
   }
@@ -127,11 +134,11 @@ export function buildShareableUrl(): string {
 }
 
 function getConfigOverrides(): string[] {
-  const currentConfig = getAnalysisConfig();
-  return Object.keys(defaultAnalysisConfig)
-    .filter((key) => currentConfig[key as keyof typeof currentConfig] !== defaultAnalysisConfig[key as keyof typeof defaultAnalysisConfig])
+  const config = getConfigSnapshot();
+  return (Object.keys(defaultConfig) as Array<keyof typeof defaultConfig>)
+    .filter((key) => config[key] !== defaultConfig[key])
     .sort()
-    .map((key) => `${key}:${encodeURIComponent(String(currentConfig[key as keyof typeof currentConfig]))}`);
+    .map((key) => `${key}:${encodeURIComponent(String(config[key]))}`);
 }
 
 function parseUrlState(hash: string): ParsedUrlState | null {
@@ -149,7 +156,10 @@ function parseUrlState(hash: string): ParsedUrlState | null {
 
   const layers = params.get("layers");
   if (layers) {
-    parsed.layers = layers.split(",").map((value) => value.trim()).filter(Boolean);
+    parsed.layers = layers
+      .split(",")
+      .map((value) => value.trim())
+      .filter(Boolean);
   }
 
   const scenarioId = params.get("scenario");
@@ -177,8 +187,8 @@ function parseConfigOverrides(value: string): Partial<AnalysisConfig> {
     if (separatorIndex <= 0) continue;
     const key = entry.slice(0, separatorIndex).trim();
     const rawValue = decodeURIComponent(entry.slice(separatorIndex + 1));
-    if (!(key in defaultAnalysisConfig)) continue;
-    const defaultValue = defaultAnalysisConfig[key as keyof typeof defaultAnalysisConfig];
+    if (!(key in defaultConfig)) continue;
+    const defaultValue = defaultConfig[key as keyof typeof defaultConfig];
     if (typeof defaultValue === "number") {
       const numeric = Number(rawValue);
       if (Number.isFinite(numeric)) {
@@ -198,5 +208,8 @@ function parseOptionalNumber(value: string | null): number | undefined {
 }
 
 function roundNumber(value: number, digits: number): string {
-  return value.toFixed(digits).replace(/\.0+$/, "").replace(/(\.\d*?)0+$/, "$1");
+  return value
+    .toFixed(digits)
+    .replace(/\.0+$/, "")
+    .replace(/(\.\d*?)0+$/, "$1");
 }

@@ -1,29 +1,55 @@
-import { getMap, layerVisibility, toggleLayer, DEFAULT_LAYER_VISIBILITY } from "../map";
-import { getAnalysisConfig, updateAnalysisConfig, resetAnalysisConfig, type AnalysisConfig } from "../model/config";
-import { getActiveScenarioId, setActiveScenarioId } from "./scenarioManager";
-import { getSelectedOriginIndex, getBeachingClouds, populateDriftClouds, selectOrigin } from "../layers/drift_clouds";
+import { setSelectedAnomaly } from "../layers/anomalies";
+import {
+  renderComparisonOverlay,
+  renderDebrisInversionLayer,
+  setComparisonOverlayVisible,
+  setDebrisInversionVisible,
+} from "../layers/debris-inversion";
+import { getBeachingClouds, getSelectedOriginIndex, populateDriftClouds, selectOrigin } from "../layers/drift-clouds";
+import type { AnalysisConfig } from "../model/config";
 import { listSavedPins, replaceSavedPins, type SavedPin } from "../model/pins";
-import { getLatestInversionResult, getInversionVisibilityState, restoreInversionState } from "../ui/sidebarInversion";
-import { getLatestModelExportState, restoreModelExportState, type ModelExportState } from "../ui/panels/modelPanel";
 import {
   getStoredAnalystNotes,
   getStoredSessionSnapshot,
   setStoredAnalystNotes,
   setStoredSessionSnapshot,
 } from "../model/session";
-import { getWorkspaceFreshness, restoreWorkspaceFreshness } from "./workspaceState";
+import { getConfigSnapshot, resetConfig, updateConfig } from "../stores/analysis-config";
+import type { EvidenceSelection } from "../stores/evidence";
+import { clearEvidence, evidenceSelection, setEvidenceSelection } from "../stores/evidence";
 import {
-  getEvidenceSelection,
-  getSelectedAnomalyId,
-  openAnomalyDetail,
-  openInfoDetail,
-  clearEvidenceSelection,
-  type EvidenceSelection,
-} from "../ui/evidencePanel";
-import { setSelectedAnomaly } from "../layers/anomalies";
-import { getCurrentPanel, openFlyout, closeFlyout } from "../ui/flyoutShell";
-import { setActivePanel } from "../ui/iconRail";
+  comparisonVisible,
+  inversionResult,
+  inversionVisible,
+  setComparisonVisible,
+  setInversionResult,
+  setInversionVisible,
+} from "../stores/inversion";
+import { DEFAULT_LAYER_VISIBILITY, layerVisibility, toggleLayerVisibility } from "../stores/layer-visibility";
+import type { FamilySummary, ModelResultSummary, ModelRunStatus } from "../stores/model-run";
+import {
+  modelRunState,
+  setConfidence,
+  setFamilySummary,
+  setModelSummary,
+  setResultSummary,
+  setRunStatus,
+} from "../stores/model-run";
+import { activeScenarioId, setActiveScenarioId } from "../stores/scenario";
+import type { PanelId } from "../stores/ui";
+import { activePanel, setActivePanel } from "../stores/ui";
 import type { BackendBeachingCloud, InversionResult } from "./backend";
+import { getWorkspaceFreshness, restoreWorkspaceFreshness } from "./workspaceState";
+
+export interface ModelExportState {
+  confidence: string;
+  runStatus: ModelRunStatus;
+  resultSummary: ModelResultSummary | null;
+  familySummary: FamilySummary | null;
+  speedRange: string;
+  fuel: string;
+  familySpread: string;
+}
 
 export interface SessionSnapshot {
   version: 1;
@@ -56,37 +82,69 @@ export interface SessionSnapshot {
 }
 
 let autoSaveTimer: number | null = null;
+let mapInstance: mapboxgl.Map | null = null;
+
+export function setSessionSnapshotMap(map: mapboxgl.Map): void {
+  mapInstance = map;
+}
+
+function getMap(): mapboxgl.Map {
+  if (!mapInstance) throw new Error("Map not set for session snapshots");
+  return mapInstance;
+}
+
+function getLatestModelExportState(): ModelExportState {
+  return {
+    confidence: modelRunState.summary.confidence,
+    runStatus: { ...modelRunState.runStatus },
+    resultSummary: modelRunState.resultSummary
+      ? { ...modelRunState.resultSummary, endpointCounts: { ...modelRunState.resultSummary.endpointCounts } }
+      : null,
+    familySummary: modelRunState.familySummary
+      ? {
+          counts: { ...modelRunState.familySummary.counts },
+          familySpreadKm: modelRunState.familySummary.familySpreadKm,
+          firsByFamily: modelRunState.familySummary.firsByFamily
+            ? { ...modelRunState.familySummary.firsByFamily }
+            : undefined,
+          endpointNarrative: modelRunState.familySummary.endpointNarrative,
+        }
+      : null,
+    speedRange: modelRunState.summary.speedRange,
+    fuel: modelRunState.summary.fuel,
+    familySpread: modelRunState.summary.familySpread,
+  };
+}
 
 export function exportSessionSnapshot(): SessionSnapshot {
   const map = getMap();
   const center = map.getCenter();
-  const inversionVisibility = getInversionVisibilityState();
 
   return {
     version: 1,
     timestamp: new Date().toISOString(),
     notes: getStoredAnalystNotes(),
-    config: getAnalysisConfig(),
+    config: getConfigSnapshot(),
     layerVisibility: { ...layerVisibility },
-    scenarioId: getActiveScenarioId(),
+    scenarioId: activeScenarioId(),
     viewport: {
       center: [center.lng, center.lat],
       zoom: map.getZoom(),
       bearing: map.getBearing(),
       pitch: map.getPitch(),
     },
-    panelId: getCurrentPanel(),
-    evidenceSelection: getEvidenceSelection(),
-    selectedAnomalyId: getSelectedAnomalyId(),
+    panelId: activePanel(),
+    evidenceSelection: { ...evidenceSelection() },
+    selectedAnomalyId: evidenceSelection().kind === "anomaly" ? evidenceSelection().id : null,
     pins: listSavedPins(),
     drift: {
       clouds: getBeachingClouds(),
       selectedOriginIndex: getSelectedOriginIndex(),
     },
     inversion: {
-      result: getLatestInversionResult(),
-      visible: inversionVisibility.visible,
-      comparisonVisible: inversionVisibility.comparisonVisible,
+      result: inversionResult(),
+      visible: inversionVisible(),
+      comparisonVisible: comparisonVisible(),
     },
     model: getLatestModelExportState(),
     freshness: getWorkspaceFreshness(),
@@ -118,6 +176,7 @@ export function scheduleAutoSaveSessionSnapshot(): void {
 }
 
 export function persistSessionSnapshot(): void {
+  if (!mapInstance) return;
   setStoredSessionSnapshot(JSON.stringify(exportSessionSnapshot()));
 }
 
@@ -140,12 +199,12 @@ function applySessionSnapshot(snapshot: SessionSnapshot): void {
     throw new Error(`Unsupported session version: ${String((snapshot as { version?: unknown }).version)}`);
   }
 
-  resetAnalysisConfig();
-  updateAnalysisConfig(snapshot.config);
+  resetConfig();
+  updateConfig(snapshot.config);
   setActiveScenarioId(snapshot.scenarioId ?? null);
 
   for (const layerId of Object.keys(DEFAULT_LAYER_VISIBILITY)) {
-    toggleLayer(layerId, snapshot.layerVisibility[layerId] ?? DEFAULT_LAYER_VISIBILITY[layerId]);
+    toggleLayerVisibility(layerId, snapshot.layerVisibility[layerId] ?? DEFAULT_LAYER_VISIBILITY[layerId]);
   }
 
   replaceSavedPins(snapshot.pins ?? []);
@@ -159,35 +218,81 @@ function applySessionSnapshot(snapshot: SessionSnapshot): void {
     pitch: snapshot.viewport.pitch,
   });
 
+  // Apply visibility to map
+  const style = map.getStyle();
+  if (style?.layers) {
+    for (const [group, visible] of Object.entries(layerVisibility)) {
+      const vis = visible ? "visible" : "none";
+      for (const layer of style.layers) {
+        if (layer.id.startsWith(`${group}-`)) {
+          map.setLayoutProperty(layer.id, "visibility", vis);
+        }
+      }
+    }
+  }
+
   populateDriftClouds(map, snapshot.drift?.clouds ?? []);
   selectOrigin(map, snapshot.drift?.selectedOriginIndex ?? null);
 
-  restoreInversionState(snapshot.inversion?.result ?? null, {
-    visible: snapshot.inversion?.visible ?? false,
-    comparisonVisible: snapshot.inversion?.comparisonVisible ?? false,
-  });
-
-  restoreModelExportState(snapshot.model);
-  restoreWorkspaceFreshness(snapshot.freshness, snapshot.config);
-
-  if (snapshot.evidenceSelection?.kind === "info" && snapshot.evidenceSelection.id) {
-    setSelectedAnomaly(map, null);
-    openInfoDetail(snapshot.evidenceSelection.id);
-  } else if (snapshot.selectedAnomalyId) {
-    setSelectedAnomaly(map, snapshot.selectedAnomalyId);
-    openAnomalyDetail(snapshot.selectedAnomalyId);
-  } else {
-    setSelectedAnomaly(map, null);
-    clearEvidenceSelection();
+  // Restore inversion state
+  const invResult = snapshot.inversion?.result ?? null;
+  setInversionResult(invResult);
+  setInversionVisible(snapshot.inversion?.visible ?? false);
+  setComparisonVisible(snapshot.inversion?.comparisonVisible ?? false);
+  if (invResult) {
+    renderDebrisInversionLayer(map, invResult);
+    renderComparisonOverlay(map, invResult);
+    setDebrisInversionVisible(map, snapshot.inversion?.visible ?? false);
+    setComparisonOverlayVisible(map, snapshot.inversion?.comparisonVisible ?? false);
   }
 
-  const panelId = snapshot.panelId;
-  if (panelId === "model" || panelId === "drift" || panelId === "layers" || panelId === "evidence" || panelId === "export") {
+  // Restore model state
+  if (snapshot.model) {
+    setRunStatus({
+      ...snapshot.model.runStatus,
+      startedAt: snapshot.model.runStatus.startedAt ? new Date(snapshot.model.runStatus.startedAt) : undefined,
+      finishedAt: snapshot.model.runStatus.finishedAt ? new Date(snapshot.model.runStatus.finishedAt) : undefined,
+    });
+    if (snapshot.model.resultSummary) {
+      setResultSummary(snapshot.model.resultSummary);
+    }
+    if (snapshot.model.familySummary) {
+      setFamilySummary(snapshot.model.familySummary);
+    }
+    setConfidence(snapshot.model.confidence);
+    setModelSummary({
+      speedRange: snapshot.model.speedRange,
+      fuel: snapshot.model.fuel,
+      familySpread: snapshot.model.familySpread,
+    });
+  }
+
+  restoreWorkspaceFreshness(snapshot.freshness, snapshot.config);
+
+  // Restore evidence selection
+  if (snapshot.evidenceSelection?.kind === "anomaly" && snapshot.selectedAnomalyId) {
+    setSelectedAnomaly(map, snapshot.selectedAnomalyId);
+    setEvidenceSelection({
+      kind: "anomaly",
+      id: snapshot.selectedAnomalyId,
+      title: snapshot.evidenceSelection.title,
+      subtitle: snapshot.evidenceSelection.subtitle,
+    });
+  } else if (snapshot.evidenceSelection?.kind === "info" && snapshot.evidenceSelection.id) {
+    setSelectedAnomaly(map, null);
+    setEvidenceSelection(snapshot.evidenceSelection);
+  } else {
+    setSelectedAnomaly(map, null);
+    clearEvidence();
+  }
+
+  // Restore panel
+  const panelId = snapshot.panelId as PanelId | null;
+  const validPanels: PanelId[] = ["model", "drift", "layers", "evidence", "export", "sensitivity"];
+  if (panelId && validPanels.includes(panelId)) {
     setActivePanel(panelId);
-    openFlyout(panelId);
   } else {
     setActivePanel(null);
-    closeFlyout();
   }
 
   setStoredSessionSnapshot(JSON.stringify(snapshot));
