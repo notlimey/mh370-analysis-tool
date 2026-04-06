@@ -113,3 +113,6 @@ This is a research tool — traceability matters. Every externally-sourced const
 ## Reference Data
 
 - `docs/bfo-reference-data.md` — Verified BFO values, sources, attribution, and the bug that was found (wrong BFO values in dataset). Consult this before modifying BFO-related code.
+- `docs/dstg-validation.md` — DSTG model assumptions (speed, altitude, BFO/BTO sigmas, maneuver model) and comparison with our tool. Use this to verify our model reproduces known results.
+- `docs/research-note-arc7-impact-zone.md` — Preliminary finding: impact zone at ~35.9°S, 90.8°E, west of all searched areas. Includes uncertainty envelope, open tensions (barnacles, HYCOM), and next steps.
+- `docs/roadmap.md` — Project roadmap: completed work, in-progress items, future constraints, and current model output.

@@ -62,6 +62,10 @@ pub struct ModelProbeSummary {
     pub best_family: Option<String>,
     pub best_score: Option<f64>,
     pub best_fuel_remaining_at_arc7_kg: Option<f64>,
+    pub best_extra_range_nm: Option<f64>,
+    pub best_extra_endurance_minutes: Option<f64>,
+    pub best_arc7_lat: Option<f64>,
+    pub best_arc7_lon: Option<f64>,
     pub bfo_used_count: Option<usize>,
     pub bfo_total_count: Option<usize>,
     pub bfo_mean_abs_residual_hz: Option<f64>,
@@ -89,12 +93,20 @@ pub fn run_model_probe(
         .map(|point| (point.position[1], point.position[0]));
     let best_path = paths.first();
 
+    // The last point in the path is the Arc 7 crossing (on the BTO ring).
+    // The heatmap peak includes post-arc-7 glide projection.
+    let best_arc7 = best_path.and_then(|path| path.points.last().copied());
+
     Ok(ModelProbeSummary {
         path_count: paths.len(),
         heatmap_count: heatmap.len(),
         best_family: best_path.map(|path| path.family.clone()),
         best_score: best_path.map(|path| path.score),
         best_fuel_remaining_at_arc7_kg: best_path.map(|path| path.fuel_remaining_at_arc7_kg),
+        best_extra_range_nm: best_path.map(|path| path.extra_range_nm),
+        best_extra_endurance_minutes: best_path.map(|path| path.extra_endurance_minutes),
+        best_arc7_lat: best_arc7.map(|p| p[1]),
+        best_arc7_lon: best_arc7.map(|p| p[0]),
         bfo_used_count: best_path.map(|path| path.bfo_summary.used_count),
         bfo_total_count: best_path.map(|path| path.bfo_summary.total_count),
         bfo_mean_abs_residual_hz: best_path.and_then(|path| path.bfo_summary.mean_abs_residual_hz),

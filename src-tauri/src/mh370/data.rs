@@ -60,7 +60,7 @@ impl Default for AnalysisConfig {
             heading_change_sigma_deg: 80.0,
             northward_leg_sigma_deg: 1.5,
             northward_penalty_weight: 2.0,
-            bfo_sigma_hz: 7.0,
+            bfo_sigma_hz: 4.3,
             bfo_score_weight: 1.0,
             arc7_vertical_speed_fpm: 0.0,
             satellite_nominal_lon_deg: 64.5,

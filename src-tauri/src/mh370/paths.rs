@@ -538,24 +538,59 @@ fn evaluate_fuel(
     let fuel_remaining_at_arc7_kg = fuel_remaining;
     let fuel_feasible = fuel_remaining_at_arc7_kg >= 0.0;
 
-    // Post-Arc 7: use the lighter weight for the low-speed burn rate
-    let low_speed_nominal = config.fuel_baseline_kg_per_hr
-        * (config.post_arc7_low_speed_kts / config.fuel_baseline_speed_kts)
-            .powf(config.fuel_speed_exponent)
-        * altitude_factor;
-    let weight_at_arc7 = super::performance::airframe::ZFW_KG + fuel_remaining_at_arc7_kg.max(0.0);
-    let low_weight_correction = 1.0
-        - fuel_flow::WEIGHT_SENSITIVITY_KG_HR_PER_KG
-            * (fuel_flow::WEIGHT_SENSITIVITY_REF_KG - weight_at_arc7)
-            / fuel_flow::WEIGHT_SENSITIVITY_REF_FLOW_KG_HR;
-    let low_speed_burn_rate = low_speed_nominal * low_weight_correction.max(0.5);
+    // Post-Arc 7: unpowered glide model.
+    //
+    // At Arc 7 (00:19:29), the engines had already flamed out — the SDU reboot
+    // that produced this handshake was triggered by APU auto-start after engine
+    // failure. The aircraft was descending unpowered.
+    //
+    // Holland 2017 (Tables IV/VII) establishes descent rate of 2,900-14,800 fpm.
+    // The DSTG estimates fuel exhaustion between 00:11 and 00:19, meaning
+    // 0-8.5 minutes of unpowered descent before Arc 7. At the central estimate
+    // of ~4,200 fpm, ~3 minutes of descent = ~12,600 ft lost from FL350,
+    // giving ~FL224 at Arc 7.
+    //
+    // Glide model:
+    //   - Zero thrust
+    //   - Glide ratio: 15:1 (conservative; clean 777 achieves ~17-18:1)
+    //   - Altitude at Arc 7: estimated from fuel exhaustion timing
+    //   - Best-glide speed: ~250 kts (irrelevant to range, only affects time)
+    //
+    // Source: Boeing 777-200ER performance data; Holland 2017.
+    const GLIDE_RATIO: f64 = 15.0;
+    const GLIDE_SPEED_KTS: f64 = 250.0;
+    const FT_TO_NM: f64 = 1.0 / 6076.0;
 
-    let extra_endurance_minutes = if fuel_remaining_at_arc7_kg > 0.0 && low_speed_burn_rate > 0.0 {
-        (fuel_remaining_at_arc7_kg / low_speed_burn_rate * 60.0).min(config.max_post_arc7_minutes)
+    // Estimate altitude at Arc 7: start from cruise altitude, subtract
+    // descent during the time between fuel exhaustion and Arc 7.
+    // Conservative: assume fuel exhaustion ~3 min before Arc 7 at ~4200 fpm.
+    // This gives altitude_at_arc7 ≈ cruise - 12,600 ft.
+    // If fuel was already exhausted at Arc 6b (8.5 min), altitude is lower.
+    // We use the fuel remaining to estimate: if fuel > 0, less descent time.
+    // The SDU reboot at 00:19:29 proves engines had flamed out — the reboot
+    // was triggered by APU auto-start after engine failure. If the fuel model
+    // shows positive fuel remaining, it's because the model underestimates
+    // consumption, not because the engines were actually running.
+    //
+    // Holland 2017 (Sec VI-A): under fuel exhaustion hypothesis, the SDU
+    // outage lasted "about one minute" (APU auto-start time). This means
+    // engines flamed out ~1 minute before 00:19:29, so the aircraft had
+    // been descending unpowered for ~1 minute at that point.
+    //
+    // At Holland's central descent rate of ~4,200 fpm, 1 minute = ~4,200 ft
+    // lost from cruise altitude. From FL350 → FL308.
+    //
+    // Source: Holland 2017, arXiv:1702.02432, Section VI-A.
+    let descent_before_arc7_ft = 1.0 * 4200.0;
+    let altitude_at_arc7_ft = (config.cruise_altitude_ft - descent_before_arc7_ft).max(0.0);
+    let altitude_at_arc7_nm = altitude_at_arc7_ft * FT_TO_NM;
+
+    let extra_range_nm = altitude_at_arc7_nm * GLIDE_RATIO;
+    let extra_endurance_minutes = if GLIDE_SPEED_KTS > 0.0 {
+        extra_range_nm / GLIDE_SPEED_KTS * 60.0
     } else {
         0.0
     };
-    let extra_range_nm = extra_endurance_minutes / 60.0 * config.post_arc7_low_speed_kts;
 
     FuelEvaluation {
         fuel_feasible,
