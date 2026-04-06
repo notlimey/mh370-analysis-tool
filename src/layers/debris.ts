@@ -26,13 +26,11 @@ interface DebrisLogItem {
   notes: string;
 }
 
-const PROBABLE_SOURCE: [number, number] = [94, -35];
-
 export async function loadDebrisLayer(map: MapboxMap): Promise<void> {
-  const [debris, debrisLog] = await Promise.all([
-    getDebrisDrift(),
-    getDebrisLog(),
-  ]) as [DebrisDriftItem[], DebrisLogItem[]];
+  const [debris, debrisLog] = (await Promise.all([getDebrisDrift(), getDebrisLog()])) as [
+    DebrisDriftItem[],
+    DebrisLogItem[],
+  ];
 
   map.addSource("debris-drift-source", {
     type: "geojson",
@@ -60,39 +58,6 @@ export async function loadDebrisLayer(map: MapboxMap): Promise<void> {
       "line-opacity": 0.45,
       "line-width": 1.5,
       "line-dasharray": [2, 2],
-    },
-  });
-
-  map.addSource("debris-corridor-source", {
-    type: "geojson",
-    data: {
-      type: "FeatureCollection",
-      features: debrisLog.map((item) => ({
-        type: "Feature" as const,
-        properties: {
-          id: item.id,
-          confirmation: item.confirmation,
-        },
-        geometry: {
-          type: "LineString" as const,
-          coordinates: [
-            [item.lon, item.lat],
-            PROBABLE_SOURCE,
-          ],
-        },
-      })),
-    },
-  });
-
-  map.addLayer({
-    id: "debris-corridor-lines",
-    type: "line",
-    source: "debris-corridor-source",
-    paint: {
-      "line-color": "#86efac",
-      "line-opacity": 0.2,
-      "line-width": 1,
-      "line-dasharray": ["case", ["==", ["get", "confirmation"], "confirmed"], [1, 0], [3, 2]],
     },
   });
 

@@ -1,6 +1,7 @@
 use std::f64::consts::PI;
-use std::fs;
-use std::sync::{Mutex, OnceLock};
+use std::sync::Once;
+
+use serde::Deserialize;
 
 use super::data::AnalysisConfig;
 use super::geometry::LatLon;
@@ -11,8 +12,12 @@ const DEFAULT_PEAK_UTC_HOURS: f64 = 19.5;
 #[allow(dead_code)]
 const DEFAULT_EQUATOR_CROSSING_UTC_HOURS: f64 = 25.5;
 const OSCILLATION_PERIOD_HOURS: f64 = 24.0;
+const EMBEDDED_EPHEMERIS_JSON: &str = include_str!("../../../src/data/i3f1_ephemeris.json");
 
-#[derive(Debug, Clone, Copy)]
+static BELOW_RANGE_WARNING: Once = Once::new();
+static ABOVE_RANGE_WARNING: Once = Once::new();
+
+#[derive(Debug, Clone, Copy, Deserialize)]
 pub struct SatState {
     pub utc_hours: f64,
     pub x_km: f64,
@@ -34,29 +39,76 @@ pub struct SatStateGeodetic {
     pub vz_km_s: f64,
 }
 
-pub const EPHEMERIS: &[SatState] = &[];
-
-static EPHEMERIS_CACHE: OnceLock<Mutex<std::collections::HashMap<String, Result<Vec<SatState>, String>>>> = OnceLock::new();
-
-pub fn sat_state_at_time_s(time_s: f64, config: &AnalysisConfig) -> Result<SatStateGeodetic, String> {
-    let utc_hours = seconds_to_utc_hours(time_s);
-    sat_state_at_utc_hours(utc_hours, config)
+#[derive(Debug, Clone)]
+pub struct SatelliteModel {
+    ephemeris: Vec<SatState>,
 }
 
-pub fn sat_state_at_utc_hours(utc_hours: f64, config: &AnalysisConfig) -> Result<SatStateGeodetic, String> {
-    if let Some(ephemeris) = load_ephemeris_file(config)? {
-        Ok(interpolate_ephemeris(utc_hours, &ephemeris))
-    } else if EPHEMERIS.len() >= 2 {
-        Ok(interpolate_ephemeris(utc_hours, EPHEMERIS))
-    } else {
-        let (x_km, y_km, z_km) = sat_position_approx(utc_hours, config);
-        let (vx, vy, vz) = sat_velocity_approx(utc_hours, config);
-        Ok(ecef_to_geodetic(x_km, y_km, z_km, vx, vy, vz))
+impl SatelliteModel {
+    pub fn load() -> Result<Self, String> {
+        let ephemeris: Vec<SatState> = serde_json::from_str(EMBEDDED_EPHEMERIS_JSON)
+            .map_err(|err| format!("failed to parse embedded I3F1 ephemeris: {err}"))?;
+        validate_ephemeris(&ephemeris)?;
+        Ok(Self { ephemeris })
+    }
+
+    pub fn sat_state_at(&self, utc_hours: f64, config: &AnalysisConfig) -> SatStateGeodetic {
+        let first = self
+            .ephemeris
+            .first()
+            .expect("validated ephemeris has points");
+        let last = self
+            .ephemeris
+            .last()
+            .expect("validated ephemeris has points");
+
+        if utc_hours < first.utc_hours {
+            BELOW_RANGE_WARNING.call_once(|| {
+                eprintln!(
+                    "warning: satellite ephemeris starts at {:.3} UTC hours; falling back to sinusoidal model before that range",
+                    first.utc_hours
+                );
+            });
+            return fallback_state(utc_hours, config);
+        }
+
+        if utc_hours > last.utc_hours {
+            ABOVE_RANGE_WARNING.call_once(|| {
+                eprintln!(
+                    "warning: satellite ephemeris ends at {:.3} UTC hours; falling back to sinusoidal model after that range",
+                    last.utc_hours
+                );
+            });
+            return fallback_state(utc_hours, config);
+        }
+
+        interpolate_ephemeris(utc_hours, &self.ephemeris)
     }
 }
 
-pub fn satellite_subpoint(time_s: f64, config: &AnalysisConfig) -> Result<LatLon, String> {
-    let state = sat_state_at_time_s(time_s, config)?;
+pub fn sat_state_at_time_s(
+    satellite: &SatelliteModel,
+    time_s: f64,
+    config: &AnalysisConfig,
+) -> Result<SatStateGeodetic, String> {
+    let utc_hours = seconds_to_utc_hours(time_s);
+    sat_state_at_utc_hours(satellite, utc_hours, config)
+}
+
+pub fn sat_state_at_utc_hours(
+    satellite: &SatelliteModel,
+    utc_hours: f64,
+    config: &AnalysisConfig,
+) -> Result<SatStateGeodetic, String> {
+    Ok(satellite.sat_state_at(utc_hours, config))
+}
+
+pub fn satellite_subpoint(
+    satellite: &SatelliteModel,
+    time_s: f64,
+    config: &AnalysisConfig,
+) -> Result<LatLon, String> {
+    let state = sat_state_at_time_s(satellite, time_s, config)?;
     Ok(LatLon::new(state.lat_deg, state.lon_deg))
 }
 
@@ -79,30 +131,80 @@ fn sat_velocity_approx(utc_hours: f64, config: &AnalysisConfig) -> (f64, f64, f6
     let amplitude_deg = config.satellite_drift_amplitude_deg.max(0.1);
     let amplitude_km = GEO_RADIUS_KM * amplitude_deg.to_radians().sin();
     let omega = 2.0 * PI / OSCILLATION_PERIOD_HOURS;
-    let vz_km_per_hour = -amplitude_km * omega * (omega * (utc_hours - DEFAULT_PEAK_UTC_HOURS)).sin();
+    let vz_km_per_hour =
+        -amplitude_km * omega * (omega * (utc_hours - DEFAULT_PEAK_UTC_HOURS)).sin();
     (0.0, 0.0, vz_km_per_hour / 3600.0)
 }
 
+fn fallback_state(utc_hours: f64, config: &AnalysisConfig) -> SatStateGeodetic {
+    let (x_km, y_km, z_km) = sat_position_approx(utc_hours, config);
+    let (vx, vy, vz) = sat_velocity_approx(utc_hours, config);
+    ecef_to_geodetic(x_km, y_km, z_km, vx, vy, vz)
+}
+
 fn interpolate_ephemeris(utc_hours: f64, ephemeris: &[SatState]) -> SatStateGeodetic {
+    if utc_hours <= ephemeris[0].utc_hours {
+        let state = ephemeris[0];
+        return ecef_to_geodetic(
+            state.x_km, state.y_km, state.z_km, state.vx, state.vy, state.vz,
+        );
+    }
+    if utc_hours >= ephemeris[ephemeris.len() - 1].utc_hours {
+        let state = ephemeris[ephemeris.len() - 1];
+        return ecef_to_geodetic(
+            state.x_km, state.y_km, state.z_km, state.vx, state.vy, state.vz,
+        );
+    }
+
     let idx = ephemeris.partition_point(|state| state.utc_hours <= utc_hours);
     let idx = idx.min(ephemeris.len() - 1).max(1);
     let s0 = ephemeris[idx - 1];
     let s1 = ephemeris[idx];
-    let t = if (s1.utc_hours - s0.utc_hours).abs() <= f64::EPSILON {
-        0.0
-    } else {
-        (utc_hours - s0.utc_hours) / (s1.utc_hours - s0.utc_hours)
+    let dt_hours = (s1.utc_hours - s0.utc_hours).max(f64::EPSILON);
+    let t = (utc_hours - s0.utc_hours) / dt_hours;
+
+    let interpolate_axis = |p0: f64, p1: f64, v0_km_s: f64, v1_km_s: f64| {
+        cubic_hermite_axis(p0, p1, v0_km_s, v1_km_s, dt_hours, t)
     };
-    let lerp = |a: f64, b: f64| a + t * (b - a);
 
     ecef_to_geodetic(
-        lerp(s0.x_km, s1.x_km),
-        lerp(s0.y_km, s1.y_km),
-        lerp(s0.z_km, s1.z_km),
-        lerp(s0.vx, s1.vx),
-        lerp(s0.vy, s1.vy),
-        lerp(s0.vz, s1.vz),
+        interpolate_axis(s0.x_km, s1.x_km, s0.vx, s1.vx).0,
+        interpolate_axis(s0.y_km, s1.y_km, s0.vy, s1.vy).0,
+        interpolate_axis(s0.z_km, s1.z_km, s0.vz, s1.vz).0,
+        interpolate_axis(s0.x_km, s1.x_km, s0.vx, s1.vx).1,
+        interpolate_axis(s0.y_km, s1.y_km, s0.vy, s1.vy).1,
+        interpolate_axis(s0.z_km, s1.z_km, s0.vz, s1.vz).1,
     )
+}
+
+fn cubic_hermite_axis(
+    p0: f64,
+    p1: f64,
+    v0_km_s: f64,
+    v1_km_s: f64,
+    dt_hours: f64,
+    t: f64,
+) -> (f64, f64) {
+    let m0 = v0_km_s * 3600.0;
+    let m1 = v1_km_s * 3600.0;
+    let t2 = t * t;
+    let t3 = t2 * t;
+
+    let h00 = 2.0 * t3 - 3.0 * t2 + 1.0;
+    let h10 = t3 - 2.0 * t2 + t;
+    let h01 = -2.0 * t3 + 3.0 * t2;
+    let h11 = t3 - t2;
+
+    let position = h00 * p0 + h10 * dt_hours * m0 + h01 * p1 + h11 * dt_hours * m1;
+
+    let dh00 = 6.0 * t2 - 6.0 * t;
+    let dh10 = 3.0 * t2 - 4.0 * t + 1.0;
+    let dh01 = -6.0 * t2 + 6.0 * t;
+    let dh11 = 3.0 * t2 - 2.0 * t;
+    let velocity_km_per_hour =
+        (dh00 * p0 + dh10 * dt_hours * m0 + dh01 * p1 + dh11 * dt_hours * m1) / dt_hours;
+
+    (position, velocity_km_per_hour / 3600.0)
 }
 
 fn ecef_to_geodetic(x: f64, y: f64, z: f64, vx: f64, vy: f64, vz: f64) -> SatStateGeodetic {
@@ -121,67 +223,16 @@ fn ecef_to_geodetic(x: f64, y: f64, z: f64, vx: f64, vy: f64, vz: f64) -> SatSta
     }
 }
 
-fn load_ephemeris_file(config: &AnalysisConfig) -> Result<Option<Vec<SatState>>, String> {
-    if config.satellite_ephemeris_path.trim().is_empty() {
-        return Ok(None);
+fn validate_ephemeris(ephemeris: &[SatState]) -> Result<(), String> {
+    if ephemeris.len() < 2 {
+        return Err("embedded ephemeris contained fewer than two usable states".to_string());
     }
-
-    let cache = EPHEMERIS_CACHE.get_or_init(|| Mutex::new(std::collections::HashMap::new()));
-    let mut cache_guard = cache.lock().map_err(|_| "failed to lock ephemeris cache".to_string())?;
-    if let Some(cached) = cache_guard.get(&config.satellite_ephemeris_path) {
-        return cached.clone().map(Some);
-    }
-
-    let parsed = parse_ephemeris_file(&config.satellite_ephemeris_path);
-    cache_guard.insert(config.satellite_ephemeris_path.clone(), parsed.clone());
-    parsed.map(Some)
-}
-
-fn parse_ephemeris_file(path: &str) -> Result<Vec<SatState>, String> {
-    let raw = fs::read_to_string(path)
-        .map_err(|err| format!("failed to read satellite ephemeris file {}: {err}", path))?;
-    let mut states = Vec::new();
-
-    for (index, line) in raw.lines().enumerate() {
-        let trimmed = line.trim();
-        if trimmed.is_empty() || trimmed.starts_with('#') {
-            continue;
+    for window in ephemeris.windows(2) {
+        if window[1].utc_hours <= window[0].utc_hours {
+            return Err("embedded ephemeris utc_hours must be strictly increasing".to_string());
         }
-
-        let parts: Vec<&str> = trimmed
-            .split(|ch: char| ch == ',' || ch.is_whitespace())
-            .filter(|part| !part.is_empty())
-            .collect();
-        if parts.len() < 7 {
-            return Err(format!("invalid ephemeris row {} in {}: expected 7 columns", index + 1, path));
-        }
-
-        let values: Result<Vec<f64>, String> = parts
-            .iter()
-            .take(7)
-            .map(|part| {
-                part.parse::<f64>()
-                    .map_err(|err| format!("invalid ephemeris value '{}' in {} row {}: {err}", part, path, index + 1))
-            })
-            .collect();
-        let values = values?;
-
-        states.push(SatState {
-            utc_hours: values[0],
-            x_km: values[1],
-            y_km: values[2],
-            z_km: values[3],
-            vx: values[4],
-            vy: values[5],
-            vz: values[6],
-        });
     }
-
-    if states.len() >= 2 {
-        Ok(states)
-    } else {
-        Err(format!("ephemeris file {} contained fewer than two usable states", path))
-    }
+    Ok(())
 }
 
 #[cfg(test)]
@@ -192,9 +243,13 @@ mod tests {
         AnalysisConfig::default()
     }
 
+    fn test_model() -> SatelliteModel {
+        SatelliteModel::load().unwrap()
+    }
+
     #[test]
     fn ephemeris_at_peak_northerly() {
-        let state = sat_state_at_utc_hours(19.5, &test_config());
+        let state = sat_state_at_utc_hours(&test_model(), 19.5, &test_config());
         let state = state.unwrap();
         assert!(state.lat_deg > 1.0);
         assert!(state.lat_deg < 2.0);
@@ -202,16 +257,32 @@ mod tests {
 
     #[test]
     fn ephemeris_at_equatorial_crossing() {
-        let state = sat_state_at_utc_hours(DEFAULT_EQUATOR_CROSSING_UTC_HOURS, &test_config()).unwrap();
+        let state = sat_state_at_utc_hours(
+            &test_model(),
+            DEFAULT_EQUATOR_CROSSING_UTC_HOURS,
+            &test_config(),
+        )
+        .unwrap();
         assert!(state.lat_deg.abs() < 0.1);
         assert!(state.vz_km_s < 0.0);
     }
 
     #[test]
     fn ephemeris_continuity() {
-        let s1 = sat_state_at_utc_hours(20.0, &test_config()).unwrap();
-        let s2 = sat_state_at_utc_hours(20.001, &test_config()).unwrap();
+        let model = test_model();
+        let s1 = sat_state_at_utc_hours(&model, 20.0, &test_config()).unwrap();
+        let s2 = sat_state_at_utc_hours(&model, 20.001, &test_config()).unwrap();
         let delta_lat = (s2.lat_deg - s1.lat_deg).abs();
         assert!(delta_lat < 0.001);
+    }
+
+    #[test]
+    fn spline_hits_ephemeris_knots_exactly() {
+        let model = test_model();
+        let state = model.sat_state_at(24.167, &test_config());
+
+        assert!((state.vx_km_s - 0.00160).abs() < 1e-9);
+        assert!((state.vy_km_s + 0.00151).abs() < 1e-9);
+        assert!((state.vz_km_s + 0.08188).abs() < 1e-9);
     }
 }

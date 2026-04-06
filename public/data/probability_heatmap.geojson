@@ -1,2542 +1,3129 @@
 {
+  "config": {
+    "arc7_grid_max_lat": -10.0,
+    "arc7_grid_min_lat": -45.0,
+    "arc7_grid_points": 180,
+    "arc7_vertical_speed_fpm": 0.0,
+    "beam_width": 256,
+    "bfo_score_weight": 1.0,
+    "bfo_sigma_hz": 4.3,
+    "calibration_altitude_ft": 0.0,
+    "cruise_altitude_ft": 35000.0,
+    "dataset_path": "",
+    "debris_weight_max_lat": -32.0,
+    "debris_weight_min_lat": -38.0,
+    "fuel_baseline_altitude_ft": 35000.0,
+    "fuel_baseline_kg_per_hr": 6500.0,
+    "fuel_baseline_speed_kts": 471.0,
+    "fuel_low_altitude_penalty_per_10kft": 0.12,
+    "fuel_remaining_at_arc1_kg": 34500.0,
+    "fuel_speed_exponent": 1.35,
+    "heading_change_sigma_deg": 80.0,
+    "max_post_arc7_minutes": 57.0,
+    "max_speed_kts": 520.0,
+    "min_speed_kts": 350.0,
+    "northward_leg_sigma_deg": 1.5,
+    "northward_penalty_weight": 2.0,
+    "perpendicular_family_tolerance_deg": 20.0,
+    "post_arc7_low_speed_kts": 420.0,
+    "ring_points": 720,
+    "ring_sample_step": 1,
+    "satellite_drift_amplitude_deg": 1.6,
+    "satellite_drift_end_time_utc": "00:19:29.416",
+    "satellite_drift_start_lat_offset_deg": 0.0,
+    "satellite_nominal_lat_deg": 0.0,
+    "satellite_nominal_lon_deg": 64.5,
+    "slow_family_max_speed_kts": 390.0,
+    "speed_consistency_sigma_kts": 35.0
+  },
   "features": [
     {
       "geometry": {
         "coordinates": [
-          64.50000000000001,
-          -43.32708988847184
+          88.05355980461368,
+          -37.627400095208976
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 0.0106159990648314,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 0.000330357937451991,
-        "probability_pct": 0.033035793745199105
+        "debris_weight": 0.0,
+        "fuel_weight": 13.491646923575203,
+        "path_density": 4.341753578088576,
+        "probability": 0.0011963299457482051,
+        "probability_pct": 0.11963299457482052
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          65.45153214991981,
-          -43.31878610427324
+          88.4092257131116,
+          -37.42548872065031
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 0.01069783416860786,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 0.0003329045537364933,
-        "probability_pct": 0.03329045537364933
+        "debris_weight": 0.0,
+        "fuel_weight": 21.15793233252472,
+        "path_density": 8.252347011460326,
+        "probability": 0.001972949460129415,
+        "probability_pct": 0.19729494601294148
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          63.54846785008019,
-          -43.31878610427324
+          88.4092257131116,
+          -37.42548872065031
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 0.01069783416860786,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 0.0003329045537364933,
-        "probability_pct": 0.03329045537364933
+        "debris_weight": 0.0,
+        "fuel_weight": 21.15793233252472,
+        "path_density": 8.252347011460326,
+        "probability": 0.001972949460129415,
+        "probability_pct": 0.19729494601294148
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          66.40225714985804,
-          -43.29388408533194
+          88.4092257131116,
+          -37.42548872065031
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 0.010946546633589554,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 0.00034064420560045645,
-        "probability_pct": 0.03406442056004565
+        "debris_weight": 0.0,
+        "fuel_weight": 21.15793233252472,
+        "path_density": 8.252347011460326,
+        "probability": 0.001972949460129415,
+        "probability_pct": 0.19729494601294148
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          62.597742850141934,
-          -43.29388408533194
+          88.7613544976494,
+          -37.22075544926187
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 0.010946546633589554,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 0.00034064420560045645,
-        "probability_pct": 0.03406442056004565
+        "debris_weight": 0.0,
+        "fuel_weight": 30.246471335736206,
+        "path_density": 13.72744352011234,
+        "probability": 0.0029499315718797127,
+        "probability_pct": 0.29499315718797126
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          67.35137121478354,
-          -43.25241178321337
+          88.7613544976494,
+          -37.22075544926187
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 0.011371917896783254,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 0.0003538812803497891,
-        "probability_pct": 0.035388128034978907
+        "debris_weight": 0.0,
+        "fuel_weight": 30.246471335736206,
+        "path_density": 13.72744352011234,
+        "probability": 0.0029499315718797127,
+        "probability_pct": 0.29499315718797126
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          61.64862878521647,
-          -43.25241178321337
+          88.7613544976494,
+          -37.22075544926187
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 0.011371917896783254,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 0.0003538812803497891,
-        "probability_pct": 0.035388128034978907
+        "debris_weight": 0.0,
+        "fuel_weight": 30.246471335736206,
+        "path_density": 13.72744352011234,
+        "probability": 0.0029499315718797127,
+        "probability_pct": 0.29499315718797126
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          60.70192274676609,
-          -43.194415619819644
+          88.7613544976494,
+          -37.22075544926187
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 0.011990789353357834,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 0.0003731398632390044,
-        "probability_pct": 0.03731398632390044
+        "debris_weight": 0.0,
+        "fuel_weight": 30.246471335736206,
+        "path_density": 13.72744352011234,
+        "probability": 0.0029499315718797127,
+        "probability_pct": 0.29499315718797126
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          68.29807725323396,
-          -43.19441561981963
+          88.7613544976494,
+          -37.22075544926187
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 0.011990789353357983,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 0.00037313986323900906,
-        "probability_pct": 0.037313986323900906
+        "debris_weight": 0.0,
+        "fuel_weight": 30.246471335736206,
+        "path_density": 13.72744352011234,
+        "probability": 0.0029499315718797127,
+        "probability_pct": 0.29499315718797126
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          69.24158812399757,
-          -43.119960243486325
+          89.10993572022161,
+          -37.0132363625007
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 0.012827890494134653,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 0.00039918950817745096,
-        "probability_pct": 0.039918950817745096
+        "debris_weight": 0.0,
+        "fuel_weight": 39.946135550021445,
+        "path_density": 20.3741387910729,
+        "probability": 0.0040465053495134466,
+        "probability_pct": 0.4046505349513447
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          59.758411876002455,
-          -43.119960243486325
+          89.10993572022161,
+          -37.0132363625007
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 0.012827890494134653,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 0.00039918950817745096,
-        "probability_pct": 0.039918950817745096
+        "debris_weight": 0.0,
+        "fuel_weight": 39.946135550021445,
+        "path_density": 20.3741387910729,
+        "probability": 0.0040465053495134466,
+        "probability_pct": 0.4046505349513447
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          70.18112978668485,
-          -43.02912819178251
+          89.10993572022161,
+          -37.0132363625007
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 0.013917035713885128,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 0.00043308248105594627,
-        "probability_pct": 0.043308248105594624
+        "debris_weight": 0.0,
+        "fuel_weight": 39.946135550021445,
+        "path_density": 20.3741387910729,
+        "probability": 0.0040465053495134466,
+        "probability_pct": 0.4046505349513447
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          58.81887021331517,
-          -43.02912819178251
+          89.10993572022161,
+          -37.0132363625007
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 0.013917035713885128,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 0.00043308248105594627,
-        "probability_pct": 0.043308248105594624
+        "debris_weight": 0.0,
+        "fuel_weight": 39.946135550021445,
+        "path_density": 20.3741387910729,
+        "probability": 0.0040465053495134466,
+        "probability_pct": 0.4046505349513447
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          71.11594431410546,
-          -42.92201946516402
+          89.10993572022161,
+          -37.0132363625007
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 0.0153027223280553,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 0.000476203488227904,
-        "probability_pct": 0.0476203488227904
+        "debris_weight": 0.0,
+        "fuel_weight": 39.946135550021445,
+        "path_density": 20.3741387910729,
+        "probability": 0.0040465053495134466,
+        "probability_pct": 0.4046505349513447
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          57.88405568589451,
-          -42.92201946516402
+          89.10993572022161,
+          -37.0132363625007
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 0.0153027223280553,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 0.000476203488227904,
-        "probability_pct": 0.0476203488227904
+        "debris_weight": 0.0,
+        "fuel_weight": 39.946135550021445,
+        "path_density": 20.3741387910729,
+        "probability": 0.0040465053495134466,
+        "probability_pct": 0.4046505349513447
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          72.0452927370489,
-          -42.79875101665713
+          89.10993572022161,
+          -37.0132363625007
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 0.01704216323898486,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 0.00053033293079332,
-        "probability_pct": 0.053033293079332
+        "debris_weight": 0.0,
+        "fuel_weight": 39.946135550021445,
+        "path_density": 20.3741387910729,
+        "probability": 0.0040465053495134466,
+        "probability_pct": 0.4046505349513447
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          56.954707262951096,
-          -42.79875101665713
+          89.10993572022161,
+          -37.0132363625007
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 0.01704216323898486,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 0.00053033293079332,
-        "probability_pct": 0.053033293079332
+        "debris_weight": 0.0,
+        "fuel_weight": 39.946135550021445,
+        "path_density": 20.3741387910729,
+        "probability": 0.0040465053495134466,
+        "probability_pct": 0.4046505349513447
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          72.96845769525864,
-          -42.6594561636646
+          89.10993572022161,
+          -37.0132363625007
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 0.01920777973668016,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 0.0005977244777519751,
-        "probability_pct": 0.05977244777519751
+        "debris_weight": 0.0,
+        "fuel_weight": 39.946135550021445,
+        "path_density": 20.3741387910729,
+        "probability": 0.0040465053495134466,
+        "probability_pct": 0.4046505349513447
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          56.031542304741365,
-          -42.6594561636646
+          89.45496048665996,
+          -36.802967484377405
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 0.01920777973668016,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 0.0005977244777519751,
-        "probability_pct": 0.05977244777519751
+        "debris_weight": 0.0,
+        "fuel_weight": 49.40821152240325,
+        "path_density": 27.54269252999197,
+        "probability": 0.005162149017047458,
+        "probability_pct": 0.5162149017047457
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          73.88474587199632,
-          -42.50428392877351
+          89.45496048665996,
+          -36.802967484377405
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 0.021890158192700373,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 0.0006811970749879817,
-        "probability_pct": 0.06811970749879817
+        "debris_weight": 0.0,
+        "fuel_weight": 49.40821152240325,
+        "path_density": 27.54269252999197,
+        "probability": 0.005162149017047458,
+        "probability_pct": 0.5162149017047457
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          55.11525412800368,
-          -42.50428392877351
+          89.45496048665996,
+          -36.802967484377405
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 0.021890158192700373,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 0.0006811970749879817,
-        "probability_pct": 0.06811970749879817
+        "debris_weight": 0.0,
+        "fuel_weight": 49.40821152240325,
+        "path_density": 27.54269252999197,
+        "probability": 0.005162149017047458,
+        "probability_pct": 0.5162149017047457
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          54.20650980649419,
-          -42.333398317089475
+          89.45496048665996,
+          -36.802967484377405
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 0.02520143223117284,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 0.000784240194623511,
-        "probability_pct": 0.0784240194623511
+        "debris_weight": 0.0,
+        "fuel_weight": 49.40821152240325,
+        "path_density": 27.54269252999197,
+        "probability": 0.005162149017047458,
+        "probability_pct": 0.5162149017047457
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          74.79349019350583,
-          -42.33339831708946
+          89.45496048665996,
+          -36.802967484377405
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 0.025201432231173132,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 0.0007842401946235201,
-        "probability_pct": 0.078424019462352
+        "debris_weight": 0.0,
+        "fuel_weight": 49.40821152240325,
+        "path_density": 27.54269252999197,
+        "probability": 0.005162149017047458,
+        "probability_pct": 0.5162149017047457
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          75.69405177880041,
-          -42.146977538119174
+          89.45496048665996,
+          -36.802967484377405
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 0.02927898080947597,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 0.000911128915125665,
-        "probability_pct": 0.0911128915125665
+        "debris_weight": 0.0,
+        "fuel_weight": 49.40821152240325,
+        "path_density": 27.54269252999197,
+        "probability": 0.005162149017047458,
+        "probability_pct": 0.5162149017047457
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          53.305948221199586,
-          -42.146977538119174
+          89.45496048665996,
+          -36.802967484377405
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 0.02927898080947597,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 0.000911128915125665,
-        "probability_pct": 0.0911128915125665
+        "debris_weight": 0.0,
+        "fuel_weight": 49.40821152240325,
+        "path_density": 27.54269252999197,
+        "probability": 0.005162149017047458,
+        "probability_pct": 0.5162149017047457
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          76.5858216293958,
-          -41.945213180566185
+          89.45496048665996,
+          -36.802967484377405
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 0.03428922248600307,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 0.0010670419946470023,
-        "probability_pct": 0.10670419946470022
+        "debris_weight": 0.0,
+        "fuel_weight": 49.40821152240325,
+        "path_density": 27.54269252999197,
+        "probability": 0.005162149017047458,
+        "probability_pct": 0.5162149017047457
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          52.414178370604176,
-          -41.945213180566185
+          89.45496048665996,
+          -36.802967484377405
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 0.03428922248600307,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 0.0010670419946470023,
-        "probability_pct": 0.10670419946470022
+        "debris_weight": 0.0,
+        "fuel_weight": 49.40821152240325,
+        "path_density": 27.54269252999197,
+        "probability": 0.005162149017047458,
+        "probability_pct": 0.5162149017047457
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          77.46822205279224,
-          -41.72830934859682
+          89.7964214010516,
+          -36.58998476448475
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 0.04043112660985624,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 0.0012581711352952672,
-        "probability_pct": 0.1258171135295267
+        "debris_weight": 0.0,
+        "fuel_weight": 57.93363371575627,
+        "path_density": 34.53003053960826,
+        "probability": 0.006202801895913257,
+        "probability_pct": 0.6202801895913257
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          51.531777947207765,
-          -41.72830934859682
+          89.7964214010516,
+          -36.58998476448475
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 0.04043112660985624,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 0.0012581711352952672,
-        "probability_pct": 0.1258171135295267
+        "debris_weight": 0.0,
+        "fuel_weight": 57.93363371575627,
+        "path_density": 34.53003053960826,
+        "probability": 0.006202801895913257,
+        "probability_pct": 0.6202801895913257
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          50.659292182429624,
-          -41.49648176817568
+          89.7964214010516,
+          -36.58998476448475
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 0.04793884488696077,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 0.0014918028745077704,
-        "probability_pct": 0.14918028745077705
+        "debris_weight": 0.0,
+        "fuel_weight": 57.93363371575627,
+        "path_density": 34.53003053960826,
+        "probability": 0.006202801895913257,
+        "probability_pct": 0.6202801895913257
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          78.3407078175704,
-          -41.49648176817565
+          89.7964214010516,
+          -36.58998476448475
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 0.04793884488696175,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 0.001491802874507801,
-        "probability_pct": 0.1491802874507801
+        "debris_weight": 0.0,
+        "fuel_weight": 57.93363371575627,
+        "path_density": 34.53003053960826,
+        "probability": 0.006202801895913257,
+        "probability_pct": 0.6202801895913257
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          49.79723295818096,
-          -41.24995687197547
+          89.7964214010516,
+          -36.58998476448475
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 0.057082589597874475,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 0.0017763459142007545,
-        "probability_pct": 0.17763459142007545
+        "debris_weight": 0.0,
+        "fuel_weight": 57.93363371575627,
+        "path_density": 34.53003053960826,
+        "probability": 0.006202801895913257,
+        "probability_pct": 0.6202801895913257
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          79.20276704181904,
-          -41.24995687197546
+          89.7964214010516,
+          -36.58998476448475
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 0.05708258959787473,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 0.0017763459142007625,
-        "probability_pct": 0.17763459142007626
+        "debris_weight": 0.0,
+        "fuel_weight": 57.93363371575627,
+        "path_density": 34.53003053960826,
+        "probability": 0.006202801895913257,
+        "probability_pct": 0.6202801895913257
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          80.05392182018082,
-          -40.98897087114097
+          89.7964214010516,
+          -36.58998476448475
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 0.0681665580301386,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 0.002121266531441211,
-        "probability_pct": 0.2121266531441211
+        "debris_weight": 0.0,
+        "fuel_weight": 57.93363371575627,
+        "path_density": 34.53003053960826,
+        "probability": 0.006202801895913257,
+        "probability_pct": 0.6202801895913257
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          48.946078179819196,
-          -40.98897087114097
+          89.7964214010516,
+          -36.58998476448475
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 0.0681665580301386,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 0.002121266531441211,
-        "probability_pct": 0.2121266531441211
+        "debris_weight": 0.0,
+        "fuel_weight": 57.93363371575627,
+        "path_density": 34.53003053960826,
+        "probability": 0.006202801895913257,
+        "probability_pct": 0.6202801895913257
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          80.89372859802538,
-          -40.71376882184865
+          89.7964214010516,
+          -36.58998476448475
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 0.08152235787152015,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 0.0025368839840874836,
-        "probability_pct": 0.25368839840874835
+        "debris_weight": 0.0,
+        "fuel_weight": 57.93363371575627,
+        "path_density": 34.53003053960826,
+        "probability": 0.006202801895913257,
+        "probability_pct": 0.6202801895913257
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          48.1062714019746,
-          -40.71376882184865
+          89.7964214010516,
+          -36.58998476448475
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 0.08152235787152015,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 0.0025368839840874836,
-        "probability_pct": 0.25368839840874835
+        "debris_weight": 0.0,
+        "fuel_weight": 57.93363371575627,
+        "path_density": 34.53003053960826,
+        "probability": 0.006202801895913257,
+        "probability_pct": 0.6202801895913257
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          81.72177830408866,
-          -40.42460369416724
+          89.7964214010516,
+          -36.58998476448475
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 0.09749608777593194,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 0.0030339684725477767,
-        "probability_pct": 0.30339684725477767
+        "debris_weight": 0.0,
+        "fuel_weight": 57.93363371575627,
+        "path_density": 34.53003053960826,
+        "probability": 0.006202801895913257,
+        "probability_pct": 0.6202801895913257
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          47.27822169591134,
-          -40.42460369416724
+          90.13431251985094,
+          -36.37432406173963
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 0.09749608777593194,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 0.0030339684725477767,
-        "probability_pct": 0.30339684725477767
+        "debris_weight": 0.0,
+        "fuel_weight": 64.97433767071362,
+        "path_density": 40.600047886636595,
+        "probability": 0.007082317190960943,
+        "probability_pct": 0.7082317190960943
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          46.46230374467646,
-          -40.121735450204234
+          90.13431251985094,
+          -36.37432406173963
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 0.11642707335424379,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 0.003623079427757136,
-        "probability_pct": 0.3623079427757136
+        "debris_weight": 0.0,
+        "fuel_weight": 64.97433767071362,
+        "path_density": 40.600047886636595,
+        "probability": 0.007082317190960943,
+        "probability_pct": 0.7082317190960943
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          82.53769625532355,
-          -40.12173545020423
+          90.13431251985094,
+          -36.37432406173963
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 0.11642707335424426,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 0.003623079427757151,
-        "probability_pct": 0.3623079427757151
+        "debris_weight": 0.0,
+        "fuel_weight": 64.97433767071362,
+        "path_density": 40.600047886636595,
+        "probability": 0.007082317190960943,
+        "probability_pct": 0.7082317190960943
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          83.34114184967378,
-          -39.80543013794077
+          90.13431251985094,
+          -36.37432406173963
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 0.13861639734499848,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 0.004313586205524653,
-        "probability_pct": 0.4313586205524653
+        "debris_weight": 0.0,
+        "fuel_weight": 64.97433767071362,
+        "path_density": 40.600047886636595,
+        "probability": 0.007082317190960943,
+        "probability_pct": 0.7082317190960943
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          45.6588581503262,
-          -39.80543013794077
+          90.13431251985094,
+          -36.37432406173963
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 0.13861639734499848,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 0.004313586205524653,
-        "probability_pct": 0.4313586205524653
+        "debris_weight": 0.0,
+        "fuel_weight": 64.97433767071362,
+        "path_density": 40.600047886636595,
+        "probability": 0.007082317190960943,
+        "probability_pct": 0.7082317190960943
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          44.868191935992684,
-          -39.47595900652518
+          90.13431251985094,
+          -36.37432406173963
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 0.16428397507571704,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 0.0051123323232216316,
-        "probability_pct": 0.5112332323221631
+        "debris_weight": 0.0,
+        "fuel_weight": 64.97433767071362,
+        "path_density": 40.600047886636595,
+        "probability": 0.007082317190960943,
+        "probability_pct": 0.7082317190960943
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          84.13180806400733,
-          -39.475959006525166
+          90.13431251985094,
+          -36.37432406173963
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 0.1642839750757182,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 0.005112332323221668,
-        "probability_pct": 0.5112332323221668
+        "debris_weight": 0.0,
+        "fuel_weight": 64.97433767071362,
+        "path_density": 40.600047886636595,
+        "probability": 0.007082317190960943,
+        "probability_pct": 0.7082317190960943
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          44.09057922446119,
-          -39.1335976481335
+          90.13431251985094,
+          -36.37432406173963
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 0.19351420159886687,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 0.006021944059853376,
-        "probability_pct": 0.6021944059853376
+        "debris_weight": 0.0,
+        "fuel_weight": 64.97433767071362,
+        "path_density": 40.600047886636595,
+        "probability": 0.007082317190960943,
+        "probability_pct": 0.7082317190960943
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          84.90942077553883,
-          -39.133597648133474
+          90.13431251985094,
+          -36.37432406173963
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 0.19351420159886937,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 0.006021944059853453,
-        "probability_pct": 0.6021944059853453
+        "debris_weight": 0.0,
+        "fuel_weight": 64.97433767071362,
+        "path_density": 40.600047886636595,
+        "probability": 0.007082317190960943,
+        "probability_pct": 0.7082317190960943
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          43.32626207424714,
-          -38.778625170827965
+          90.13431251985094,
+          -36.37432406173963
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 0.22619227720777244,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 0.007038848977810781,
-        "probability_pct": 0.7038848977810781
+        "debris_weight": 0.0,
+        "fuel_weight": 64.97433767071362,
+        "path_density": 40.600047886636595,
+        "probability": 0.007082317190960943,
+        "probability_pct": 0.7082317190960943
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          85.67373792575287,
-          -38.77862517082794
+          90.13431251985094,
+          -36.37432406173963
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 0.22619227720777513,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 0.007038848977810864,
-        "probability_pct": 0.7038848977810864
+        "debris_weight": 0.0,
+        "fuel_weight": 64.97433767071362,
+        "path_density": 40.600047886636595,
+        "probability": 0.007082317190960943,
+        "probability_pct": 0.7082317190960943
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          42.57545145386057,
-          -38.41132340616501
+          90.13431251985094,
+          -36.37432406173963
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 0.26193621545895723,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 0.008151160089083497,
-        "probability_pct": 0.8151160089083497
+        "debris_weight": 0.0,
+        "fuel_weight": 64.97433767071362,
+        "path_density": 40.600047886636595,
+        "probability": 0.007082317190960943,
+        "probability_pct": 0.7082317190960943
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          86.42454854613942,
-          -38.411323406164996
+          90.13431251985094,
+          -36.37432406173963
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 0.2619362154589587,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 0.008151160089083542,
-        "probability_pct": 0.8151160089083542
+        "debris_weight": 0.0,
+        "fuel_weight": 64.97433767071362,
+        "path_density": 40.600047886636595,
+        "probability": 0.007082317190960943,
+        "probability_pct": 0.7082317190960943
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          41.838328334992184,
-          -38.03197615463796
+          90.46862930579236,
+          -36.156021128834574
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 0.3000330322433257,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 0.009336690131005203,
-        "probability_pct": 0.9336690131005203
+        "debris_weight": 0.0,
+        "fuel_weight": 70.05150959706287,
+        "path_density": 44.9603881713159,
+        "probability": 0.007715420141257185,
+        "probability_pct": 0.7715420141257185
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          87.16167166500782,
-          -38.031976154637945
+          90.46862930579236,
+          -36.156021128834574
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 0.3000330322433272,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 0.00933669013100525,
-        "probability_pct": 0.933669013100525
+        "debris_weight": 0.0,
+        "fuel_weight": 70.05150959706287,
+        "path_density": 44.9603881713159,
+        "probability": 0.007715420141257185,
+        "probability_pct": 0.7715420141257185
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          41.115044885706105,
-          -37.640868471393816
+          90.46862930579236,
+          -36.156021128834574
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 1.0,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 0.03111887401595562,
-        "probability_pct": 3.111887401595562
+        "debris_weight": 0.0,
+        "fuel_weight": 70.05150959706287,
+        "path_density": 44.9603881713159,
+        "probability": 0.007715420141257185,
+        "probability_pct": 0.7715420141257185
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          87.88495511429392,
-          -37.6408684713938
+          90.46862930579236,
+          -36.156021128834574
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 1.0,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 0.03111887401595562,
-        "probability_pct": 3.111887401595562
+        "debris_weight": 0.0,
+        "fuel_weight": 70.05150959706287,
+        "path_density": 44.9603881713159,
+        "probability": 0.007715420141257185,
+        "probability_pct": 0.7715420141257185
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          40.40572574533893,
-          -37.23828599405094
+          90.46862930579236,
+          -36.156021128834574
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 1.0,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 0.03111887401595562,
-        "probability_pct": 3.111887401595562
+        "debris_weight": 0.0,
+        "fuel_weight": 70.05150959706287,
+        "path_density": 44.9603881713159,
+        "probability": 0.007715420141257185,
+        "probability_pct": 0.7715420141257185
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          88.59427425466107,
-          -37.23828599405093
+          90.46862930579236,
+          -36.156021128834574
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 1.0,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 0.03111887401595562,
-        "probability_pct": 3.111887401595562
+        "debris_weight": 0.0,
+        "fuel_weight": 70.05150959706287,
+        "path_density": 44.9603881713159,
+        "probability": 0.007715420141257185,
+        "probability_pct": 0.7715420141257185
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          39.71046936363706,
-          -36.82451431386934
+          90.46862930579236,
+          -36.156021128834574
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 1.0,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 0.03111887401595562,
-        "probability_pct": 3.111887401595562
+        "debris_weight": 0.0,
+        "fuel_weight": 70.05150959706287,
+        "path_density": 44.9603881713159,
+        "probability": 0.007715420141257185,
+        "probability_pct": 0.7715420141257185
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          89.28953063636295,
-          -36.82451431386933
+          90.46862930579236,
+          -36.156021128834574
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 1.0,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 0.03111887401595562,
-        "probability_pct": 3.111887401595562
+        "debris_weight": 0.0,
+        "fuel_weight": 70.05150959706287,
+        "path_density": 44.9603881713159,
+        "probability": 0.007715420141257185,
+        "probability_pct": 0.7715420141257185
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          89.97065061232784,
-          -36.3998383909943
+          90.46862930579236,
+          -36.156021128834574
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 1.0,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 0.03111887401595562,
-        "probability_pct": 3.111887401595562
+        "debris_weight": 0.0,
+        "fuel_weight": 70.05150959706287,
+        "path_density": 44.9603881713159,
+        "probability": 0.007715420141257185,
+        "probability_pct": 0.7715420141257185
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          39.02934938767215,
-          -36.39983839099428
+          90.46862930579236,
+          -36.156021128834574
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 1.0,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 0.03111887401595562,
-        "probability_pct": 3.111887401595562
+        "debris_weight": 0.0,
+        "fuel_weight": 70.05150959706287,
+        "path_density": 44.9603881713159,
+        "probability": 0.007715420141257185,
+        "probability_pct": 0.7715420141257185
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          90.63758391878265,
-          -35.96454201401228
+          90.46862930579236,
+          -36.156021128834574
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 1.0,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 0.03111887401595562,
-        "probability_pct": 3.111887401595562
+        "debris_weight": 0.0,
+        "fuel_weight": 70.05150959706287,
+        "path_density": 44.9603881713159,
+        "probability": 0.007715420141257185,
+        "probability_pct": 0.7715420141257185
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          38.36241608121737,
-          -35.96454201401228
+          90.46862930579236,
+          -36.156021128834574
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 1.0,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 0.03111887401595562,
-        "probability_pct": 3.111887401595562
+        "debris_weight": 0.0,
+        "fuel_weight": 70.05150959706287,
+        "path_density": 44.9603881713159,
+        "probability": 0.007715420141257185,
+        "probability_pct": 0.7715420141257185
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          91.29030223749794,
-          -35.51890730362447
+          90.46862930579236,
+          -36.156021128834574
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 1.0,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 0.03111887401595562,
-        "probability_pct": 3.111887401595562
+        "debris_weight": 0.0,
+        "fuel_weight": 70.05150959706287,
+        "path_density": 44.9603881713159,
+        "probability": 0.007715420141257185,
+        "probability_pct": 0.7715420141257185
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          37.70969776250207,
-          -35.51890730362447
+          90.46862930579236,
+          -36.156021128834574
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 1.0,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 0.03111887401595562,
-        "probability_pct": 3.111887401595562
+        "debris_weight": 0.0,
+        "fuel_weight": 70.05150959706287,
+        "path_density": 44.9603881713159,
+        "probability": 0.007715420141257185,
+        "probability_pct": 0.7715420141257185
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          91.92879775244124,
-          -35.06321425986209
+          90.79936858170478,
+          -35.93511159739248
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 1.0,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 0.03111887401595562,
-        "probability_pct": 3.111887401595562
+        "debris_weight": 0.0,
+        "fuel_weight": 72.74575882188321,
+        "path_density": 46.96667520637774,
+        "probability": 0.008030749362302138,
+        "probability_pct": 0.8030749362302139
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          37.071202247558745,
-          -35.06321425986208
+          90.79936858170478,
+          -35.93511159739248
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 1.0,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 0.03111887401595562,
-        "probability_pct": 3.111887401595562
+        "debris_weight": 0.0,
+        "fuel_weight": 72.74575882188321,
+        "path_density": 46.96667520637774,
+        "probability": 0.008030749362302138,
+        "probability_pct": 0.8030749362302139
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          36.4469182876981,
-          -34.59774035193724
+          90.79936858170478,
+          -35.93511159739248
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 1.0,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 0.03111887401595562,
-        "probability_pct": 3.111887401595562
+        "debris_weight": 0.0,
+        "fuel_weight": 72.74575882188321,
+        "path_density": 46.96667520637774,
+        "probability": 0.008030749362302138,
+        "probability_pct": 0.8030749362302139
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          92.5530817123019,
-          -34.597740351937226
+          90.79936858170478,
+          -35.93511159739248
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 1.0,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 0.03111887401595562,
-        "probability_pct": 3.111887401595562
+        "debris_weight": 0.0,
+        "fuel_weight": 72.74575882188321,
+        "path_density": 46.96667520637774,
+        "probability": 0.008030749362302138,
+        "probability_pct": 0.8030749362302139
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          35.83681699096969,
-          -34.122760149540795
+          90.79936858170478,
+          -35.93511159739248
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 1.0,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 0.03111887401595562,
-        "probability_pct": 3.111887401595562
+        "debris_weight": 0.0,
+        "fuel_weight": 72.74575882188321,
+        "path_density": 46.96667520637774,
+        "probability": 0.008030749362302138,
+        "probability_pct": 0.8030749362302139
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          93.16318300903033,
-          -34.122760149540774
+          90.79936858170478,
+          -35.93511159739248
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 1.0,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 0.03111887401595562,
-        "probability_pct": 3.111887401595562
+        "debris_weight": 0.0,
+        "fuel_weight": 72.74575882188321,
+        "path_density": 46.96667520637774,
+        "probability": 0.008030749362302138,
+        "probability_pct": 0.8030749362302139
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          35.24085321876393,
-          -33.63854499416562
+          90.79936858170478,
+          -35.93511159739248
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 1.0,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 0.03111887401595562,
-        "probability_pct": 3.111887401595562
+        "debris_weight": 0.0,
+        "fuel_weight": 72.74575882188321,
+        "path_density": 46.96667520637774,
+        "probability": 0.008030749362302138,
+        "probability_pct": 0.8030749362302139
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          93.75914678123607,
-          -33.63854499416561
+          90.79936858170478,
+          -35.93511159739248
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 1.0,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 0.03111887401595562,
-        "probability_pct": 3.111887401595562
+        "debris_weight": 0.0,
+        "fuel_weight": 72.74575882188321,
+        "path_density": 46.96667520637774,
+        "probability": 0.008030749362302138,
+        "probability_pct": 0.8030749362302139
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          94.34103305003511,
-          -33.14536270884391
+          90.79936858170478,
+          -35.93511159739248
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 1.0,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 0.03111887401595562,
-        "probability_pct": 3.111887401595562
+        "debris_weight": 0.0,
+        "fuel_weight": 72.74575882188321,
+        "path_density": 46.96667520637774,
+        "probability": 0.008030749362302138,
+        "probability_pct": 0.8030749362302139
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          34.65896694996489,
-          -33.14536270884391
+          90.79936858170478,
+          -35.93511159739248
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 1.0,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 0.03111887401595562,
-        "probability_pct": 3.111887401595562
+        "debris_weight": 0.0,
+        "fuel_weight": 72.74575882188321,
+        "path_density": 46.96667520637774,
+        "probability": 0.008030749362302138,
+        "probability_pct": 0.8030749362302139
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          34.09108460625904,
-          -32.64347734453938
+          90.79936858170478,
+          -35.93511159739248
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 1.0,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 0.03111887401595562,
-        "probability_pct": 3.111887401595562
+        "debris_weight": 0.0,
+        "fuel_weight": 72.74575882188321,
+        "path_density": 46.96667520637774,
+        "probability": 0.008030749362302138,
+        "probability_pct": 0.8030749362302139
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          94.90891539374097,
-          -32.64347734453936
+          90.79936858170478,
+          -35.93511159739248
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 1.0,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 0.03111887401595562,
-        "probability_pct": 3.111887401595562
+        "debris_weight": 0.0,
+        "fuel_weight": 72.74575882188321,
+        "path_density": 46.96667520637774,
+        "probability": 0.008030749362302138,
+        "probability_pct": 0.8030749362302139
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          95.46287966666986,
-          -32.13314896132615
+          90.79936858170478,
+          -35.93511159739248
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 1.0,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 0.03111887401595562,
-        "probability_pct": 3.111887401595562
+        "debris_weight": 0.0,
+        "fuel_weight": 72.74575882188321,
+        "path_density": 46.96667520637774,
+        "probability": 0.008030749362302138,
+        "probability_pct": 0.8030749362302139
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          33.53712033333014,
-          -32.13314896132615
+          90.79936858170478,
+          -35.93511159739248
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 1.0,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 0.03111887401595562,
-        "probability_pct": 3.111887401595562
+        "debris_weight": 0.0,
+        "fuel_weight": 72.74575882188321,
+        "path_density": 46.96667520637774,
+        "probability": 0.008030749362302138,
+        "probability_pct": 0.8030749362302139
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          32.996977233716194,
-          -31.614633442410494
+          90.79936858170478,
+          -35.93511159739248
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 0.26451611322807317,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 0.00823144360273466,
-        "probability_pct": 0.823144360273466
+        "debris_weight": 0.0,
+        "fuel_weight": 72.74575882188321,
+        "path_density": 46.96667520637774,
+        "probability": 0.008030749362302138,
+        "probability_pct": 0.8030749362302139
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          96.00302276628382,
-          -31.614633442410483
+          90.79936858170478,
+          -35.93511159739248
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 0.26451611322807206,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 0.008231443602734626,
-        "probability_pct": 0.8231443602734626
+        "debris_weight": 0.0,
+        "fuel_weight": 72.74575882188321,
+        "path_density": 46.96667520637774,
+        "probability": 0.008030749362302138,
+        "probability_pct": 0.8030749362302139
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          96.52945145193489,
-          -31.088182339006867
+          91.12652848432445,
+          -35.7116309638179
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 0.21367995394378536,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 0.006649479566511856,
-        "probability_pct": 0.6649479566511857
+        "debris_weight": 0.0,
+        "fuel_weight": 72.78111311919051,
+        "path_density": 46.423017242701114,
+        "probability": 0.007996650487129426,
+        "probability_pct": 0.7996650487129426
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          32.47054854806511,
-          -31.088182339006856
+          91.12652848432445,
+          -35.7116309638179
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 0.2136799539437844,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 0.006649479566511826,
-        "probability_pct": 0.6649479566511826
+        "debris_weight": 0.0,
+        "fuel_weight": 72.78111311919051,
+        "path_density": 46.423017242701114,
+        "probability": 0.007996650487129426,
+        "probability_pct": 0.7996650487129426
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          31.95771878240118,
-          -30.554042744063363
+          91.12652848432445,
+          -35.7116309638179
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 0.16674525254371636,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 0.0051889245066666125,
-        "probability_pct": 0.5188924506666612
+        "debris_weight": 0.0,
+        "fuel_weight": 72.78111311919051,
+        "path_density": 46.423017242701114,
+        "probability": 0.007996650487129426,
+        "probability_pct": 0.7996650487129426
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          97.04228121759883,
-          -30.55404274406335
+          91.12652848432445,
+          -35.7116309638179
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 0.16674525254371517,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 0.005188924506666576,
-        "probability_pct": 0.5188924506666576
+        "debris_weight": 0.0,
+        "fuel_weight": 72.78111311919051,
+        "path_density": 46.423017242701114,
+        "probability": 0.007996650487129426,
+        "probability_pct": 0.7996650487129426
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          31.45836477979877,
-          -30.012457192836685
+          91.12652848432445,
+          -35.7116309638179
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 0.12554085595070705,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 0.0039066900801852855,
-        "probability_pct": 0.39066900801852855
+        "debris_weight": 0.0,
+        "fuel_weight": 72.78111311919051,
+        "path_density": 46.423017242701114,
+        "probability": 0.007996650487129426,
+        "probability_pct": 0.7996650487129426
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          97.54163522020124,
-          -30.012457192836678
+          91.12652848432445,
+          -35.7116309638179
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 0.12554085595070655,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 0.00390669008018527,
-        "probability_pct": 0.390669008018527
+        "debris_weight": 0.0,
+        "fuel_weight": 72.78111311919051,
+        "path_density": 46.423017242701114,
+        "probability": 0.007996650487129426,
+        "probability_pct": 0.7996650487129426
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          98.0276432644401,
-          -29.463663588343373
+          91.12652848432445,
+          -35.7116309638179
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 0.0910832210862028,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 0.0028344072819489773,
-        "probability_pct": 0.28344072819489774
+        "debris_weight": 0.0,
+        "fuel_weight": 72.78111311919051,
+        "path_density": 46.423017242701114,
+        "probability": 0.007996650487129426,
+        "probability_pct": 0.7996650487129426
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          30.972356735559885,
-          -29.46366358834337
+          91.12652848432445,
+          -35.7116309638179
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 0.09108322108620259,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 0.002834407281948971,
-        "probability_pct": 0.2834407281948971
+        "debris_weight": 0.0,
+        "fuel_weight": 72.78111311919051,
+        "path_density": 46.423017242701114,
+        "probability": 0.007996650487129426,
+        "probability_pct": 0.7996650487129426
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          30.499559155606473,
-          -28.907895149757156
+          91.12652848432445,
+          -35.7116309638179
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 0.06360763881523064,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 0.001979398098743571,
-        "probability_pct": 0.19793980987435708
+        "debris_weight": 0.0,
+        "fuel_weight": 72.78111311919051,
+        "path_density": 46.423017242701114,
+        "probability": 0.007996650487129426,
+        "probability_pct": 0.7996650487129426
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          98.50044084439352,
-          -28.907895149757145
+          91.12652848432445,
+          -35.7116309638179
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 0.06360763881523016,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 0.0019793980987435557,
-        "probability_pct": 0.19793980987435558
+        "debris_weight": 0.0,
+        "fuel_weight": 72.78111311919051,
+        "path_density": 46.423017242701114,
+        "probability": 0.007996650487129426,
+        "probability_pct": 0.7996650487129426
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          30.03983175833211,
-          -28.34538038187871
+          91.12652848432445,
+          -35.7116309638179
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 0.042708073306033184,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 0.001329027152674644,
-        "probability_pct": 0.1329027152674644
+        "debris_weight": 0.0,
+        "fuel_weight": 72.78111311919051,
+        "path_density": 46.423017242701114,
+        "probability": 0.007996650487129426,
+        "probability_pct": 0.7996650487129426
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          98.9601682416679,
-          -28.34538038187869
+          91.12652848432445,
+          -35.7116309638179
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 0.042708073306032636,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 0.0013290271526746268,
-        "probability_pct": 0.1329027152674627
+        "debris_weight": 0.0,
+        "fuel_weight": 72.78111311919051,
+        "path_density": 46.423017242701114,
+        "probability": 0.007996650487129426,
+        "probability_pct": 0.7996650487129426
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          29.59303032061654,
-          -27.776343063872407
+          91.12652848432445,
+          -35.7116309638179
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 0.027540329504799965,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 0.0008570240442177756,
-        "probability_pct": 0.08570240442177755
+        "debris_weight": 0.0,
+        "fuel_weight": 72.78111311919051,
+        "path_density": 46.423017242701114,
+        "probability": 0.007996650487129426,
+        "probability_pct": 0.7996650487129426
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          99.40696967938347,
-          -27.77634306387238
+          91.45010841819601,
+          -35.48561457583656
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 0.02754032950479933,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 0.0008570240442177558,
-        "probability_pct": 0.08570240442177558
+        "debris_weight": 0.0,
+        "fuel_weight": 70.11363459226274,
+        "path_density": 43.61557929487874,
+        "probability": 0.007629372999664108,
+        "probability_pct": 0.7629372999664108
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          29.15900746909254,
-          -27.2010022555409
+          91.45010841819601,
+          -35.48561457583656
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 0.017038520015598912,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 0.0005302195577837608,
-        "probability_pct": 0.053021955778376074
+        "debris_weight": 0.0,
+        "fuel_weight": 70.11363459226274,
+        "path_density": 43.61557929487874,
+        "probability": 0.007629372999664108,
+        "probability_pct": 0.7629372999664108
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          99.84099253090746,
-          -27.201002255540885
+          91.45010841819601,
+          -35.48561457583656
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 0.0170385200155987,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 0.0005302195577837541,
-        "probability_pct": 0.053021955778375415
+        "debris_weight": 0.0,
+        "fuel_weight": 70.11363459226274,
+        "path_density": 43.61557929487874,
+        "probability": 0.007629372999664108,
+        "probability_pct": 0.7629372999664108
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          100.26238658192284,
-          -26.619572319491887
+          91.45010841819601,
+          -35.48561457583656
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 0.010103221310520397,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 0.0003144008711174023,
-        "probability_pct": 0.03144008711174023
+        "debris_weight": 0.0,
+        "fuel_weight": 70.11363459226274,
+        "path_density": 43.61557929487874,
+        "probability": 0.007629372999664108,
+        "probability_pct": 0.7629372999664108
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          28.737613418077153,
-          -26.619572319491887
+          91.45010841819601,
+          -35.48561457583656
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 0.010103221310520397,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 0.0003144008711174023,
-        "probability_pct": 0.03144008711174023
+        "debris_weight": 0.0,
+        "fuel_weight": 70.11363459226274,
+        "path_density": 43.61557929487874,
+        "probability": 0.007629372999664108,
+        "probability_pct": 0.7629372999664108
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          28.32869665584045,
-          -26.032262957638267
+          91.45010841819601,
+          -35.48561457583656
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 0.005736293260910998,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 0.0001785069873048646,
-        "probability_pct": 0.017850698730486458
+        "debris_weight": 0.0,
+        "fuel_weight": 70.11363459226274,
+        "path_density": 43.61557929487874,
+        "probability": 0.007629372999664108,
+        "probability_pct": 0.7629372999664108
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          100.67130334415954,
-          -26.032262957638263
+          91.45010841819601,
+          -35.48561457583656
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 0.0057362932609109725,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 0.0001785069873048638,
-        "probability_pct": 0.01785069873048638
+        "debris_weight": 0.0,
+        "fuel_weight": 70.11363459226274,
+        "path_density": 43.61557929487874,
+        "probability": 0.007629372999664108,
+        "probability_pct": 0.7629372999664108
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          101.06789541890625,
-          -25.439279260564035
+          91.45010841819601,
+          -35.48561457583656
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 0.0031155953634666523,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 0.00009695381960041421,
-        "probability_pct": 0.00969538196004142
+        "debris_weight": 0.0,
+        "fuel_weight": 70.11363459226274,
+        "path_density": 43.61557929487874,
+        "probability": 0.007629372999664108,
+        "probability_pct": 0.7629372999664108
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          27.932104581093732,
-          -25.439279260564025
+          91.45010841819601,
+          -35.48561457583656
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 0.0031155953634666132,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 0.000096953819600413,
-        "probability_pct": 0.0096953819600413
+        "debris_weight": 0.0,
+        "fuel_weight": 70.11363459226274,
+        "path_density": 43.61557929487874,
+        "probability": 0.007629372999664108,
+        "probability_pct": 0.7629372999664108
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          101.45231590826187,
-          -24.840821768379364
+          91.45010841819601,
+          -35.48561457583656
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 0.0016173357401354329,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 0.00005032966713877687,
-        "probability_pct": 0.005032966713877687
+        "debris_weight": 0.0,
+        "fuel_weight": 70.11363459226274,
+        "path_density": 43.61557929487874,
+        "probability": 0.007629372999664108,
+        "probability_pct": 0.7629372999664108
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          27.547684091738127,
-          -24.84082176837936
+          91.45010841819601,
+          -35.48561457583656
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 0.001617335740135427,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 0.00005032966713877669,
-        "probability_pct": 0.005032966713877669
+        "debris_weight": 0.0,
+        "fuel_weight": 70.11363459226274,
+        "path_density": 43.61557929487874,
+        "probability": 0.007629372999664108,
+        "probability_pct": 0.7629372999664108
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          101.82471787196857,
-          -24.23708654178037
+          91.45010841819601,
+          -35.48561457583656
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 0.0008017451712450618,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 0.000024949406976875842,
-        "probability_pct": 0.002494940697687584
+        "debris_weight": 0.0,
+        "fuel_weight": 70.11363459226274,
+        "path_density": 43.61557929487874,
+        "probability": 0.007629372999664108,
+        "probability_pct": 0.7629372999664108
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          27.175282128031412,
-          -24.237086541780368
+          91.45010841819601,
+          -35.48561457583656
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 0.000801745171245059,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 0.000024949406976875758,
-        "probability_pct": 0.002494940697687576
+        "debris_weight": 0.0,
+        "fuel_weight": 70.11363459226274,
+        "path_density": 43.61557929487874,
+        "probability": 0.007629372999664108,
+        "probability_pct": 0.7629372999664108
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          26.814746172410675,
-          -23.628265242120168
+          91.45010841819601,
+          -35.48561457583656
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 0.00037922194204951116,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 0.00001180095983872476,
-        "probability_pct": 0.001180095983872476
+        "debris_weight": 0.0,
+        "fuel_weight": 70.11363459226274,
+        "path_density": 43.61557929487874,
+        "probability": 0.007629372999664108,
+        "probability_pct": 0.7629372999664108
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          102.18525382758932,
-          -23.62826524212016
+          91.45010841819601,
+          -35.48561457583656
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 0.0003792219420495074,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 0.000011800959838724644,
-        "probability_pct": 0.0011800959838724643
+        "debris_weight": 0.0,
+        "fuel_weight": 70.11363459226274,
+        "path_density": 43.61557929487874,
+        "probability": 0.007629372999664108,
+        "probability_pct": 0.7629372999664108
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          26.46592470825377,
-          -23.014545219386605
+          91.45010841819601,
+          -35.48561457583656
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 0.00017101397011258897,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 5.321762190902056e-6,
-        "probability_pct": 0.0005321762190902056
+        "debris_weight": 0.0,
+        "fuel_weight": 70.11363459226274,
+        "path_density": 43.61557929487874,
+        "probability": 0.007629372999664108,
+        "probability_pct": 0.7629372999664108
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          102.53407529174625,
-          -23.014545219386576
+          91.77010900974703,
+          -35.25709761971321
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 0.00017101397011258244,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 5.321762190901853e-6,
-        "probability_pct": 0.0005321762190901853
+        "debris_weight": 0.0,
+        "fuel_weight": 64.95777749591929,
+        "path_density": 39.08236849245714,
+        "probability": 0.006979394770744792,
+        "probability_pct": 0.6979394770744791
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          26.12866763988163,
-          -22.396109607068844
+          91.77010900974703,
+          -35.25709761971321
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 0.00007347285266231965,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 2.2863924455915948e-6,
-        "probability_pct": 0.00022863924455915948
+        "debris_weight": 0.0,
+        "fuel_weight": 64.95777749591929,
+        "path_density": 39.08236849245714,
+        "probability": 0.006979394770744792,
+        "probability_pct": 0.6979394770744791
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          102.87133236011837,
-          -22.396109607068823
+          91.77010900974703,
+          -35.25709761971321
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 0.00007347285266231744,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 2.2863924455915257e-6,
-        "probability_pct": 0.00022863924455915257
+        "debris_weight": 0.0,
+        "fuel_weight": 64.95777749591929,
+        "path_density": 39.08236849245714,
+        "probability": 0.006979394770744792,
+        "probability_pct": 0.6979394770744791
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          103.19717332390265,
-          -21.773137422978944
+          91.77010900974703,
+          -35.25709761971321
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 0.000030051868607522853,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 9.351803131415553e-7,
-        "probability_pct": 0.00009351803131415553
+        "debris_weight": 0.0,
+        "fuel_weight": 64.95777749591929,
+        "path_density": 39.08236849245714,
+        "probability": 0.006979394770744792,
+        "probability_pct": 0.6979394770744791
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          25.802826676097347,
-          -21.773137422978934
+          91.77010900974703,
+          -35.25709761971321
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 0.000030051868607522372,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 9.351803131415404e-7,
-        "probability_pct": 0.00009351803131415404
+        "debris_weight": 0.0,
+        "fuel_weight": 64.95777749591929,
+        "path_density": 39.08236849245714,
+        "probability": 0.006979394770744792,
+        "probability_pct": 0.6979394770744791
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          25.488255679531942,
-          -21.14580367517439
+          91.77010900974703,
+          -35.25709761971321
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 0.000011694272194598331,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 3.639125831319983e-7,
-        "probability_pct": 0.000036391258313199834
+        "debris_weight": 0.0,
+        "fuel_weight": 64.95777749591929,
+        "path_density": 39.08236849245714,
+        "probability": 0.006979394770744792,
+        "probability_pct": 0.6979394770744791
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          103.51174432046807,
-          -21.145803675174378
+          91.77010900974703,
+          -35.25709761971321
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 0.000011694272194598145,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 3.639125831319925e-7,
-        "probability_pct": 0.00003639125831319925
+        "debris_weight": 0.0,
+        "fuel_weight": 64.95777749591929,
+        "path_density": 39.08236849245714,
+        "probability": 0.006979394770744792,
+        "probability_pct": 0.6979394770744791
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          25.18481098402392,
-          -20.514279472204297
+          91.77010900974703,
+          -35.25709761971321
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 4.3266878137668166e-6,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 1.3464165298298002e-7,
-        "probability_pct": 0.000013464165298298002
+        "debris_weight": 0.0,
+        "fuel_weight": 64.95777749591929,
+        "path_density": 39.08236849245714,
+        "probability": 0.006979394770744792,
+        "probability_pct": 0.6979394770744791
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          103.81518901597607,
-          -20.514279472204294
+          91.77010900974703,
+          -35.25709761971321
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 4.326687813766794e-6,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 1.346416529829793e-7,
-        "probability_pct": 0.000013464165298297931
+        "debris_weight": 0.0,
+        "fuel_weight": 64.95777749591929,
+        "path_density": 39.08236849245714,
+        "probability": 0.006979394770744792,
+        "probability_pct": 0.6979394770744791
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          24.892351682203923,
-          -19.87873213697483
+          91.77010900974703,
+          -35.25709761971321
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 1.5210992712141241e-6,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 4.7334896586674236e-8,
-        "probability_pct": 4.733489658667424e-6
+        "debris_weight": 0.0,
+        "fuel_weight": 64.95777749591929,
+        "path_density": 39.08236849245714,
+        "probability": 0.006979394770744792,
+        "probability_pct": 0.6979394770744791
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          104.10764831779609,
-          -19.878732136974804
+          91.77010900974703,
+          -35.25709761971321
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 1.521099271214062e-6,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 4.733489658667231e-8,
-        "probability_pct": 4.733489658667231e-6
+        "debris_weight": 0.0,
+        "fuel_weight": 64.95777749591929,
+        "path_density": 39.08236849245714,
+        "probability": 0.006979394770744792,
+        "probability_pct": 0.6979394770744791
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          104.38926011461211,
-          -19.239325323597527
+          91.77010900974703,
+          -35.25709761971321
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 5.078477216947322e-7,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 1.5803649270708465e-8,
-        "probability_pct": 1.5803649270708466e-6
+        "debris_weight": 0.0,
+        "fuel_weight": 64.95777749591929,
+        "path_density": 39.08236849245714,
+        "probability": 0.006979394770744792,
+        "probability_pct": 0.6979394770744791
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          24.610739885387883,
-          -19.23932532359752
+          91.77010900974703,
+          -35.25709761971321
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 5.078477216947259e-7,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 1.5803649270708267e-8,
-        "probability_pct": 1.5803649270708266e-6
+        "debris_weight": 0.0,
+        "fuel_weight": 64.95777749591929,
+        "path_density": 39.08236849245714,
+        "probability": 0.006979394770744792,
+        "probability_pct": 0.6979394770744791
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          24.339840957806864,
-          -18.59621913664945
+          92.08653206161593,
+          -35.02611510813798
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 1.6093588675883373e-7,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 5.008143584694247e-9,
-        "probability_pct": 5.008143584694247e-7
+        "debris_weight": 0.0,
+        "fuel_weight": 57.74565549161556,
+        "path_density": 33.3920010134159,
+        "probability": 0.006113848430203244,
+        "probability_pct": 0.6113848430203245
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          104.66015904219313,
-          -18.596219136649438
+          92.08653206161593,
+          -35.02611510813798
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 1.6093588675883087e-7,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 5.008143584694158e-9,
-        "probability_pct": 5.008143584694158e-7
+        "debris_weight": 0.0,
+        "fuel_weight": 57.74565549161556,
+        "path_density": 33.3920010134159,
+        "probability": 0.006113848430203244,
+        "probability_pct": 0.6113848430203245
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          24.079523727119398,
-          -17.94957025233345
+          92.08653206161593,
+          -35.02611510813798
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 4.838382792749354e-8,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 1.5056502456853467e-9,
-        "probability_pct": 1.5056502456853466e-7
+        "debris_weight": 0.0,
+        "fuel_weight": 57.74565549161556,
+        "path_density": 33.3920010134159,
+        "probability": 0.006113848430203244,
+        "probability_pct": 0.6113848430203245
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          104.92047627288058,
-          -17.94957025233344
+          92.08653206161593,
+          -35.02611510813798
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 4.838382792749251e-8,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 1.5056502456853144e-9,
-        "probability_pct": 1.5056502456853143e-7
+        "debris_weight": 0.0,
+        "fuel_weight": 57.74565549161556,
+        "path_density": 33.3920010134159,
+        "probability": 0.006113848430203244,
+        "probability_pct": 0.6113848430203245
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          23.829660673065963,
-          -17.299532041084547
+          92.08653206161593,
+          -35.02611510813798
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 1.3793511839131295e-8,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 4.2923855715951906e-10,
-        "probability_pct": 4.29238557159519e-8
+        "debris_weight": 0.0,
+        "fuel_weight": 57.74565549161556,
+        "path_density": 33.3920010134159,
+        "probability": 0.006113848430203244,
+        "probability_pct": 0.6113848430203245
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          105.17033932693404,
-          -17.29953204108454
+          92.08653206161593,
+          -35.02611510813798
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 1.3793511839131148e-8,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 4.292385571595145e-10,
-        "probability_pct": 4.292385571595145e-8
+        "debris_weight": 0.0,
+        "fuel_weight": 57.74565549161556,
+        "path_density": 33.3920010134159,
+        "probability": 0.006113848430203244,
+        "probability_pct": 0.6113848430203245
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          23.590128096035418,
-          -16.646254691219912
+          92.08653206161593,
+          -35.02611510813798
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 3.72726996600295e-9,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 1.1598844449550099e-10,
-        "probability_pct": 1.1598844449550099e-8
+        "debris_weight": 0.0,
+        "fuel_weight": 57.74565549161556,
+        "path_density": 33.3920010134159,
+        "probability": 0.006113848430203244,
+        "probability_pct": 0.6113848430203245
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          105.40987190396459,
-          -16.646254691219887
+          92.08653206161593,
+          -35.02611510813798
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 3.727269966002751e-9,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 1.1598844449549481e-10,
-        "probability_pct": 1.159884444954948e-8
+        "debris_weight": 0.0,
+        "fuel_weight": 57.74565549161556,
+        "path_density": 33.3920010134159,
+        "probability": 0.006113848430203244,
+        "probability_pct": 0.6113848430203245
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          23.360806267222117,
-          -15.989885333279048
+          92.08653206161593,
+          -35.02611510813798
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 9.542822725119952e-10,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 2.969618981396061e-11,
-        "probability_pct": 2.9696189813960608e-9
+        "debris_weight": 0.0,
+        "fuel_weight": 57.74565549161556,
+        "path_density": 33.3920010134159,
+        "probability": 0.006113848430203244,
+        "probability_pct": 0.6113848430203245
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          105.63919373277787,
-          -15.989885333279046
+          92.08653206161593,
+          -35.02611510813798
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 9.542822725119952e-10,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 2.969618981396061e-11,
-        "probability_pct": 2.9696189813960608e-9
+        "debris_weight": 0.0,
+        "fuel_weight": 57.74565549161556,
+        "path_density": 33.3920010134159,
+        "probability": 0.006113848430203244,
+        "probability_pct": 0.6113848430203245
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          23.14157956196105,
-          -15.330568164745909
+          92.08653206161593,
+          -35.02611510813798
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 2.3140670361697137e-10,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 7.2011160563041135e-12,
-        "probability_pct": 7.201116056304113e-10
+        "debris_weight": 0.0,
+        "fuel_weight": 57.74565549161556,
+        "path_density": 33.3920010134159,
+        "probability": 0.006113848430203244,
+        "probability_pct": 0.6113848430203245
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          105.85842043803895,
-          -15.3305681647459
+          92.3993805073075,
+          -34.79270186876943
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 2.314067036169656e-10,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 7.201116056303934e-12,
-        "probability_pct": 7.201116056303934e-10
+        "debris_weight": 0.0,
+        "fuel_weight": 49.057187927956065,
+        "path_density": 27.033021448112184,
+        "probability": 0.005104410459819409,
+        "probability_pct": 0.510441045981941
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          22.932336577736674,
-          -14.668444574885626
+          92.3993805073075,
+          -34.79270186876943
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 5.313068922987051e-11,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 1.6533672245252307e-12,
-        "probability_pct": 1.6533672245252306e-10
+        "debris_weight": 0.0,
+        "fuel_weight": 49.057187927956065,
+        "path_density": 27.033021448112184,
+        "probability": 0.005104410459819409,
+        "probability_pct": 0.510441045981941
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          106.06766342226334,
-          -14.668444574885617
+          92.3993805073075,
+          -34.79270186876943
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 5.3130689229869756e-11,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 1.653367224525207e-12,
-        "probability_pct": 1.653367224525207e-10
+        "debris_weight": 0.0,
+        "fuel_weight": 49.057187927956065,
+        "path_density": 27.033021448112184,
+        "probability": 0.005104410459819409,
+        "probability_pct": 0.510441045981941
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          22.73297023827196,
-          -14.003653269467625
+          92.3993805073075,
+          -34.79270186876943
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 1.154667468353749e-11,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 3.5931951478022736e-13,
-        "probability_pct": 3.593195147802273e-11
+        "debris_weight": 0.0,
+        "fuel_weight": 49.057187927956065,
+        "path_density": 27.033021448112184,
+        "probability": 0.005104410459819409,
+        "probability_pct": 0.510441045981941
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          106.26702976172803,
-          -14.003653269467609
+          92.3993805073075,
+          -34.79270186876943
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 1.1546674683537039e-11,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 3.593195147802134e-13,
-        "probability_pct": 3.593195147802134e-11
+        "debris_weight": 0.0,
+        "fuel_weight": 49.057187927956065,
+        "path_density": 27.033021448112184,
+        "probability": 0.005104410459819409,
+        "probability_pct": 0.510441045981941
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          22.54337788501502,
-          -13.33633039518112
+          92.3993805073075,
+          -34.79270186876943
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 2.3746300849728202e-12,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 7.389581444876718e-14,
-        "probability_pct": 7.389581444876718e-12
+        "debris_weight": 0.0,
+        "fuel_weight": 49.057187927956065,
+        "path_density": 27.033021448112184,
+        "probability": 0.005104410459819409,
+        "probability_pct": 0.510441045981941
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          106.45662211498497,
-          -13.336330395181092
+          92.3993805073075,
+          -34.79270186876943
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 2.37463008497266e-12,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 7.38958144487622e-14,
-        "probability_pct": 7.38958144487622e-12
+        "debris_weight": 0.0,
+        "fuel_weight": 49.057187927956065,
+        "path_density": 27.033021448112184,
+        "probability": 0.005104410459819409,
+        "probability_pct": 0.510441045981941
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          22.363461357255623,
-          -12.666609663581399
+          92.3993805073075,
+          -34.79270186876943
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 4.620214039292865e-13,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 1.4377585861550412e-14,
-        "probability_pct": 1.4377585861550412e-12
+        "debris_weight": 0.0,
+        "fuel_weight": 49.057187927956065,
+        "path_density": 27.033021448112184,
+        "probability": 0.005104410459819409,
+        "probability_pct": 0.510441045981941
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          106.63653864274436,
-          -12.666609663581392
+          92.70865836624525,
+          -34.55689253342212
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 4.620214039292783e-13,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 1.4377585861550156e-14,
-        "probability_pct": 1.4377585861550155e-12
+        "debris_weight": 0.0,
+        "fuel_weight": 39.59154459741703,
+        "path_density": 20.432781294368617,
+        "probability": 0.0040266520415437905,
+        "probability_pct": 0.40266520415437906
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          22.193127062020306,
-          -11.994622474434893
+          92.70865836624525,
+          -34.55689253342212
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 8.502932130920839e-14,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 2.6460167374834664e-15,
-        "probability_pct": 2.6460167374834665e-13
+        "debris_weight": 0.0,
+        "fuel_weight": 39.59154459741703,
+        "path_density": 20.432781294368617,
+        "probability": 0.0040266520415437905,
+        "probability_pct": 0.40266520415437906
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          106.80687293797969,
-          -11.994622474434884
+          92.70865836624525,
+          -34.55689253342212
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 8.502932130920688e-14,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 2.6460167374834195e-15,
-        "probability_pct": 2.6460167374834195e-13
+        "debris_weight": 0.0,
+        "fuel_weight": 39.59154459741703,
+        "path_density": 20.432781294368617,
+        "probability": 0.0040266520415437905,
+        "probability_pct": 0.40266520415437906
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          22.032286034814565,
-          -11.320498038356735
+          92.70865836624525,
+          -34.55689253342212
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 1.4799361519560177e-14,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 4.605394666437747e-16,
-        "probability_pct": 4.605394666437747e-14
+        "debris_weight": 0.0,
+        "fuel_weight": 39.59154459741703,
+        "path_density": 20.432781294368617,
+        "probability": 0.0040266520415437905,
+        "probability_pct": 0.40266520415437906
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          106.96771396518542,
-          -11.320498038356718
+          92.70865836624525,
+          -34.55689253342212
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 1.479936151955939e-14,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 4.605394666437501e-16,
-        "probability_pct": 4.605394666437501e-14
+        "debris_weight": 0.0,
+        "fuel_weight": 39.59154459741703,
+        "path_density": 20.432781294368617,
+        "probability": 0.0040266520415437905,
+        "probability_pct": 0.40266520415437906
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          107.11914600779636,
-          -10.644363498660253
+          92.70865836624525,
+          -34.55689253342212
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 2.4357109689211173e-15,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 7.579658278113745e-17,
-        "probability_pct": 7.579658278113745e-15
+        "debris_weight": 0.0,
+        "fuel_weight": 39.59154459741703,
+        "path_density": 20.432781294368617,
+        "probability": 0.0040266520415437905,
+        "probability_pct": 0.40266520415437906
       },
       "type": "Feature"
     },
     {
       "geometry": {
         "coordinates": [
-          21.88085399220362,
-          -10.644363498660246
+          92.70865836624525,
+          -34.55689253342212
         ],
         "type": "Point"
       },
       "properties": {
-        "debris_weight": 2.435710968921065e-15,
-        "fuel_weight": -0.0,
-        "path_density": -0.0,
-        "probability": 7.579658278113582e-17,
-        "probability_pct": 7.579658278113582e-15
+        "debris_weight": 0.0,
+        "fuel_weight": 39.59154459741703,
+        "path_density": 20.432781294368617,
+        "probability": 0.0040266520415437905,
+        "probability_pct": 0.40266520415437906
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          92.70865836624525,
+          -34.55689253342212
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "debris_weight": 0.0,
+        "fuel_weight": 39.59154459741703,
+        "path_density": 20.432781294368617,
+        "probability": 0.0040266520415437905,
+        "probability_pct": 0.40266520415437906
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          92.70865836624525,
+          -34.55689253342212
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "debris_weight": 0.0,
+        "fuel_weight": 39.59154459741703,
+        "path_density": 20.432781294368617,
+        "probability": 0.0040266520415437905,
+        "probability_pct": 0.40266520415437906
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          93.01437069928453,
+          -34.31872152788592
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "debris_weight": 0.0,
+        "fuel_weight": 30.198401165312518,
+        "path_density": 14.109979538045838,
+        "probability": 0.0029723687682612276,
+        "probability_pct": 0.29723687682612276
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          93.01437069928453,
+          -34.31872152788592
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "debris_weight": 0.0,
+        "fuel_weight": 30.198401165312518,
+        "path_density": 14.109979538045838,
+        "probability": 0.0029723687682612276,
+        "probability_pct": 0.29723687682612276
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          93.01437069928453,
+          -34.31872152788592
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "debris_weight": 0.0,
+        "fuel_weight": 30.198401165312518,
+        "path_density": 14.109979538045838,
+        "probability": 0.0029723687682612276,
+        "probability_pct": 0.29723687682612276
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          93.01437069928453,
+          -34.31872152788592
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "debris_weight": 0.0,
+        "fuel_weight": 30.198401165312518,
+        "path_density": 14.109979538045838,
+        "probability": 0.0029723687682612276,
+        "probability_pct": 0.29723687682612276
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          93.01437069928453,
+          -34.31872152788592
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "debris_weight": 0.0,
+        "fuel_weight": 30.198401165312518,
+        "path_density": 14.109979538045838,
+        "probability": 0.0029723687682612276,
+        "probability_pct": 0.29723687682612276
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          93.31652356474606,
+          -34.078223062363044
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "debris_weight": 0.0,
+        "fuel_weight": 21.849347411332385,
+        "path_density": 8.726989863618586,
+        "probability": 0.002051172905016529,
+        "probability_pct": 0.20511729050165292
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          93.31652356474606,
+          -34.078223062363044
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "debris_weight": 0.0,
+        "fuel_weight": 21.849347411332385,
+        "path_density": 8.726989863618586,
+        "probability": 0.002051172905016529,
+        "probability_pct": 0.20511729050165292
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          93.31652356474606,
+          -34.078223062363044
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "debris_weight": 0.0,
+        "fuel_weight": 21.849347411332385,
+        "path_density": 8.726989863618586,
+        "probability": 0.002051172905016529,
+        "probability_pct": 0.20511729050165292
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          94.00260957891528,
+          -33.52604787742799
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "debris_weight": 0.0,
+        "fuel_weight": 10.633266553291513,
+        "path_density": 2.142687443436695,
+        "probability": 0.0008570578757742512,
+        "probability_pct": 0.08570578757742513
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          94.29328166828017,
+          -33.27803736666718
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "debris_weight": 0.0,
+        "fuel_weight": 9.359035345277395,
+        "path_density": 1.392128586966003,
+        "probability": 0.0007212275282322539,
+        "probability_pct": 0.07212275282322539
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          94.58042605175682,
+          -33.02784014085571
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "debris_weight": 0.0,
+        "fuel_weight": 9.46899453137463,
+        "path_density": 1.2550457051558608,
+        "probability": 0.0007194079711927715,
+        "probability_pct": 0.07194079711927716
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          94.58042605175682,
+          -33.02784014085571
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "debris_weight": 0.0,
+        "fuel_weight": 9.46899453137463,
+        "path_density": 1.2550457051558608,
+        "probability": 0.0007194079711927715,
+        "probability_pct": 0.07194079711927716
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          94.86405334709376,
+          -32.775489240685296
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "debris_weight": 0.0,
+        "fuel_weight": 10.171703718558748,
+        "path_density": 1.3497904287504063,
+        "probability": 0.0007729041058043127,
+        "probability_pct": 0.07729041058043128
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          94.86405334709376,
+          -32.775489240685296
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "debris_weight": 0.0,
+        "fuel_weight": 10.171703718558748,
+        "path_density": 1.3497904287504063,
+        "probability": 0.0007729041058043127,
+        "probability_pct": 0.07729041058043128
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          95.1441749126068,
+          -32.521017443435426
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "debris_weight": 0.0,
+        "fuel_weight": 10.864444466377986,
+        "path_density": 1.4699681434756051,
+        "probability": 0.0008274376592958505,
+        "probability_pct": 0.08274376592958506
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          95.1441749126068,
+          -32.521017443435426
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "debris_weight": 0.0,
+        "fuel_weight": 10.864444466377986,
+        "path_density": 1.4699681434756051,
+        "probability": 0.0008274376592958505,
+        "probability_pct": 0.08274376592958506
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          95.1441749126068,
+          -32.521017443435426
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "debris_weight": 0.0,
+        "fuel_weight": 10.864444466377986,
+        "path_density": 1.4699681434756051,
+        "probability": 0.0008274376592958505,
+        "probability_pct": 0.08274376592958506
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          95.42080280810465,
+          -32.264457257383924
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "debris_weight": 0.0,
+        "fuel_weight": 11.239711544939581,
+        "path_density": 1.540899919920212,
+        "probability": 0.0008573703158272104,
+        "probability_pct": 0.08573703158272104
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          95.42080280810465,
+          -32.264457257383924
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "debris_weight": 0.0,
+        "fuel_weight": 11.239711544939581,
+        "path_density": 1.540899919920212,
+        "probability": 0.0008573703158272104,
+        "probability_pct": 0.08573703158272104
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          95.69394975665652,
+          -32.00584091671457
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "debris_weight": 0.0,
+        "fuel_weight": 11.221190119961767,
+        "path_density": 1.5575093943924458,
+        "probability": 0.0008572420551713471,
+        "probability_pct": 0.08572420551713471
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          95.69394975665652,
+          -32.00584091671457
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "debris_weight": 0.0,
+        "fuel_weight": 11.221190119961767,
+        "path_density": 1.5575093943924458,
+        "probability": 0.0008572420551713471,
+        "probability_pct": 0.08572420551713471
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          95.96362910722266,
+          -31.74520037690498
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "debris_weight": 0.0,
+        "fuel_weight": 10.80774749821574,
+        "path_density": 1.5236529215220256,
+        "probability": 0.0008272355905295761,
+        "probability_pct": 0.08272355905295761
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          96.22985479816373,
+          -31.482567310577668
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "debris_weight": 0.0,
+        "fuel_weight": 9.962828644741325,
+        "path_density": 1.4196868519326205,
+        "probability": 0.0007635809079341665,
+        "probability_pct": 0.07635809079341664
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          96.22985479816373,
+          -31.482567310577668
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "debris_weight": 0.0,
+        "fuel_weight": 9.962828644741325,
+        "path_density": 1.4196868519326205,
+        "probability": 0.0007635809079341665,
+        "probability_pct": 0.07635809079341664
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          96.22985479816373,
+          -31.482567310577668
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "debris_weight": 0.0,
+        "fuel_weight": 9.962828644741325,
+        "path_density": 1.4196868519326205,
+        "probability": 0.0007635809079341665,
+        "probability_pct": 0.07635809079341664
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          96.49264132164375,
+          -31.217973103798112
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "debris_weight": 0.0,
+        "fuel_weight": 8.642718047508483,
+        "path_density": 1.2211397323531572,
+        "probability": 0.0006617037755389926,
+        "probability_pct": 0.06617037755389926
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          96.49264132164375,
+          -31.217973103798112
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "debris_weight": 0.0,
+        "fuel_weight": 8.642718047508483,
+        "path_density": 1.2211397323531572,
+        "probability": 0.0006617037755389926,
+        "probability_pct": 0.06617037755389926
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          96.7520036889367,
+          -30.951448852803274
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "debris_weight": 0.0,
+        "fuel_weight": 6.912269554870015,
+        "path_density": 0.9392808289517156,
+        "probability": 0.0005267108112017347,
+        "probability_pct": 0.05267108112017347
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          96.7520036889367,
+          -30.951448852803274
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "debris_weight": 0.0,
+        "fuel_weight": 6.912269554870015,
+        "path_density": 0.9392808289517156,
+        "probability": 0.0005267108112017347,
+        "probability_pct": 0.05267108112017347
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          97.0079573966451,
+          -30.683025361144022
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "debris_weight": 0.0,
+        "fuel_weight": 5.0016519357012745,
+        "path_density": 0.6301203330593365,
+        "probability": 0.0003777999497136877,
+        "probability_pct": 0.03777999497136877
       },
       "type": "Feature"
     }
   ],
+  "generated_at": "2026-04-06T17:26:45.11694Z",
   "metadata": {
-    "sum_check": 1.0000000000000002,
-    "total_points": 149
+    "sum_check": 1.0000000000000016,
+    "total_points": 181
+  },
+  "summary": {
+    "peak_probability_lat": -35.93511159739248,
+    "peak_probability_lon": 90.79936858170478,
+    "point_count": 181
   },
   "type": "FeatureCollection"
 }

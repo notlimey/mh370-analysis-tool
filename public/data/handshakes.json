@@ -1,100 +1,100 @@
 [
   {
     "arc": 0,
-    "time_utc": "16:00:13.406",
-    "bto": 14840,
-    "bfo": 88,
-    "note": "Pre-departure calibration. Aircraft at gate. Known position. Use for BTO bias calibration."
+    "bfo": 88.0,
+    "bto": 14840.0,
+    "note": "Pre-departure calibration. Aircraft at gate. Known position. Use for BTO bias calibration.",
+    "time_utc": "16:00:13.406"
   },
   {
     "arc": 0,
-    "time_utc": "16:42:04.408",
-    "bto": 14920,
-    "bfo": 142,
-    "note": "Shortly after takeoff. BTO implies ~2305 NM from satellite - consistent with KUL position."
+    "bfo": 142.0,
+    "bto": 14920.0,
+    "note": "Shortly after takeoff. BTO implies ~2305 NM from satellite - consistent with KUL position.",
+    "time_utc": "16:42:04.408"
   },
   {
     "arc": 0,
-    "time_utc": "17:07:55.587",
+    "bfo": 132.0,
     "bto": null,
-    "bfo": 132,
-    "note": "Last ACARS. BFO only - no BTO available for this message type. Position from ACARS: 5.27N 102.79E"
+    "note": "Last ACARS. BFO only - no BTO available for this message type. Position from ACARS: 5.27N 102.79E",
+    "time_utc": "17:07:55.587"
   },
   {
     "arc": 1,
-    "time_utc": "18:25:27.421",
-    "bto": 12520,
-    "bfo": 273,
-    "note": "SDU reboot after power cycle. BFO unreliable due to oscillator warm-up transient. This is the controversial ping - some analysts say BFO here implies northward heading, others southward. BTO implies aircraft ~1570 NM from satellite."
+    "bfo": 142.0,
+    "bto": 12520.0,
+    "note": "SDU reboot after power cycle. BFO unreliable due to oscillator warm-up transient (Holland 2017 Sec V). First in settling sequence: 142, 273, 176, 175, 172, 144, 143 Hz. Low C/N0 and non-zero BER - deemed untrustworthy by SATCOM working group. BFO=142 Hz from joewragg/MH370 FinalData.csv and radiantphysics.com.",
+    "time_utc": "18:25:27.421"
   },
   {
     "arc": 1,
-    "time_utc": "18:25:34.461",
-    "bto": 11500,
-    "bfo": 240,
-    "note": "7 seconds after reboot request. BFO still in warm-up transient. +130 Hz change in 7s is anomalous - no plausible maneuver explains this without warm-up transient. BTO here is inconsistent with 18:25:27 value - implies aircraft moved ~130 NM in 7 seconds, which is impossible. Likely measurement artifact."
+    "bfo": 273.0,
+    "bto": 11500.0,
+    "note": "7 seconds after reboot request. BFO dominated by OCXO oscillator warm-up transient (Holland 2017 Sec V). +131 Hz change in 7s is anomalous - no plausible maneuver explains this without warm-up transient. BFO=273 Hz from joewragg/MH370 FinalData.csv. BTO here is inconsistent with 18:25:27 value.",
+    "time_utc": "18:25:34.461"
   },
   {
     "arc": 2,
-    "time_utc": "19:41:02.906",
-    "bto": 14060,
-    "bfo": 182,
-    "note": "First clean data point with both BTO and BFO. BTO ring radius ~4740 NM from satellite. BFO implies aircraft moving away from satellite - consistent with southward heading at cruise speed."
+    "bfo": 111.0,
+    "bto": 14060.0,
+    "note": "First clean data point with both BTO and BFO. BFO=111 Hz from joewragg/MH370 FinalData.csv. Lowest BFO in the hourly sequence - consistent with aircraft heading nearly perpendicular to satellite LOS at this point.",
+    "time_utc": "19:41:02.906"
   },
   {
     "arc": 3,
-    "time_utc": "20:41:04.904",
-    "bto": 15220,
-    "bfo": 140,
-    "note": "BTO ring radius ~5100 NM. Aircraft moving further from satellite. BFO lower - consistent with heading more perpendicular to satellite direction."
+    "bfo": 141.0,
+    "bto": 15220.0,
+    "note": "BFO=141 Hz from joewragg/MH370 FinalData.csv. BFO rising from Arc 2 minimum - aircraft LOS velocity toward satellite increasing as it tracks further south.",
+    "time_utc": "20:41:04.904"
   },
   {
     "arc": 4,
-    "time_utc": "21:41:26.905",
-    "bto": 16540,
-    "bfo": 111,
-    "note": "BTO ring radius ~5540 NM. Still moving further from satellite. BFO continuing to decrease."
+    "bfo": 168.0,
+    "bto": 16540.0,
+    "note": "BFO=168 Hz from joewragg/MH370 FinalData.csv. BFO continuing to rise as aircraft moves further south.",
+    "time_utc": "21:41:26.905"
   },
   {
     "arc": 5,
-    "time_utc": "22:41:21.906",
-    "bto": 17900,
-    "bfo": 141,
-    "note": "BTO ring radius ~5990 NM. BFO slight increase - possible minor heading change."
+    "bfo": 204.0,
+    "bto": 17900.0,
+    "note": "BFO=204 Hz from joewragg/MH370 FinalData.csv. BFO continues rising monotonically.",
+    "time_utc": "22:41:21.906"
   },
   {
     "arc": 6,
-    "time_utc": "23:14:01.021",
-    "bto": 18040,
-    "bfo": 168,
-    "note": "Malaysia Airlines attempted to call aircraft. Triggered a transmission. BTO very similar to arc 5 - aircraft moved very little in 33 minutes. Either speed reduced significantly, or heading changed to more tangential to satellite."
+    "bfo": 168.0,
+    "bto": 18040.0,
+    "note": "Malaysia Airlines attempted to call aircraft. Triggered a transmission. BTO very similar to arc 5 - aircraft moved very little in 33 minutes. Either speed reduced significantly, or heading changed to more tangential to satellite.",
+    "time_utc": "23:14:01.021"
   },
   {
     "arc": 6,
-    "time_utc": "00:10:58.528",
-    "bto": 18400,
-    "bfo": 182,
-    "note": "Final arc 6. BTO implies ~6150 NM from satellite. BFO 182 Hz - same as arc 2, suggesting similar speed/heading component toward/away from satellite."
+    "bfo": 252.0,
+    "bto": 18400.0,
+    "note": "BFO=252 Hz from joewragg/MH370 FinalData.csv. Highest BFO in the hourly sequence. Linear trend from Arc 2 (111 Hz) to here (252 Hz) extrapolates to ~254 Hz at 00:19Z (Holland 2017 Fig 5).",
+    "time_utc": "00:10:58.528"
   },
   {
     "arc": 7,
-    "time_utc": "00:19:29.416",
-    "bto": 18400,
-    "bfo": 182,
-    "note": "SDU reboot triggered by APU auto-start after engine flameout. BTO identical to arc 6 - aircraft barely moved in 8.5 minutes. BFO here may already be affected by descent/dive. This defines THE 7TH ARC."
+    "bfo": 182.0,
+    "bto": 18400.0,
+    "note": "SDU reboot triggered by APU auto-start after engine flameout. BTO identical to arc 6 - aircraft barely moved in 8.5 minutes. BFO here may already be affected by descent/dive. This defines THE 7TH ARC.",
+    "time_utc": "00:19:29.416"
   },
   {
     "arc": 7,
-    "time_utc": "00:19:37.443",
+    "bfo": -2.0,
     "bto": null,
-    "bfo": 252,
-    "note": "8 seconds after 00:19:29. BFO jumped +70 Hz. Official interpretation: aircraft in steep accelerating dive at ~14,800 fpm. Competing interpretation (Declination Model): aircraft descending more gently and turning eastward. This is the LAST TRANSMISSION. No BTO available - logon was never completed."
+    "note": "BFO=-2 Hz from Holland 2017 Table III. 8 seconds after 00:19:29 (182 Hz). Drop of 184 Hz implies rapid descent at 2,900-14,800 fpm (Holland Table IV/VII). Also affected by OCXO warm-up drift: recorded BFO was 17-130 Hz higher than steady-state (Holland Sec V-B). This is the LAST TRANSMISSION.",
+    "time_utc": "00:19:37.443"
   },
   {
     "arc": 8,
-    "time_utc": "00:21:06",
-    "bto": null,
     "bfo": null,
-    "note": "In-Flight Entertainment system should have sent a setup ping ~90 seconds after SDU reboot. It was never received. Four possible explanations: (a) IFE manually switched off from cockpit, (b) IFE/SDU lost power due to APU flameout, (c) APU ran out of fuel before IFE initialized, (d) aircraft already impacted. The absence of this ping is used to argue aircraft hit water before 00:21. But explanation (a) - deliberate pilot action - cannot be ruled out."
+    "bto": null,
+    "note": "In-Flight Entertainment system should have sent a setup ping ~90 seconds after SDU reboot. It was never received. Four possible explanations: (a) IFE manually switched off from cockpit, (b) IFE/SDU lost power due to APU flameout, (c) APU ran out of fuel before IFE initialized, (d) aircraft already impacted. The absence of this ping is used to argue aircraft hit water before 00:21. But explanation (a) - deliberate pilot action - cannot be ruled out.",
+    "time_utc": "00:21:06"
   }
 ]

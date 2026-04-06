@@ -43,8 +43,10 @@ pub fn reverse_drift_debris(config: Option<AnalysisConfig>) -> Result<Vec<Debris
         .map(|item| {
             let days_adrift = approx_days_since_2014_03_08(&item.found_date);
             let reverse_distance_km = days_adrift * CURRENT_SPEED_KM_PER_DAY;
-            let lon_shift_deg = reverse_distance_km / (111.32 * item.lat.to_radians().cos()).abs().max(15.0);
-            let source_lon = (item.lon + lon_shift_deg).clamp(REFERENCE_CRASH_LON - 20.0, REFERENCE_CRASH_LON + 20.0);
+            let lon_shift_deg =
+                reverse_distance_km / (111.32 * item.lat.to_radians().cos()).abs().max(15.0);
+            let source_lon = (item.lon + lon_shift_deg)
+                .clamp(REFERENCE_CRASH_LON - 20.0, REFERENCE_CRASH_LON + 20.0);
             let source_lat = REFERENCE_CRASH_LAT + (item.lat - REFERENCE_CRASH_LAT) * 0.15;
 
             let drift_line = (0..=24)
@@ -129,9 +131,18 @@ fn slugify(value: &str) -> String {
 /// which at ~17 km/day drift speed corresponds to ~51 km position error.
 fn approx_days_since_2014_03_08(date: &str) -> f64 {
     let mut parts = date.split('-');
-    let year = parts.next().and_then(|value| value.parse::<i32>().ok()).unwrap_or(2014);
-    let month = parts.next().and_then(|value| value.parse::<i32>().ok()).unwrap_or(3);
-    let day = parts.next().and_then(|value| value.parse::<i32>().ok()).unwrap_or(8);
+    let year = parts
+        .next()
+        .and_then(|value| value.parse::<i32>().ok())
+        .unwrap_or(2014);
+    let month = parts
+        .next()
+        .and_then(|value| value.parse::<i32>().ok())
+        .unwrap_or(3);
+    let day = parts
+        .next()
+        .and_then(|value| value.parse::<i32>().ok())
+        .unwrap_or(8);
 
     let start_days = 2014 * 365 + 3 * 30 + 8;
     let end_days = year * 365 + month * 30 + day;

@@ -1,12 +1,5 @@
-import type { Map } from "mapbox-gl";
-import {
-  KLIA,
-  LAST_RADAR,
-  SATELLITE,
-  SEARCHED_2014_2017,
-  SEARCHED_2018,
-  SEARCHED_2025_2026,
-} from "../constants";
+import type { Map as MapboxMap } from "mapbox-gl";
+import { KLIA, LAST_RADAR, SATELLITE, SEARCHED_2014_2017, SEARCHED_2018, SEARCHED_2025_2026 } from "../constants";
 
 interface KeyPoint {
   name: string;
@@ -21,7 +14,7 @@ const KEY_POINTS: KeyPoint[] = [
 ];
 
 /** Draw key reference points and searched-area polygons */
-export function loadPointsLayer(map: Map): void {
+export function loadPointsLayer(map: MapboxMap): void {
   // Key point markers
   map.addSource("points-source", {
     type: "geojson",
@@ -76,17 +69,29 @@ export function loadPointsLayer(map: Map): void {
       features: [
         {
           type: "Feature" as const,
-          properties: { name: "Searched 2014-2017", color: "rgba(239,68,68,0.15)" },
+          properties: {
+            name: "Searched 2014-2017",
+            fillColor: "#ef4444",
+            outlineColor: "#f87171",
+          },
           geometry: { type: "Polygon" as const, coordinates: [SEARCHED_2014_2017] },
         },
         {
           type: "Feature" as const,
-          properties: { name: "Searched 2018 (Ocean Infinity)", color: "rgba(249,115,22,0.15)" },
+          properties: {
+            name: "Searched 2018 (Ocean Infinity)",
+            fillColor: "#f97316",
+            outlineColor: "#fb923c",
+          },
           geometry: { type: "Polygon" as const, coordinates: [SEARCHED_2018] },
         },
         {
           type: "Feature" as const,
-          properties: { name: "Searched 2025-2026", color: "rgba(168,85,247,0.15)" },
+          properties: {
+            name: "Searched 2025-2026",
+            fillColor: "#a855f7",
+            outlineColor: "#c084fc",
+          },
           geometry: { type: "Polygon" as const, coordinates: [SEARCHED_2025_2026] },
         },
       ],
@@ -98,7 +103,8 @@ export function loadPointsLayer(map: Map): void {
     type: "fill",
     source: "searched-source",
     paint: {
-      "fill-color": ["get", "color"],
+      "fill-color": ["get", "fillColor"],
+      "fill-opacity": 0.1,
     },
   });
 
@@ -107,9 +113,9 @@ export function loadPointsLayer(map: Map): void {
     type: "line",
     source: "searched-source",
     paint: {
-      "line-color": "#ef4444",
-      "line-opacity": 0.5,
-      "line-width": 1,
+      "line-color": ["get", "outlineColor"],
+      "line-opacity": 0.75,
+      "line-width": 1.25,
       "line-dasharray": [3, 2],
     },
   });
@@ -123,7 +129,7 @@ export function loadPointsLayer(map: Map): void {
       "text-size": 10,
     },
     paint: {
-      "text-color": "#ef4444",
+      "text-color": ["get", "outlineColor"],
       "text-halo-color": "#000000",
       "text-halo-width": 1,
     },

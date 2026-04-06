@@ -1,5 +1,5 @@
 import type { Map as MapboxMap } from "mapbox-gl";
-import holidaysGeoJson from "../data/data_holidays.json";
+import { SEARCHED_2014_2017, SEARCHED_2018, SEARCHED_2025_2026 } from "../constants";
 
 interface ProbPoint {
   position: [number, number];
@@ -52,24 +52,62 @@ export function loadPriorityGapsLayer(map: MapboxMap, heatmap: ProbPoint[]): voi
   });
 }
 
+export function zoomToPriorityGaps(map: MapboxMap): void {
+  const sourceFeatures = map.querySourceFeatures("priority-source");
+  const polygonFeatures = sourceFeatures.filter((feature) => feature.geometry.type === "Polygon");
+
+  if (polygonFeatures.length === 0) {
+    return;
+  }
+
+  let minLon = Number.POSITIVE_INFINITY;
+  let minLat = Number.POSITIVE_INFINITY;
+  let maxLon = Number.NEGATIVE_INFINITY;
+  let maxLat = Number.NEGATIVE_INFINITY;
+
+  for (const feature of polygonFeatures) {
+    const geometry = feature.geometry as GeoJSON.Polygon;
+    for (const ring of geometry.coordinates) {
+      for (const [lon, lat] of ring) {
+        minLon = Math.min(minLon, lon);
+        minLat = Math.min(minLat, lat);
+        maxLon = Math.max(maxLon, lon);
+        maxLat = Math.max(maxLat, lat);
+      }
+    }
+  }
+
+  if (!Number.isFinite(minLon) || !Number.isFinite(minLat) || !Number.isFinite(maxLon) || !Number.isFinite(maxLat)) {
+    return;
+  }
+
+  map.fitBounds(
+    [
+      [minLon, minLat],
+      [maxLon, maxLat],
+    ],
+    { padding: 60, duration: 900, maxZoom: 7 },
+  );
+}
+
 function computePriorityGaps(heatmap: ProbPoint[]): GeoJSON.FeatureCollection<GeoJSON.Polygon> {
   if (heatmap.length === 0) {
     return { type: "FeatureCollection", features: [] };
   }
 
   const sorted = [...heatmap].sort((a, b) => b.probability - a.probability);
-  const cutoffIndex = Math.max(0, Math.floor(sorted.length * 0.3) - 1);
+  const cutoffIndex = Math.max(0, Math.floor(sorted.length * 0.2) - 1);
   const threshold = sorted[cutoffIndex]?.probability ?? sorted[0].probability;
 
   const features = heatmap
     .filter((point) => point.probability >= threshold)
-    .filter((point) => isNearHoliday(point.position, 5))
+    .filter((point) => !isInsideSearchedArea(point.position))
     .map((point, index) => ({
       type: "Feature" as const,
       properties: {
         id: `priority_gap_${index + 1}`,
         probability: point.probability,
-        label: "Unsearched high-probability zone",
+        label: "High-probability area outside searched zones",
       },
       geometry: squareAround(point.position, 0.18),
     }));
@@ -77,25 +115,25 @@ function computePriorityGaps(heatmap: ProbPoint[]): GeoJSON.FeatureCollection<Ge
   return { type: "FeatureCollection", features };
 }
 
-function isNearHoliday(position: [number, number], thresholdKm: number): boolean {
+function isInsideSearchedArea(position: [number, number]): boolean {
   const [lon, lat] = position;
-  return holidaysGeoJson.features.some((feature) => {
-    if (feature.geometry.type !== "Polygon") return false;
-    const ring = feature.geometry.coordinates[0] as [number, number][];
-    return pointInPolygon(lon, lat, ring) || distanceToPolygonKm(position, ring) <= thresholdKm;
-  });
+  return SEARCHED_RINGS.some((ring) => pointInPolygon(lon, lat, ring));
 }
+
+const SEARCHED_RINGS: [number, number][][] = [SEARCHED_2014_2017, SEARCHED_2018, SEARCHED_2025_2026];
 
 function squareAround([lon, lat]: [number, number], sizeDeg: number): GeoJSON.Polygon {
   return {
     type: "Polygon",
-    coordinates: [[
-      [lon - sizeDeg, lat - sizeDeg],
-      [lon + sizeDeg, lat - sizeDeg],
-      [lon + sizeDeg, lat + sizeDeg],
-      [lon - sizeDeg, lat + sizeDeg],
-      [lon - sizeDeg, lat - sizeDeg],
-    ]],
+    coordinates: [
+      [
+        [lon - sizeDeg, lat - sizeDeg],
+        [lon + sizeDeg, lat - sizeDeg],
+        [lon + sizeDeg, lat + sizeDeg],
+        [lon - sizeDeg, lat + sizeDeg],
+        [lon - sizeDeg, lat - sizeDeg],
+      ],
+    ],
   };
 }
 
@@ -110,31 +148,4 @@ function pointInPolygon(x: number, y: number, polygon: [number, number][]): bool
     if (intersect) inside = !inside;
   }
   return inside;
-}
-
-function distanceToPolygonKm(point: [number, number], polygon: [number, number][]): number {
-  let minDistance = Number.POSITIVE_INFINITY;
-  for (let i = 0; i < polygon.length - 1; i += 1) {
-    minDistance = Math.min(minDistance, distanceToSegmentKm(point, polygon[i], polygon[i + 1]));
-  }
-  return minDistance;
-}
-
-function distanceToSegmentKm(point: [number, number], start: [number, number], end: [number, number]): number {
-  const [px, py] = project(point);
-  const [sx, sy] = project(start);
-  const [ex, ey] = project(end);
-  const dx = ex - sx;
-  const dy = ey - sy;
-  const lengthSquared = dx * dx + dy * dy;
-  const t = lengthSquared === 0 ? 0 : Math.max(0, Math.min(1, ((px - sx) * dx + (py - sy) * dy) / lengthSquared));
-  const closestX = sx + t * dx;
-  const closestY = sy + t * dy;
-  return Math.hypot(px - closestX, py - closestY);
-}
-
-function project([lon, lat]: [number, number]): [number, number] {
-  const latScale = 111.32;
-  const lonScale = 111.32 * Math.cos(lat * Math.PI / 180);
-  return [lon * lonScale, lat * latScale];
 }

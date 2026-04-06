@@ -6,3 +6,4 @@ dist
 pnpm-debug.log*
 .DS_Store
 src-tauri/target
+config/analysis.local.toml

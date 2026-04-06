@@ -1,0 +1,384 @@
+{
+  "_meta": {
+    "description": "MH370 parsed dataset from public sources",
+    "sources": [
+      "Inmarsat Signalling Unit Log (CNN PDF release, May 27 2014)",
+      "ATSB MH370 Definition of Underwater Search Areas (June 2014)",
+      "Malaysian Safety Investigation Report (July 2018)",
+      "DSTG Bayesian Methods paper (Holland et al, 2017)",
+      "Independent Group analyses (Iannello, Godfrey, Ulich et al)"
+    ],
+    "warnings": [
+      "BFO values at 18:25:27 and 18:25:34 are flagged UNRELIABLE - SDU warm-up transient after power cycle",
+      "BTO at 18:25 is debated - some analysts believe the aircraft position implied is inconsistent with radar track",
+      "BFO values are NOT raw signal measurements - they are derived values after Inmarsat internal processing",
+      "Timestamps have millisecond precision in PDF but native resolution unknown (may be float or integer microseconds)",
+      "All BFO values carry unknown vertical velocity component that is uncompensated by aircraft SDU",
+      "Military radar data (17:22-18:22 UTC) has never been independently verified by a technical body",
+      "Gap between 17:07 and 18:25 has NO Inmarsat data - ACARS off, SDU powered down"
+    ]
+  },
+
+  "satellite": {
+    "id": "Inmarsat-3F1",
+    "orbit": "Geostationary (nominal)",
+    "longitude_deg": 64.5,
+    "latitude_deg": 0.0,
+    "note": "Satellite has a ±0.6 deg north-south oscillation over 24h period. BFO calculations must account for this drift. Early analysis by Inmarsat FAILED to correct for this - later revised.",
+    "ground_station": {
+      "name": "Perth GES",
+      "lat": -31.804,
+      "lon": 115.885
+    }
+  },
+
+  "aircraft": {
+    "registration": "9M-MRO",
+    "type": "Boeing 777-200ER",
+    "engines": "Rolls-Royce Trent 892",
+    "max_takeoff_weight_kg": 297551,
+    "fuel_on_departure_kg": 49200,
+    "zero_fuel_weight_kg": 174400,
+    "typical_cruise_speed_kts": 471,
+    "typical_cruise_altitude_ft": 35000,
+    "typical_fuel_flow_kg_per_hr": 6500
+  },
+
+  "known_positions": [
+    {
+      "time_utc": "16:41:43",
+      "source": "ATC + FlightRadar24",
+      "lat": 3.12,
+      "lon": 101.69,
+      "altitude_ft": 0,
+      "speed_kts": 0,
+      "note": "Takeoff from KLIA runway 32R"
+    },
+    {
+      "time_utc": "17:07:00",
+      "source": "ACARS (last transmission)",
+      "lat": 5.27,
+      "lon": 102.79,
+      "altitude_ft": 35000,
+      "speed_kts": 472,
+      "heading_deg": 25,
+      "fuel_remaining_kg": 43800,
+      "note": "Last confirmed ACARS position. After this, ACARS disabled."
+    },
+    {
+      "time_utc": "17:19:30",
+      "source": "ATC radar (secondary - transponder)",
+      "lat": 6.921,
+      "lon": 103.578,
+      "altitude_ft": 35000,
+      "note": "Passed waypoint IGARI. Last civilian radar contact. Handed to Ho Chi Minh - never checked in."
+    },
+    {
+      "time_utc": "17:20:31",
+      "source": "ATC radar (secondary - last return)",
+      "lat": 6.9,
+      "lon": 103.58,
+      "note": "Transponder goes to standby. Disappears from civilian radar."
+    },
+    {
+      "time_utc": "17:21:13",
+      "source": "Malaysian military radar (primary)",
+      "lat": 6.921,
+      "lon": 103.578,
+      "note": "Military radar picks up unidentified return. Aircraft turning back westward."
+    },
+    {
+      "time_utc": "18:02:00",
+      "source": "Malaysian military radar (primary)",
+      "lat": 5.47,
+      "lon": 100.68,
+      "note": "Aircraft near VAMPI waypoint, north of Penang. Flying northwest up Malacca Strait."
+    },
+    {
+      "time_utc": "18:15:00",
+      "source": "Malaysian military radar (primary - LAST)",
+      "lat": 6.8,
+      "lon": 97.7,
+      "note": "Last confirmed radar return. Near waypoint MEKAR, Andaman Sea. After this - nothing confirmed.",
+      "reliability": "FLAGGED - never independently verified. Thailand military also had radar coverage but reported late."
+    }
+  ],
+
+  "inmarsat_handshakes": [
+    {
+      "arc": 0,
+      "time_utc": "16:00:13.406",
+      "bto_us": 14840,
+      "bfo_hz": 88,
+      "message_type": "R-Channel Log-on",
+      "note": "Pre-departure calibration. Aircraft at gate. Known position. Use for BTO bias calibration.",
+      "position_known": true,
+      "lat": 3.12,
+      "lon": 101.69
+    },
+    {
+      "arc": 0,
+      "time_utc": "16:42:04.408",
+      "bto_us": 14920,
+      "bfo_hz": 142,
+      "message_type": "Acknowledge User Data",
+      "note": "Shortly after takeoff. BTO implies ~2305 NM from satellite - consistent with KUL position.",
+      "position_known": true,
+      "lat": 3.12,
+      "lon": 101.69
+    },
+    {
+      "arc": 0,
+      "time_utc": "17:07:55.587",
+      "bto_us": null,
+      "bfo_hz": 132,
+      "message_type": "ACARS transmission",
+      "note": "Last ACARS. BFO only - no BTO available for this message type. Position from ACARS: 5.27N 102.79E",
+      "position_known": true,
+      "lat": 5.27,
+      "lon": 102.79
+    },
+    {
+      "arc": 1,
+      "time_utc": "18:25:27.421",
+      "bto_us": 12520,
+      "bfo_hz": 142,
+      "message_type": "Log-on Request (SDU reboot)",
+      "reliability": "UNRELIABLE_BFO",
+      "note": "SDU reboot after power cycle. BFO unreliable due to oscillator warm-up transient (Holland 2017 Sec V). First in settling sequence: 142, 273, 176, 175, 172, 144, 143 Hz. Low C/N0 and non-zero BER - deemed untrustworthy by SATCOM working group. BFO=142 Hz from joewragg/MH370 FinalData.csv and radiantphysics.com.",
+      "flag": "HIGH_UNCERTAINTY"
+    },
+    {
+      "arc": 1,
+      "time_utc": "18:25:34.461",
+      "bto_us": 11500,
+      "bfo_hz": 273,
+      "message_type": "Log-on Acknowledge",
+      "reliability": "UNRELIABLE_BFO",
+      "note": "7 seconds after reboot request. BFO dominated by OCXO oscillator warm-up transient (Holland 2017 Sec V). +131 Hz change in 7s is anomalous - no plausible maneuver explains this without warm-up transient. BFO=273 Hz from joewragg/MH370 FinalData.csv. BTO here is inconsistent with 18:25:27 value.",
+      "flag": "CRITICAL_ANOMALY"
+    },
+    {
+      "arc": 2,
+      "time_utc": "19:41:02.906",
+      "bto_us": 14060,
+      "bfo_hz": 111,
+      "message_type": "Hourly handshake",
+      "reliability": "GOOD",
+      "note": "First clean data point with both BTO and BFO. BFO=111 Hz from joewragg/MH370 FinalData.csv. Lowest BFO in the hourly sequence - consistent with aircraft heading nearly perpendicular to satellite LOS at this point."
+    },
+    {
+      "arc": 3,
+      "time_utc": "20:41:04.904",
+      "bto_us": 15220,
+      "bfo_hz": 141,
+      "message_type": "Hourly handshake",
+      "reliability": "GOOD",
+      "note": "BFO=141 Hz from joewragg/MH370 FinalData.csv. BFO rising from Arc 2 minimum - aircraft LOS velocity toward satellite increasing as it tracks further south."
+    },
+    {
+      "arc": 4,
+      "time_utc": "21:41:26.905",
+      "bto_us": 16540,
+      "bfo_hz": 168,
+      "message_type": "Hourly handshake",
+      "reliability": "GOOD",
+      "note": "BFO=168 Hz from joewragg/MH370 FinalData.csv. BFO continuing to rise as aircraft moves further south."
+    },
+    {
+      "arc": 5,
+      "time_utc": "22:41:21.906",
+      "bto_us": 17900,
+      "bfo_hz": 204,
+      "message_type": "Hourly handshake",
+      "reliability": "GOOD",
+      "note": "BFO=204 Hz from joewragg/MH370 FinalData.csv. BFO continues rising monotonically."
+    },
+    {
+      "arc": 6,
+      "time_utc": "23:14:01.021",
+      "bto_us": 18040,
+      "bfo_hz": 168,
+      "message_type": "Unanswered phone call attempt",
+      "reliability": "GOOD",
+      "note": "Malaysia Airlines attempted to call aircraft. Triggered a transmission. BTO very similar to arc 5 - aircraft moved very little in 33 minutes. Either speed reduced significantly, or heading changed to more tangential to satellite."
+    },
+    {
+      "arc": 6,
+      "time_utc": "00:10:58.528",
+      "bto_us": 18400,
+      "bfo_hz": 252,
+      "message_type": "Hourly handshake",
+      "reliability": "GOOD",
+      "note": "BFO=252 Hz from joewragg/MH370 FinalData.csv. Highest BFO in the hourly sequence. Linear trend from Arc 2 (111 Hz) to here (252 Hz) extrapolates to ~254 Hz at 00:19Z (Holland 2017 Fig 5)."
+    },
+    {
+      "arc": 7,
+      "time_utc": "00:19:29.416",
+      "bto_us": 18400,
+      "bfo_hz": 182,
+      "message_type": "Log-on Request (SDU reboot - fuel exhaustion)",
+      "reliability": "GOOD_BTO_UNCERTAIN_BFO",
+      "note": "SDU reboot triggered by APU auto-start after engine flameout. BTO identical to arc 6 - aircraft barely moved in 8.5 minutes. BFO here may already be affected by descent/dive. This defines THE 7TH ARC.",
+      "flag": "FINAL_POSITION_CONSTRAINT"
+    },
+    {
+      "arc": 7,
+      "time_utc": "00:19:37.443",
+      "bto_us": null,
+      "bfo_hz": -2,
+      "message_type": "Log-on Acknowledge (partial - interrupted)",
+      "reliability": "BFO_DESCENT_SIGNATURE",
+      "note": "BFO=-2 Hz from Holland 2017 Table III. 8 seconds after 00:19:29 (182 Hz). Drop of 184 Hz implies rapid descent at 2,900-14,800 fpm (Holland Table IV/VII). Also affected by OCXO warm-up drift: recorded BFO was 17-130 Hz higher than steady-state (Holland Sec V-B). This is the LAST TRANSMISSION.",
+      "flag": "FINAL_TRANSMISSION"
+    },
+    {
+      "arc": 8,
+      "time_utc": "00:21:06",
+      "bto_us": null,
+      "bfo_hz": null,
+      "message_type": "IFE setup message (EXPECTED but NOT RECEIVED)",
+      "note": "In-Flight Entertainment system should have sent a setup ping ~90 seconds after SDU reboot. It was never received. Four possible explanations: (a) IFE manually switched off from cockpit, (b) IFE/SDU lost power due to APU flameout, (c) APU ran out of fuel before IFE initialized, (d) aircraft already impacted. The absence of this ping is used to argue aircraft hit water before 00:21. But explanation (a) - deliberate pilot action - cannot be ruled out.",
+      "flag": "MISSING_EXPECTED_PING"
+    }
+  ],
+
+  "bto_to_range_formula": {
+    "description": "Convert BTO microseconds to slant range in km",
+    "formula": "range_km = (bto_us - BTO_FIXED_OFFSET) * SPEED_OF_LIGHT / 2",
+    "BTO_FIXED_OFFSET_us": 495679,
+    "SPEED_OF_LIGHT_km_per_s": 299792.458,
+    "note": "The fixed offset accounts for processing delays in ground station, satellite, and aircraft terminal. This value is empirically derived from pre-flight known-position pings. If this offset is wrong by even 1 microsecond, the arc radius shifts by ~150 meters."
+  },
+
+  "bfo_model": {
+    "description": "BFO is affected by multiple Doppler components",
+    "components": [
+      "Aircraft horizontal velocity component toward/away from satellite (PARTIALLY compensated by SDU)",
+      "Aircraft vertical velocity component (NOT compensated - this is what reveals descent)",
+      "Satellite north-south orbital drift (±3 deg/24h oscillation - must be calibrated out)",
+      "Ground station oscillator drift",
+      "Aircraft SDU oscillator bias (fixed per unit, ~+150 Hz for 9M-MRO)",
+      "SDU warm-up transient after power cycle (affects first 2-3 minutes after reboot)"
+    ],
+    "known_bias_hz": 150,
+    "measurement_std_dev_hz": 4.3,
+    "note": "The SDU assumes satellite is perfectly stationary. It is not - this introduces a heading-dependent error that the standard 'Up-Down Model' ignores. The Declination Model attempts to correct for this."
+  },
+
+  "confirmed_debris": [
+    {
+      "item": "Flaperon (wing component)",
+      "found_date": "2015-07-29",
+      "location": "Saint-André, Réunion Island",
+      "lat": -20.9,
+      "lon": 55.5,
+      "confirmed_mh370": true,
+      "note": "First confirmed MH370 debris. Barnacle analysis suggests origin in warm tropical water, not cold southern ocean - disputed by drift modelers."
+    },
+    {
+      "item": "Trailing edge flap",
+      "found_date": "2016-03-03",
+      "location": "Mozambique coast",
+      "lat": -15.5,
+      "lon": 36.0,
+      "confirmed_mh370": true
+    },
+    {
+      "item": "Horizontal stabilizer panel ('No Step')",
+      "found_date": "2016-02-28",
+      "location": "Mozambique",
+      "lat": -16.0,
+      "lon": 36.2,
+      "confirmed_mh370": true
+    },
+    {
+      "item": "Interior trim panel",
+      "found_date": "2016-06-23",
+      "location": "Tanzania coast",
+      "lat": -8.5,
+      "lon": 40.0,
+      "confirmed_mh370": "probable"
+    },
+    {
+      "item": "Cabin window panel",
+      "found_date": "2016-06-23",
+      "location": "Rodrigues Island",
+      "lat": -19.7,
+      "lon": 63.4,
+      "confirmed_mh370": "probable"
+    },
+    {
+      "item": "Outboard flap (Pemba Island)",
+      "found_date": "2016-06-22",
+      "location": "Pemba Island, Tanzania",
+      "lat": -5.1,
+      "lon": 39.8,
+      "confirmed_mh370": true,
+      "note": "Damage pattern on this flap contradicts flaps-extended ditching hypothesis. ATSB: consistent with high-speed impact, not controlled landing."
+    },
+    {
+      "item": "Suspected fuselage panel",
+      "found_date": "2015-12-28",
+      "location": "South Africa (Mossel Bay area)",
+      "lat": -34.0,
+      "lon": 22.1,
+      "confirmed_mh370": "suspected"
+    }
+  ],
+
+  "searched_zones": [
+    {
+      "id": "ATSB_2014_2017",
+      "searcher": "ATSB (Australia)",
+      "period": "Oct 2014 - Jan 2017",
+      "area_km2": 120000,
+      "arc_latitude_range": "39.4S to 33S",
+      "width_from_arc_nm": 40,
+      "result": "Nothing found",
+      "note": "Used towed sonar vehicles. 2km track spacing in some areas. Some terrain too rough - data holidays exist."
+    },
+    {
+      "id": "OI_2018",
+      "searcher": "Ocean Infinity",
+      "period": "Jan 2018 - Jun 2018",
+      "area_km2": 112000,
+      "arc_latitude_range": "36S to 24.7S",
+      "width_from_arc_nm": 55,
+      "result": "Nothing found",
+      "note": "AUV fleet, faster coverage. Extended north and widened the band."
+    },
+    {
+      "id": "OI_2025_2026",
+      "searcher": "Ocean Infinity",
+      "period": "Mar 2025 - Jan 2026",
+      "area_km2": 7571,
+      "arc_latitude_range": "~33S to 25S",
+      "result": "Nothing found",
+      "note": "Only completed half of planned 15,000 km2 due to weather. Ocean Infinity stated they believe aircraft is NOT in searched area."
+    }
+  ],
+
+  "key_anomalies_to_investigate": [
+    {
+      "id": "BTO_18_25_inconsistency",
+      "description": "The BTO at 18:25:27 implies aircraft ~1570 NM from satellite. The BTO at 18:25:34 (7 seconds later) implies ~1400 NM. A 170 NM position change in 7 seconds is physically impossible at any aircraft speed. One or both values contain a measurement error or the formula is being misapplied during SDU warm-up."
+    },
+    {
+      "id": "satellite_drift_correction",
+      "description": "Inmarsat-3F1 oscillates ±0.6 degrees north-south every 24 hours. At 00:19 UTC the satellite was at approximately 1.6 degrees south of its nominal position. Original analysis did not correctly account for this. Later corrected, but the correction magnitude is debated."
+    },
+    {
+      "id": "arc6_arc7_proximity",
+      "description": "BTO at arc 6 (00:10:58) and arc 7 (00:19:29) are both 18,400 microseconds - identical. In 8.5 minutes at 471 knots cruise speed, the aircraft should have moved ~67 NM and the BTO should have changed. Either the aircraft dramatically slowed/turned, or there is a BTO quantization issue at this value."
+    },
+    {
+      "id": "missing_gap_17_07_to_18_25",
+      "description": "There are ZERO Inmarsat records between 17:07 and 18:25 UTC - a 78-minute gap. During this time the aircraft made its U-turn, crossed Malaysia, and flew up the Malacca Strait. Why did the SDU go completely silent? If only ACARS was disabled, the SDU should still have responded to pings. This suggests either full power-down or SDU was deliberately disabled."
+    },
+    {
+      "id": "BFO_north_vs_south",
+      "description": "The BFO values from arc 2 onward are consistent with BOTH a southward track AND a northward track, depending on assumptions about speed and the satellite drift correction. The northern route was never formally excluded by the BFO data alone - it was excluded by combining BFO with fuel range assumptions."
+    }
+  ]
+}

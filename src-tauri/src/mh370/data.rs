@@ -2,13 +2,13 @@ use std::fs;
 
 use serde::{Deserialize, Serialize};
 
-pub const DEFAULT_DATASET_PATH: &str = "mh370_data.json";
+pub const DEFAULT_DATASET_PATH: &str = "";
+const EMBEDDED_DATASET: &str = include_str!("../../../src/data/mh370_data.json");
 pub const ANALYSIS_EPOCH_HOUR_UTC: u32 = 16;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct AnalysisConfig {
     pub dataset_path: String,
-    pub satellite_ephemeris_path: String,
     pub ring_points: usize,
     pub min_speed_kts: f64,
     pub max_speed_kts: f64,
@@ -18,6 +18,11 @@ pub struct AnalysisConfig {
     pub ring_sample_step: usize,
     pub speed_consistency_sigma_kts: f64,
     pub heading_change_sigma_deg: f64,
+    pub northward_leg_sigma_deg: f64,
+    pub northward_penalty_weight: f64,
+    pub bfo_sigma_hz: f64,
+    pub bfo_score_weight: f64,
+    pub arc7_vertical_speed_fpm: f64,
     pub satellite_nominal_lon_deg: f64,
     pub satellite_nominal_lat_deg: f64,
     pub satellite_drift_start_lat_offset_deg: f64,
@@ -44,22 +49,26 @@ impl Default for AnalysisConfig {
     fn default() -> Self {
         Self {
             dataset_path: DEFAULT_DATASET_PATH.to_string(),
-            satellite_ephemeris_path: String::new(),
-            ring_points: 360,
+            ring_points: 720,
             min_speed_kts: 350.0,
             max_speed_kts: 520.0,
             cruise_altitude_ft: 35_000.0,
             calibration_altitude_ft: 0.0,
             beam_width: 256,
-            ring_sample_step: 10,
+            ring_sample_step: 1,
             speed_consistency_sigma_kts: 35.0,
             heading_change_sigma_deg: 80.0,
+            northward_leg_sigma_deg: 1.5,
+            northward_penalty_weight: 2.0,
+            bfo_sigma_hz: 4.3,
+            bfo_score_weight: 1.0,
+            arc7_vertical_speed_fpm: 0.0,
             satellite_nominal_lon_deg: 64.5,
             satellite_nominal_lat_deg: 0.0,
             satellite_drift_start_lat_offset_deg: 0.0,
             satellite_drift_amplitude_deg: 1.6,
             satellite_drift_end_time_utc: "00:19:29.416".to_string(),
-            fuel_remaining_at_arc1_kg: 33_500.0,
+            fuel_remaining_at_arc1_kg: 34_500.0,
             fuel_baseline_kg_per_hr: 6_500.0,
             fuel_baseline_speed_kts: 471.0,
             fuel_baseline_altitude_ft: 35_000.0,
@@ -176,8 +185,12 @@ pub fn resolve_config(config: Option<AnalysisConfig>) -> AnalysisConfig {
 }
 
 pub fn load_dataset(config: &AnalysisConfig) -> Result<Mh370Dataset, String> {
-    let raw = fs::read_to_string(&config.dataset_path)
-        .map_err(|err| format!("failed to read {}: {err}", config.dataset_path))?;
+    let raw = if config.dataset_path.trim().is_empty() {
+        EMBEDDED_DATASET.to_string()
+    } else {
+        fs::read_to_string(&config.dataset_path)
+            .map_err(|err| format!("failed to read {}: {err}", config.dataset_path))?
+    };
     serde_json::from_str(&raw).map_err(|err| format!("failed to parse dataset JSON: {err}"))
 }
 
@@ -227,7 +240,11 @@ pub fn handshake_views(dataset: &Mh370Dataset) -> Result<Vec<HandshakeView>, Str
         .collect()
 }
 
-pub fn nearest_known_altitude_ft(dataset: &Mh370Dataset, time_s: f64, default_altitude_ft: f64) -> f64 {
+pub fn nearest_known_altitude_ft(
+    dataset: &Mh370Dataset,
+    time_s: f64,
+    default_altitude_ft: f64,
+) -> f64 {
     dataset
         .known_positions
         .iter()
@@ -280,5 +297,27 @@ pub fn primary_arc_handshakes<'a>(dataset: &'a Mh370Dataset) -> Vec<&'a Inmarsat
             selected.push(handshake);
         }
     }
+    selected
+}
+
+pub fn path_scoring_handshakes<'a>(dataset: &'a Mh370Dataset) -> Vec<&'a InmarsatHandshake> {
+    let mut selected: Vec<&InmarsatHandshake> = dataset
+        .inmarsat_handshakes
+        .iter()
+        .filter(|handshake| handshake.arc >= 1 && handshake.bto_us.is_some())
+        .filter(|handshake| !matches!(handshake.flag.as_deref(), Some("CRITICAL_ANOMALY")))
+        .filter(|handshake| {
+            matches!(
+                handshake.reliability.as_deref(),
+                Some("GOOD") | Some("GOOD_BTO_UNCERTAIN_BFO") | Some("UNRELIABLE_BFO")
+            )
+        })
+        .collect();
+
+    selected.sort_by(|left, right| {
+        let left_time = parse_time_utc_seconds(&left.time_utc).unwrap_or_default();
+        let right_time = parse_time_utc_seconds(&right.time_utc).unwrap_or_default();
+        left_time.partial_cmp(&right_time).unwrap()
+    });
     selected
 }

@@ -61,18 +61,21 @@ export function loadSonarLayers(map: MapboxMap): void {
       attribution: "© Governments of Australia, Malaysia and PRC 2018",
     });
 
-    map.addLayer({
-      id: layerId,
-      type: "raster",
-      source: sourceId,
-      paint: {
-        "raster-opacity": source.defaultOpacity,
-        "raster-fade-duration": 300,
+    map.addLayer(
+      {
+        id: layerId,
+        type: "raster",
+        source: sourceId,
+        paint: {
+          "raster-opacity": source.defaultOpacity,
+          "raster-fade-duration": 300,
+        },
+        layout: {
+          visibility: source.defaultOn ? "visible" : "none",
+        },
       },
-      layout: {
-        visibility: source.defaultOn ? "visible" : "none",
-      },
-    }, "arcs-lines");
+      "arcs-lines",
+    );
   }
 }
 

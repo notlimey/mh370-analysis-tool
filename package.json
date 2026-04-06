@@ -9,18 +9,24 @@
     "build": "tsc && vite build",
     "build:web": "BUILD_TARGET=web vite build",
     "preview": "vite preview",
-    "tauri": "tauri"
+    "tauri": "tauri",
+    "check": "biome check src/",
+    "format": "biome check --write src/",
+    "lint": "biome lint src/"
   },
   "license": "MIT",
   "dependencies": {
     "@tauri-apps/api": "^2",
     "@tauri-apps/plugin-opener": "^2",
     "geotiff": "^3.0.5",
-    "mapbox-gl": "^3.9.4"
+    "mapbox-gl": "^3.9.4",
+    "solid-js": "^1.9.12"
   },
   "devDependencies": {
+    "@biomejs/biome": "^2.4.10",
     "@tauri-apps/cli": "^2",
     "typescript": "~5.6.2",
-    "vite": "^6.0.3"
+    "vite": "^6.0.3",
+    "vite-plugin-solid": "^2.11.12"
   }
 }

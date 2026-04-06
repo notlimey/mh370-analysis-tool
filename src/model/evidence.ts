@@ -24,7 +24,7 @@ export async function getAnomalies(): Promise<Anomaly[]> {
   if (anomalyCache) {
     return anomalyCache;
   }
-  anomalyCache = await loadAnomalies() as Anomaly[];
+  anomalyCache = (await loadAnomalies()) as Anomaly[];
   return anomalyCache;
 }
 
