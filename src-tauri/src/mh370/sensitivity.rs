@@ -31,7 +31,7 @@ pub struct SweepTrial {
     pub delta_from_base: f64,
     pub peak_lat: Option<f64>,
     pub peak_lon: Option<f64>,
-    pub peak_probability: Option<f64>,
+    pub peak_density_score: Option<f64>,
     pub fuel_feasible_count: usize,
     pub total_path_count: usize,
     pub distance_from_base_km: f64,
@@ -107,11 +107,11 @@ fn run_trial(
 
     let peak = heatmap
         .iter()
-        .max_by(|a, b| a.probability.partial_cmp(&b.probability).unwrap());
+        .max_by(|a, b| a.path_density_score.partial_cmp(&b.path_density_score).unwrap());
 
     let peak_lat = peak.map(|p| p.position[1]);
     let peak_lon = peak.map(|p| p.position[0]);
-    let peak_probability = peak.map(|p| p.probability);
+    let peak_density_score = peak.map(|p| p.path_density_score);
 
     let distance_from_base_km = match (base_peak, peak_lat, peak_lon) {
         (Some(base), Some(lat), Some(lon)) => haversine(base, LatLon::new(lat, lon)),
@@ -123,7 +123,7 @@ fn run_trial(
         delta_from_base: value - base_value,
         peak_lat,
         peak_lon,
-        peak_probability,
+        peak_density_score,
         fuel_feasible_count,
         total_path_count,
         distance_from_base_km,
@@ -163,7 +163,7 @@ where
 
     let base_peak_point = base_heatmap
         .iter()
-        .max_by(|a, b| a.probability.partial_cmp(&b.probability).unwrap());
+        .max_by(|a, b| a.path_density_score.partial_cmp(&b.path_density_score).unwrap());
     let base_peak_lat = base_peak_point.map(|p| p.position[1]);
     let base_peak_lon = base_peak_point.map(|p| p.position[0]);
     let base_peak_latlon = match (base_peak_lat, base_peak_lon) {

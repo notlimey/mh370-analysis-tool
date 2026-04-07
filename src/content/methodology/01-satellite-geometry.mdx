@@ -1,0 +1,104 @@
+# Satellite Geometry
+
+MH370's last known electronic signals weren't voice or data transmissions — they were automatic
+"handshakes" between the aircraft's satellite terminal and the Inmarsat-3F1 satellite, stationed in
+geostationary orbit over the Indian Ocean.
+
+These handshakes are the backbone of the entire search. Each one recorded two key measurements —
+**Burst Timing Offset (BTO)** and **Burst Frequency Offset (BFO)** — that let us work backwards
+to constrain the aircraft's position and motion.
+
+## The satellite
+
+Inmarsat-3F1 orbits at approximately 64.5°E longitude in a geostationary orbit — roughly 36,000 km
+above the equator. But "geostationary" isn't perfectly stationary. The satellite drifts slightly
+north-south and east-west over the course of a day, tracing a small figure-eight pattern in the sky.
+
+This drift matters. A few dozen kilometers of satellite motion translates to measurable differences
+in signal timing and frequency. Our model uses cubic Hermite spline interpolation on the PAR5
+parametric ephemeris data (Rydberg) to track the satellite's exact position at each handshake time,
+validated to within 58 meters against GMAT orbital propagation.
+
+<Accordion title="The Math">
+
+The satellite's 3D position at any time $t$ is interpolated from a table of state vectors
+$(x, y, z, \dot{x}, \dot{y}, \dot{z})$ sampled at regular intervals. We use cubic Hermite
+interpolation, which matches both position and velocity at each knot:
+
+$$
+\mathbf{r}(t) = h_{00}(s)\,\mathbf{r}_k + h_{10}(s)\,\Delta t\,\dot{\mathbf{r}}_k + h_{01}(s)\,\mathbf{r}_{k+1} + h_{11}(s)\,\Delta t\,\dot{\mathbf{r}}_{k+1}
+$$
+
+where $s = (t - t_k) / \Delta t$ and $h_{00}, h_{10}, h_{01}, h_{11}$ are the Hermite basis
+functions. This ensures smooth, physically consistent trajectories — no jumps in velocity at
+interval boundaries.
+
+For times outside the ephemeris table range, we fall back to a sinusoidal approximation of the
+satellite's oscillation around its nominal geostationary position.
+
+</Accordion>
+
+<Accordion title="The Code">
+
+```rust
+// src-tauri/src/mh370/satellite.rs — cubic Hermite interpolation
+let s = (t - t0) / dt;
+let s2 = s * s;
+let s3 = s2 * s;
+
+let h00 = 2.0 * s3 - 3.0 * s2 + 1.0;
+let h10 = s3 - 2.0 * s2 + s;
+let h01 = -2.0 * s3 + 3.0 * s2;
+let h11 = s3 - s2;
+
+// Interpolate each coordinate
+let x = h00 * x0 + h10 * dt * vx0 + h01 * x1 + h11 * dt * vx1;
+```
+
+The ephemeris data itself is embedded at compile time from `src/data/i3f1_ephemeris.json`, sourced
+from the PAR5 parametric model.
+
+</Accordion>
+
+<SourceCitation
+  sources={[
+    { label: "PAR5 parametric ephemeris (Rydberg)", detail: "Satellite state vectors, validated to 58m vs GMAT" },
+    { label: "DSTG 'Bayesian Methods in the Search for MH370'", detail: "Chapter 2 — Satellite communication system" },
+    { label: "Inmarsat 'MH370 Signalling Unit Log Interpretation'", detail: "Handshake protocol and timing definitions" },
+  ]}
+/>
+
+## Burst Timing Offset (BTO)
+
+The BTO measures the round-trip signal delay between the ground station in Perth, the satellite,
+and the aircraft. Since we know the positions of Perth and the satellite precisely, the BTO tells
+us how far the aircraft was from the satellite — defining a **ring** on the Earth's surface at a
+fixed distance from the satellite's sub-point.
+
+Each handshake produces one ring. Seven handshakes produce seven rings. The aircraft must have been
+somewhere on each ring at the corresponding time.
+
+<Accordion title="The Math">
+
+The BTO is related to the total signal path delay. After calibrating against the known-position
+ground pings at KLIA (where the aircraft's position is known), we extract the aircraft-to-satellite
+slant range:
+
+$$
+R_{\text{slant}} = \frac{(\text{BTO} - \Delta_{\text{bias}}) \cdot c}{2}
+$$
+
+where $c$ is the speed of light and $\Delta_{\text{bias}}$ is the calibration offset determined
+from the pre-departure ping at gate position KLIA.
+
+From the slant range, we compute the surface distance (great-circle arc) from the satellite
+sub-point, accounting for Earth's curvature and the aircraft's cruise altitude.
+
+</Accordion>
+
+<SourceCitation
+  sources={[
+    { label: "ATSB 'Definition of Underwater Search Areas'", detail: "June 2014, Section 3.2 — BTO analysis" },
+    { label: "DSTG 'Bayesian Methods'", detail: "Section 3.1 — BTO measurement model" },
+  ]}
+/>

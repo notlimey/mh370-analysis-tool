@@ -3,7 +3,7 @@ import { SEARCHED_2014_2017, SEARCHED_2018, SEARCHED_2025_2026 } from "../consta
 
 interface ProbPoint {
   position: [number, number];
-  probability: number;
+  path_density_score: number;
 }
 
 export function loadPriorityGapsLayer(map: MapboxMap, heatmap: ProbPoint[]): void {
@@ -40,7 +40,7 @@ export function loadPriorityGapsLayer(map: MapboxMap, heatmap: ProbPoint[]): voi
     type: "symbol",
     source: "priority-source",
     layout: {
-      "text-field": "Unsearched high-probability zone",
+      "text-field": "Unsearched high-density zone",
       "text-size": 10,
       "text-offset": [0, 0],
     },
@@ -95,19 +95,19 @@ function computePriorityGaps(heatmap: ProbPoint[]): GeoJSON.FeatureCollection<Ge
     return { type: "FeatureCollection", features: [] };
   }
 
-  const sorted = [...heatmap].sort((a, b) => b.probability - a.probability);
+  const sorted = [...heatmap].sort((a, b) => b.path_density_score - a.path_density_score);
   const cutoffIndex = Math.max(0, Math.floor(sorted.length * 0.2) - 1);
-  const threshold = sorted[cutoffIndex]?.probability ?? sorted[0].probability;
+  const threshold = sorted[cutoffIndex]?.path_density_score ?? sorted[0].path_density_score;
 
   const features = heatmap
-    .filter((point) => point.probability >= threshold)
+    .filter((point) => point.path_density_score >= threshold)
     .filter((point) => !isInsideSearchedArea(point.position))
     .map((point, index) => ({
       type: "Feature" as const,
       properties: {
         id: `priority_gap_${index + 1}`,
-        probability: point.probability,
-        label: "High-probability area outside searched zones",
+        path_density_score: point.path_density_score,
+        label: "High-density area outside searched zones",
       },
       geometry: squareAround(point.position, 0.18),
     }));

@@ -12,7 +12,7 @@ const LAYER_TOGGLES: LayerToggle[] = [
   { group: "flightpath", label: "Flight path" },
   { group: "arcs", label: "BTO arcs" },
   { group: "paths", label: "Candidate paths" },
-  { group: "heatmap", label: "Probability heatmap" },
+  { group: "heatmap", label: "Path density heatmap" },
   { group: "points", label: "Key points" },
   { group: "pins", label: "Saved pins" },
   { group: "searched", label: "Searched areas" },

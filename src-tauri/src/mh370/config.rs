@@ -47,6 +47,10 @@ macro_rules! analysis_config_fields {
             debris_weight_max_lat: f64,
             slow_family_max_speed_kts: f64,
             perpendicular_family_tolerance_deg: f64,
+            endpoint_mode: String,
+            descent_before_arc7_minutes: f64,
+            descent_rate_fpm: f64,
+            glide_wind_correction_kts: f64,
         }
     };
 }
@@ -120,7 +124,10 @@ pub fn get_config_field(config: &AnalysisConfig, field_name: &str) -> Result<f64
         "debris_weight_max_lat" => Ok(config.debris_weight_max_lat),
         "slow_family_max_speed_kts" => Ok(config.slow_family_max_speed_kts),
         "perpendicular_family_tolerance_deg" => Ok(config.perpendicular_family_tolerance_deg),
-        "dataset_path" | "satellite_drift_end_time_utc" => {
+        "descent_before_arc7_minutes" => Ok(config.descent_before_arc7_minutes),
+        "descent_rate_fpm" => Ok(config.descent_rate_fpm),
+        "glide_wind_correction_kts" => Ok(config.glide_wind_correction_kts),
+        "dataset_path" | "satellite_drift_end_time_utc" | "endpoint_mode" => {
             Err(format!("field {field_name} is not numeric"))
         }
         _ => Err(format!("unknown config field: {field_name}")),
@@ -267,7 +274,19 @@ pub fn set_config_field(
             config.perpendicular_family_tolerance_deg = value;
             Ok(value)
         }
-        "dataset_path" | "satellite_drift_end_time_utc" => {
+        "descent_before_arc7_minutes" => {
+            config.descent_before_arc7_minutes = value;
+            Ok(value)
+        }
+        "descent_rate_fpm" => {
+            config.descent_rate_fpm = value;
+            Ok(value)
+        }
+        "glide_wind_correction_kts" => {
+            config.glide_wind_correction_kts = value;
+            Ok(value)
+        }
+        "dataset_path" | "satellite_drift_end_time_utc" | "endpoint_mode" => {
             Err(format!("field {field_name} is not numeric"))
         }
         _ => Err(format!("unknown config field: {field_name}")),

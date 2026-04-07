@@ -1,7 +1,7 @@
 [package]
 name = "mh370-tracker"
 version = "0.1.0"
-description = "MH370 flight path analysis and probability mapping tool"
+description = "MH370 flight path analysis and search-priority mapping tool"
 authors = ["you"]
 edition = "2021"
 default-run = "mh370-tracker"

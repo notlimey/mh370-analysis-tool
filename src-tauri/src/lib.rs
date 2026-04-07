@@ -31,8 +31,11 @@ use mh370::export::{
     export_paths_geojson as run_export_paths_geojson,
     export_probability_geojson as run_export_probability_geojson,
 };
+use mh370::bfo::BfoStepthrough;
 use mh370::paths::{
-    apply_fuel_filter as run_apply_fuel_filter, debug_path_sampling as run_debug_path_sampling,
+    apply_fuel_filter as run_apply_fuel_filter,
+    compute_bfo_stepthroughs as run_compute_bfo_stepthroughs,
+    debug_path_sampling as run_debug_path_sampling,
     sample_candidate_paths as run_sample_candidate_paths, FlightPath, FuelSummary,
     PathSamplingDebug,
 };
@@ -84,10 +87,10 @@ pub fn run_model_probe(
     let sampling_debug = run_debug_path_sampling(&satellite, config)?;
     let heatmap_peak = heatmap
         .iter()
-        .filter(|point| point.probability.is_finite())
+        .filter(|point| point.path_density_score.is_finite())
         .max_by(|left, right| {
-            left.probability
-                .partial_cmp(&right.probability)
+            left.path_density_score
+                .partial_cmp(&right.path_density_score)
                 .unwrap_or(CmpOrdering::Equal)
         })
         .map(|point| (point.position[1], point.position[0]));
@@ -119,10 +122,10 @@ pub fn run_model_probe(
 fn update_heatmap_peak(state: &AppState, points: &[ProbPoint]) {
     if let Some(lat) = points
         .iter()
-        .filter(|point| point.probability.is_finite())
+        .filter(|point| point.path_density_score.is_finite())
         .max_by(|left, right| {
-            left.probability
-                .partial_cmp(&right.probability)
+            left.path_density_score
+                .partial_cmp(&right.path_density_score)
                 .unwrap_or(CmpOrdering::Equal)
         })
         .map(|point| point.position[1])
@@ -158,7 +161,10 @@ async fn run_debris_inversion(
     let validation_ok = get_or_compute_drift_validation(&state);
     let config = effective_config(&state, config);
     let satellite_peak_lat = if satellite_peak == 0.0 {
-        -34.23
+        return Err(
+            "Heatmap has not been computed yet. Run the path-density model before debris inversion."
+                .to_string(),
+        );
     } else {
         satellite_peak
     };
@@ -465,6 +471,14 @@ fn export_probability_geojson(
 }
 
 #[tauri::command]
+fn get_bfo_stepthroughs(
+    state: State<'_, AppState>,
+    config: Option<AnalysisConfig>,
+) -> Result<Vec<BfoStepthrough>, String> {
+    run_compute_bfo_stepthroughs(&state.satellite, Some(effective_config(&state, config)))
+}
+
+#[tauri::command]
 fn export_paths_geojson(
     state: State<'_, AppState>,
     path: String,
@@ -523,7 +537,9 @@ pub fn run() {
             app.manage(AppState {
                 satellite,
                 resolved_config: Mutex::new(resolved_config),
-                last_heatmap_peak: AtomicU64::new((-34.23_f64).to_bits()),
+                // Sentinel: 0.0 means "heatmap not yet computed".
+                // The debris inversion checks for this and returns an error.
+                last_heatmap_peak: AtomicU64::new(0_f64.to_bits()),
                 drift_validation_ok: Mutex::new(None),
             });
 
@@ -548,6 +564,7 @@ pub fn run() {
             reverse_drift_debris,
             export_probability_geojson,
             export_paths_geojson,
+            get_bfo_stepthroughs,
             get_resolved_config,
             run_debris_inversion,
             get_drift_particle_clouds,

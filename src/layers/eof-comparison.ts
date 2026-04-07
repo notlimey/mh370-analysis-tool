@@ -36,16 +36,16 @@ export function loadEofComparisonOverlay(map: MapboxMap): void {
   if (overlays.length === 0) return;
 
   const features = overlays.flatMap((overlay) => {
-    const maxProb = Math.max(...overlay.heatmap.map((point) => point.probability), 0.001);
+    const maxProb = Math.max(...overlay.heatmap.map((point) => point.path_density_score), 0.001);
     return overlay.heatmap
-      .filter((point) => Number.isFinite(point.probability))
+      .filter((point) => Number.isFinite(point.path_density_score))
       .map((point) => ({
         type: "Feature" as const,
         properties: {
           scenarioId: overlay.scenarioId,
           scenarioName: overlay.scenarioName,
           color: overlay.color,
-          weight: point.probability / maxProb,
+          weight: point.path_density_score / maxProb,
         },
         geometry: {
           type: "Point" as const,
@@ -56,8 +56,8 @@ export function loadEofComparisonOverlay(map: MapboxMap): void {
 
   const peakFeatures = overlays.flatMap((overlay) => {
     const peak = overlay.heatmap
-      .filter((point) => Number.isFinite(point.probability))
-      .sort((left, right) => right.probability - left.probability)[0];
+      .filter((point) => Number.isFinite(point.path_density_score))
+      .sort((left, right) => right.path_density_score - left.path_density_score)[0];
     if (!peak) return [];
     return [
       {

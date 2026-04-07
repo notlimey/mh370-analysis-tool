@@ -1,3 +1,7 @@
+import mdx from "@mdx-js/rollup";
+import rehypeKatex from "rehype-katex";
+import remarkGfm from "remark-gfm";
+import remarkMath from "remark-math";
 import { defineConfig } from "vite";
 import solid from "vite-plugin-solid";
 
@@ -8,7 +12,18 @@ const isWeb = process.env.BUILD_TARGET === "web";
 
 // https://vite.dev/config/
 export default defineConfig(async () => ({
-  plugins: [solid()],
+  plugins: [
+    {
+      ...mdx({
+        jsx: true,
+        jsxImportSource: "solid-js",
+        remarkPlugins: [remarkGfm, remarkMath],
+        rehypePlugins: [rehypeKatex],
+      }),
+      enforce: "pre",
+    },
+    solid({ extensions: [".mdx"] }),
+  ],
   base: isWeb ? "/mh370-analysis-tool/" : "/",
   clearScreen: false,
   assetsInclude: ["**/*.tiff", "**/*.tif"],

@@ -19,7 +19,7 @@ export const INFO_CONTENT: Record<string, InfoContent> = {
     sections: [
       {
         heading: "How to use",
-        body: "Start with Probability Heatmap, Priority Gaps, and Searched Areas. Then add Candidate Paths or BTO Arc Rings only when you want to understand why a zone appears.",
+        body: "Start with Path Density Heatmap, Priority Gaps, and Searched Areas. Then add Candidate Paths or BTO Arc Rings only when you want to understand why a zone appears.",
       },
       {
         heading: "What changes visually",
@@ -87,7 +87,7 @@ export const INFO_CONTENT: Record<string, InfoContent> = {
       },
       {
         heading: "Operational use",
-        body: "This is search-context information, not a crash-location probability layer.",
+        body: "This is search-context information, not a crash-location indicator.",
       },
     ],
   },
@@ -105,14 +105,14 @@ export const INFO_CONTENT: Record<string, InfoContent> = {
     ],
   },
   "layer:heatmap": {
-    title: "Probability Heatmap",
-    subtitle: "Satellite-driven search preference along the 7th arc",
+    title: "Path Density Heatmap",
+    subtitle: "Relative search priority along the 7th arc",
     summary:
-      "Shows the model's normalized preference over the 7th arc after combining path density, fuel plausibility, and other active weighting terms.",
+      "Shows the relative density of beam-search candidate endpoints along the 7th arc after combining path scoring, fuel plausibility, and other active weighting terms. This is a heuristic search output, not a Bayesian posterior probability.",
     sections: [
       {
         heading: "How to read colors",
-        body: "Brighter areas are more favored by the current model assumptions. It is comparative, not an absolute probability of wreck location.",
+        body: "Brighter areas have more high-scoring candidate paths under the current assumptions. This is comparative — it identifies high-priority regions but does not provide calibrated probability estimates.",
       },
       {
         heading: "Best use",
@@ -132,7 +132,7 @@ export const INFO_CONTENT: Record<string, InfoContent> = {
       },
       {
         heading: "How to use them",
-        body: "Turn this on when you want to understand why certain arc sectors receive higher probability.",
+        body: "Turn this on when you want to understand why certain arc sectors receive higher path density.",
       },
     ],
   },
@@ -166,13 +166,13 @@ export const INFO_CONTENT: Record<string, InfoContent> = {
   },
   "layer:priority": {
     title: "Priority Gaps",
-    subtitle: "High-probability areas outside searched zones",
+    subtitle: "High-density areas outside searched zones",
     summary:
       "Highlights the strongest-looking heatmap cells that sit outside the searched polygons, making them easier to inspect as next-search candidates.",
     sections: [
       {
         heading: "What it is now",
-        body: "This layer now means exactly what its name suggests: unsearched high-probability sectors.",
+        body: "This layer now means exactly what its name suggests: unsearched high-density sectors.",
       },
       {
         heading: "Best reading mode",
@@ -422,10 +422,10 @@ export const INFO_CONTENT: Record<string, InfoContent> = {
   },
   "action:export-heatmap": {
     title: "Export Heatmap",
-    subtitle: "Write probability results to GeoJSON",
-    summary: "Exports the current probability heatmap so you can inspect or reuse it outside the app.",
+    subtitle: "Write path-density results to GeoJSON",
+    summary: "Exports the current path-density heatmap so you can inspect or reuse it outside the app.",
     sections: [
-      { heading: "Output", body: "A GeoJSON file with per-point probability and model-weight fields." },
+      { heading: "Output", body: "A GeoJSON file with per-point path-density scores and model-weight fields." },
       { heading: "Use", body: "Helpful for archival comparison between parameter runs." },
     ],
   },
@@ -451,11 +451,11 @@ export const INFO_CONTENT: Record<string, InfoContent> = {
   "inversion:result": {
     title: "Debris Inversion Result",
     subtitle: "Debris-only preferred zone",
-    summary: "Shows the inversion probability along the 7th arc derived from the currently loaded debris dataset.",
+    summary: "Shows the inversion likelihood along the 7th arc derived from the currently loaded debris dataset.",
     sections: [
       {
         heading: "What it shows",
-        body: "A line along the 7th arc colored to indicate where the debris-only model concentrates probability.",
+        body: "A line along the 7th arc colored to indicate where the debris-only model concentrates likelihood.",
       },
       {
         heading: "What it does not do",
@@ -514,6 +514,26 @@ export const INFO_CONTENT: Record<string, InfoContent> = {
     sections: [
       { heading: "Confirmed", body: "Radar-backed segments with the strongest support." },
       { heading: "Probable", body: "Inferred continuation where the record becomes less direct." },
+    ],
+  },
+  "section:bfo": {
+    title: "BFO Model",
+    subtitle: "Burst Frequency Offset — what it measures and what the residuals mean",
+    summary:
+      "BFO measures the Doppler frequency shift caused by the aircraft's motion relative to the Inmarsat satellite. The model decomposes BFO into uplink Doppler, SDU compensation, downlink Doppler, equipment corrections, and a fixed bias.",
+    sections: [
+      {
+        heading: "What the residuals mean",
+        body: "The ~4 Hz residuals on arcs 2-5 show the path solver found positions where the BFO prediction closely matches the measurement. However, the solver optimized those positions specifically to achieve this fit. These are in-sample results, not an independent test of model accuracy.",
+      },
+      {
+        heading: "Why independent validation is not possible",
+        body: "No public data source provides both a reliably measured BFO and an independently known aircraft position for MH370 after departure. The DSTG validated their BFO model against 20 prior flights of 9M-MRO with known radar positions (achieving 4.3 Hz sigma), but that dataset is not publicly available.",
+      },
+      {
+        heading: "What this means for the results",
+        body: "The BFO model uses the same equations and constants as the DSTG (Holland 2017). The model is sound in principle. The limitation is that we cannot independently verify our implementation produces correct results for MH370 specifically. The BFO Model panel shows every component of the calculation for full transparency.",
+      },
     ],
   },
   "section:info": {

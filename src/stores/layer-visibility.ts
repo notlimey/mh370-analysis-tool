@@ -36,3 +36,40 @@ export function resetLayerVisibilityDefaults(): void {
   }
   setStoredLayerVisibility({ ...layerVisibility });
 }
+
+/** BFO inspection preset: arcs + paths + points only. */
+const BFO_INSPECTION_LAYERS: Record<string, boolean> = {
+  flightpath: false,
+  anomalies: false,
+  airspaces: false,
+  magnetic: false,
+  sonar: false,
+  holidays: false,
+  priority: false,
+  arcs: true,
+  paths: true,
+  heatmap: false,
+  debris: false,
+  points: true,
+  pins: false,
+  searched: false,
+  "eof-compare": false,
+  "drift-clouds": false,
+};
+
+let savedBeforeBfo: Record<string, boolean> | null = null;
+
+export function applyBfoInspectionPreset(): void {
+  savedBeforeBfo = { ...layerVisibility };
+  for (const [group, visible] of Object.entries(BFO_INSPECTION_LAYERS)) {
+    setLayerVisibility(group, visible);
+  }
+}
+
+export function restorePreviousLayerVisibility(): void {
+  if (!savedBeforeBfo) return;
+  for (const [group, visible] of Object.entries(savedBeforeBfo)) {
+    setLayerVisibility(group, visible);
+  }
+  savedBeforeBfo = null;
+}

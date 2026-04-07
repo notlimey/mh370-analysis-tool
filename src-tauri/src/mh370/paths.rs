@@ -581,11 +581,20 @@ fn evaluate_fuel(
     // lost from cruise altitude. From FL350 → FL308.
     //
     // Source: Holland 2017, arXiv:1702.02432, Section VI-A.
-    let descent_before_arc7_ft = 1.0 * 4200.0;
+    let descent_before_arc7_ft = config.descent_before_arc7_minutes * config.descent_rate_fpm;
     let altitude_at_arc7_ft = (config.cruise_altitude_ft - descent_before_arc7_ft).max(0.0);
     let altitude_at_arc7_nm = altitude_at_arc7_ft * FT_TO_NM;
 
-    let extra_range_nm = altitude_at_arc7_nm * GLIDE_RATIO;
+    // Wind correction: reduce glide ground-track range by headwind component.
+    // glide_wind_correction_kts > 0 = headwind (reduces range).
+    let wind_range_reduction_nm = if config.glide_wind_correction_kts > 0.0 && GLIDE_SPEED_KTS > 0.0 {
+        let glide_time_hrs = (altitude_at_arc7_nm * GLIDE_RATIO) / GLIDE_SPEED_KTS;
+        config.glide_wind_correction_kts * glide_time_hrs
+    } else {
+        0.0
+    };
+
+    let extra_range_nm = (altitude_at_arc7_nm * GLIDE_RATIO - wind_range_reduction_nm).max(0.0);
     let extra_endurance_minutes = if GLIDE_SPEED_KTS > 0.0 {
         extra_range_nm / GLIDE_SPEED_KTS * 60.0
     } else {
@@ -921,6 +930,60 @@ fn summarize_bfo_diagnostics(diagnostics: &[BfoDiagnostic]) -> BfoSummary {
         mean_abs_residual_hz,
         max_abs_residual_hz,
     }
+}
+
+/// Compute BFO stepthroughs for the best candidate path.
+///
+/// Returns a full component breakdown for each arc, designed for transparent
+/// display in the UI.
+pub fn compute_bfo_stepthroughs(
+    satellite: &SatelliteModel,
+    config: Option<AnalysisConfig>,
+) -> Result<Vec<super::bfo::BfoStepthrough>, String> {
+    let config = super::data::resolve_config(config);
+    let dataset = super::data::load_dataset(&config)?;
+    let calibration = super::arcs::calibrate_bto_offset_from_dataset(satellite, &dataset, &config)?;
+    let _ = calibration;
+    let bfo_model = BfoModel::calibrate(satellite, &config)?;
+
+    let paths = sample_candidate_paths_from_dataset(satellite, &dataset, 10, &config)?;
+    let best_path = paths.first().ok_or("no candidate paths generated")?;
+
+    let path_handshakes: Vec<&super::data::InmarsatHandshake> =
+        super::data::path_scoring_handshakes(&dataset)
+            .into_iter()
+            .filter(|h| h.arc >= 2)
+            .collect();
+
+    let mut stepthroughs = Vec::new();
+
+    for (i, handshake) in path_handshakes.iter().enumerate() {
+        let pos_idx = i + 1; // points[0] is LAST_RADAR
+        let Some(&[lon, lat]) = best_path.points.get(pos_idx) else {
+            continue;
+        };
+        let pos = LatLon::new(lat, lon);
+        let heading = best_path.headings_deg.get(i).copied().unwrap_or(180.0);
+        let speed = best_path.speeds_kts.get(i).copied().unwrap_or(450.0);
+        let time_s = parse_time_utc_seconds(&handshake.time_utc)?;
+        let vspeed = vertical_speed_for_handshake(handshake.arc, &config);
+
+        let step = bfo_model.stepthrough(
+            satellite,
+            pos,
+            heading,
+            speed,
+            time_s,
+            &config,
+            vspeed,
+            handshake.bfo_hz,
+            handshake.arc,
+            &handshake.time_utc,
+        )?;
+        stepthroughs.push(step);
+    }
+
+    Ok(stepthroughs)
 }
 
 fn sampled_points(points: &[[f64; 2]], sample_step: usize) -> Vec<[f64; 2]> {

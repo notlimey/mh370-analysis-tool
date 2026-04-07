@@ -49,6 +49,8 @@
 - `docs/dstg-validation.md` — DSTG model assumptions and comparison
 - `docs/research-note-arc7-impact-zone.md` — Preliminary finding with
   uncertainty envelope, open tensions, next steps
+- `docs/research-note-oscar-drift.md` — OSCAR drift comparison (impact
+  zone vs ATSB corridor), methodology, weakly contradictory result
 
 ### Frontend Migration (2026-04-06)
 
@@ -59,24 +61,53 @@
 
 ---
 
+### OSCAR Drift Plausibility Check (2026-04-06)
+
+- **OSCAR data pipeline.** Built `oscar.rs` module that fetches 1/3°, 5-day
+  surface current data from CoastWatch ERDDAP, parses CSV grids, caches to
+  disk (18 MB JSON), and provides bilinear spatial + linear temporal
+  interpolation via `oscar_current_at()`. 48 timesteps, March 2014 – April
+  2015.
+
+- **OscarFieldProvider.** Implements the existing `FieldProvider` trait in
+  `drift_transport.rs`, falling back to synthetic currents outside the OSCAR
+  domain (50-100°E, 45-10°S) or time range.
+
+- **Multi-site comparison.** 1,000-particle simulation from two origins:
+  our impact zone (90.4-91.8°E) and the ATSB search corridor (93-97°E).
+  Tracked arrivals at all 7 confirmed/probable debris recovery sites.
+
+- **Result: weakly contradictory.** Both origins reach all 4 confirmed debris
+  sites. The ATSB corridor produces better Reunion timing (5 hits, day 503-677
+  vs 1 hit at day 595, 87 days late). Our zone produces more Mozambique/Rodrigues
+  arrivals, but these are large targets where a more westward origin geometrically
+  produces more hits. Drift weakly favors the ATSB corridor over 90.8°E.
+
+- **100→1000 particle lesson.** An initial 100-particle run showed a false
+  positive (1 Reunion hit from our zone, 0 from ATSB). At 1,000 particles
+  the signal reversed. Documented as a cautionary example.
+
+---
+
 ## In Progress
+
+### ERA5 Wind Drift Analysis (2026-04-07)
+
+- **ERA5 monthly mean wind** (0.25°, 18 months) replaces synthetic wind climatology
+- 5M particles across 100 origins along the 7th arc
+- **Result: supportive.** 113,842 timing-matched Reunion hits (was zero under
+  synthetic wind). Best origin at 35.8°S, 90.9°E (8.0% rate). Our zone
+  produces 1.88× the ATSB corridor's Reunion timed hit rate.
+- See `docs/research-note-era5-drift.md` for full methodology and results.
 
 ### HYCOM Drift Modeling
 
-**Status:** Not started. Next major phase.
+**Status:** Deprioritized — ERA5 wind resolved the Reunion timing signal.
 
-Integrate HYCOM ocean reanalysis data for March 2014 – July 2015. For each
-candidate crash latitude, simulate debris drift with real currents and
-compute:
-
-- Arrival timing at Reunion, Mozambique, Tanzania, South Africa
-- SST exposure along each drift path
-- Whether Lepas barnacle colonization is thermally viable
-
-This resolves both the barnacle tension and the simplified-drift limitation.
-It's also the primary validation against observed debris: if drift from our
-impact zone can't deliver the flaperon to Reunion in ~508 days, the zone
-needs revision.
+HYCOM at higher current fidelity (1/12°, daily timesteps) could further
+sharpen the result, but the ERA5 wind analysis already provides a
+discriminating signal. The key bottleneck was wind realism, not current
+resolution. HYCOM remains available if finer discrimination is needed.
 
 ### Altitude-from-BFO Coupling
 

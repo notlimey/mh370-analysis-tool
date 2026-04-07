@@ -1,7 +1,7 @@
 # Research Note: Arc 7 Impact Zone Estimate
 
 **Date:** 2026-04-06
-**Status:** Preliminary — awaiting HYCOM drift validation and glide heading sensitivity analysis
+**Status:** Preliminary — ERA5 drift analysis supports impact zone (35.8°S best Reunion origin, 1.88× ATSB corridor)
 
 ---
 
@@ -35,9 +35,12 @@ corresponding to ~4.3 km range uncertainty.
 relative to the satellite. After correcting measured BFO values against
 primary sources (joewragg/MH370 FinalData.csv; Holland 2017
 arXiv:1702.02432) and adopting the ATSB published oscillator bias of 150 Hz,
-the model achieves ~4 Hz RMS residuals on level-flight arcs (2–5 and 6b),
-consistent with the DSTG empirical noise floor of 4.3 Hz. BFO is scored with
-σ = 4.3 Hz. The BFO at Arc 7 is handled separately (see below).
+the path solver finds candidate paths with ~4 Hz RMS BFO residuals on
+level-flight arcs (2–5 and 6b). This reflects the solver's optimization
+over position, heading, and speed on each arc — it demonstrates internal
+consistency with the DSTG empirical noise floor of 4.3 Hz, not independent
+validation of the model. BFO is scored with σ = 4.3 Hz. The BFO at Arc 7
+is handled separately (see below).
 
 ### Soft constraints (physically grounded assumptions)
 
@@ -167,12 +170,24 @@ strongly support it. A crash at 30–33°S would be more naturally consistent
 with the observed biofouling. This is a 2–5° latitude tension, corresponding
 to roughly 220–550 km along the 7th arc.
 
-### Ocean current model is simplified
+### Drift evidence is supportive (ERA5 wind, quantified)
 
-The drift simulation uses simplified currents, not reanalysis data. Real
-ocean currents (HYCOM, OSCAR) would allow quantitative SST-along-drift-path
-analysis and could shift the preferred origin latitude. This is the single
-most impactful improvement remaining.
+A 5,000,000-particle drift simulation using OSCAR currents with ERA5 monthly-
+mean 10m wind reanalysis produces **113,842 timing-matched Reunion hits**. The
+best-performing origin is at **35.8°S, 90.9°E** (8.0% timed hit rate) — within
+0.1° of the BTO/BFO-derived impact zone. Our zone (90-92°E, 34-37°S) produces
+**1.88× the Reunion timed hit rate** of the ATSB corridor (93-98°E).
+
+This is the first independent line of evidence that favors our impact zone over
+the searched corridor. The key improvement was replacing the synthetic wind
+climatology with ERA5 reanalysis — even at monthly resolution, the spatial and
+temporal structure of real wind patterns is sufficient to route debris from
+35.8°S to Reunion within the observed timeframe. See
+`docs/research-note-era5-drift.md` for full methodology and results.
+
+The earlier OSCAR-only result (with synthetic wind) produced zero Reunion timed
+hits — that was a wind model limitation, not an oceanographic constraint. See
+`docs/research-note-oscar-drift.md` for that analysis.
 
 ### Glide heading — resolved
 

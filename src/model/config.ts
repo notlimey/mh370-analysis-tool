@@ -38,6 +38,10 @@ export interface AnalysisConfig {
   debris_weight_max_lat: number;
   slow_family_max_speed_kts: number;
   perpendicular_family_tolerance_deg: number;
+  endpoint_mode: string;
+  descent_before_arc7_minutes: number;
+  descent_rate_fpm: number;
+  glide_wind_correction_kts: number;
 }
 
 export let defaultAnalysisConfig = {} as AnalysisConfig;

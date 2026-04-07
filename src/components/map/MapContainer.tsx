@@ -247,15 +247,15 @@ async function loadAllLayers(
 
   // Update stores with results
   if (heatmap.length > 0) {
-    const maxProb = Math.max(...heatmap.map((p) => p.probability));
-    const maxPoint = heatmap.find((p) => p.probability === maxProb);
+    const maxDensity = Math.max(...heatmap.map((p) => p.path_density_score));
+    const maxPoint = heatmap.find((p) => p.path_density_score === maxDensity);
     if (maxPoint) setConfidence(formatLatLon(maxPoint.position[1], maxPoint.position[0]));
   }
 
   const bestPath = paths[0];
   const bestEndpoint = bestPath?.points[bestPath.points.length - 1];
   const summary = summarizeFamilies(pathAnnotations);
-  const peakPoint = heatmap.slice().sort((a, b) => b.probability - a.probability)[0];
+  const peakPoint = heatmap.slice().sort((a, b) => b.path_density_score - a.path_density_score)[0];
   const fuelFeasibleCount = paths.filter((p) => p.fuel_feasible).length;
   const overlapSummary = summarizeEndpointOverlap(paths);
   const continuationSummary = summarizeContinuationContribution(paths);

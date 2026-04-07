@@ -1,7 +1,7 @@
 import type { Component } from "solid-js";
 import { For } from "solid-js";
 import type { PanelId } from "../../stores/ui";
-import { activePanel, setActivePanel } from "../../stores/ui";
+import { activePanel, setActivePanel, setMethodologyOpen } from "../../stores/ui";
 
 interface RailButton {
   id: PanelId;
@@ -40,6 +40,11 @@ const BUTTONS: RailButton[] = [
     label: "Sensitivity",
     svg: '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17h2v-6H3z"/><path d="M7 17h2V8H7z"/><path d="M11 17h2V4h-2z"/><path d="M15 17h2v-9h-2z"/></svg>',
   },
+  {
+    id: "bfo",
+    label: "BFO Model",
+    svg: '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 15l4-6 4 3 6-9"/><circle cx="17" cy="3" r="1.5"/></svg>',
+  },
 ];
 
 const IconRail: Component = () => {
@@ -70,6 +75,17 @@ const IconRail: Component = () => {
           </button>
         )}
       </For>
+      <div class="rail-spacer" />
+      <button
+        class="rail-btn"
+        title="Methodology"
+        aria-label="Methodology"
+        onClick={() => setMethodologyOpen(true)}
+        type="button"
+      >
+        <span innerHTML='<svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h12"/><path d="M4 8h8"/><path d="M4 12h10"/><path d="M4 16h6"/></svg>' />
+        <span class="rail-label">Methods</span>
+      </button>
     </nav>
   );
 };

@@ -1,5 +1,5 @@
 import type { Component } from "solid-js";
-import { createEffect, onCleanup, onMount } from "solid-js";
+import { createEffect, lazy, onCleanup, onMount, Show, Suspense } from "solid-js";
 import "./style.css";
 import EvidencePanel from "./components/evidence/EvidencePanel";
 import BrowserBanner from "./components/layout/BrowserBanner";
@@ -21,7 +21,9 @@ import { markWorkspaceInputsChanged } from "./lib/workspaceState";
 import { analysisConfig, initAnalysisConfig } from "./stores/analysis-config";
 import { layerVisibility } from "./stores/layer-visibility";
 import { activeScenarioId } from "./stores/scenario";
-import { setActivePanel } from "./stores/ui";
+import { methodologyOpen, setActivePanel, setMethodologyOpen } from "./stores/ui";
+
+const MethodologyView = lazy(() => import("./components/methodology/MethodologyView"));
 
 const App: Component = () => {
   // Initialize config before render
@@ -58,7 +60,11 @@ const App: Component = () => {
   // Keyboard shortcuts
   const handleKeydown = (event: KeyboardEvent) => {
     if (event.key === "Escape") {
-      setActivePanel(null);
+      if (methodologyOpen()) {
+        setMethodologyOpen(false);
+      } else {
+        setActivePanel(null);
+      }
       return;
     }
     if (!(event.metaKey || event.ctrlKey) || !event.shiftKey) return;
@@ -84,13 +90,20 @@ const App: Component = () => {
 
   return (
     <MapProvider>
-      <IconRail />
-      <FlyoutShell />
-      <MapContainer />
-      <Loader />
-      <BrowserBanner />
-      <EvidencePanel />
-      <Timeline />
+      <div style={{ display: methodologyOpen() ? "none" : "contents" }}>
+        <IconRail />
+        <FlyoutShell />
+        <MapContainer />
+        <Loader />
+        <BrowserBanner />
+        <EvidencePanel />
+        <Timeline />
+      </div>
+      <Show when={methodologyOpen()}>
+        <Suspense>
+          <MethodologyView />
+        </Suspense>
+      </Show>
     </MapProvider>
   );
 };

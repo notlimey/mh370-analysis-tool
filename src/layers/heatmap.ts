@@ -1,12 +1,12 @@
 import type { Map as MapboxMap } from "mapbox-gl";
 import { type BackendProbPoint, getProbabilityHeatmap } from "../lib/backend";
 
-/** Draw probability heatmap along the 7th arc */
+/** Draw path-density heatmap along the 7th arc */
 export async function loadHeatmapLayer(map: MapboxMap, providedPoints?: BackendProbPoint[]): Promise<void> {
   const points: BackendProbPoint[] = providedPoints ?? (await getProbabilityHeatmap());
 
-  // Scale probabilities for heatmap intensity
-  const maxProb = Math.max(...points.map((p) => p.probability), 0.001);
+  // Scale density scores for heatmap intensity
+  const maxDensity = Math.max(...points.map((p) => p.path_density_score), 0.001);
 
   map.addSource("heatmap-source", {
     type: "geojson",
@@ -15,7 +15,7 @@ export async function loadHeatmapLayer(map: MapboxMap, providedPoints?: BackendP
       features: points.map((p) => ({
         type: "Feature" as const,
         properties: {
-          weight: p.probability / maxProb,
+          weight: p.path_density_score / maxDensity,
         },
         geometry: {
           type: "Point" as const,
