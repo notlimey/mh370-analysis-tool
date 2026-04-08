@@ -1,0 +1,4454 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              94.88,
+              -33.315
+            ],
+            [
+              94.855,
+              -33.3
+            ],
+            [
+              95.08,
+              -33.125
+            ],
+            [
+              95.13,
+              -33.125
+            ],
+            [
+              95.19,
+              -33.075
+            ],
+            [
+              95.24,
+              -33.085
+            ],
+            [
+              95.35,
+              -33.185
+            ],
+            [
+              95.5,
+              -33.055
+            ],
+            [
+              95.52,
+              -33.005
+            ],
+            [
+              95.4,
+              -33.095
+            ],
+            [
+              95.375,
+              -33.07
+            ],
+            [
+              95.455,
+              -32.99
+            ],
+            [
+              95.42,
+              -32.955
+            ],
+            [
+              95.345,
+              -32.95
+            ],
+            [
+              95.36,
+              -32.895
+            ],
+            [
+              95.305,
+              -32.9
+            ],
+            [
+              95.4,
+              -32.825
+            ],
+            [
+              95.455,
+              -32.84
+            ],
+            [
+              95.475,
+              -32.95
+            ],
+            [
+              95.575,
+              -33.0
+            ],
+            [
+              95.35,
+              -33.205
+            ],
+            [
+              95.24,
+              -33.125
+            ],
+            [
+              95.08,
+              -33.145
+            ],
+            [
+              94.88,
+              -33.315
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "source": "auv",
+        "instrument": "AUV Side Scan Sonar",
+        "resolution": "5m",
+        "phase": "Phase 2",
+        "source_wms": "ausseabed:MH370_Phase_2_Sonar_Imagery_Backscatter_Inverse_Autonomous_Underwater_Vehicle__SSS__5m_2018",
+        "extracted_date": "2026-04-08",
+        "attribution": "Governments of Australia, Malaysia and PRC, 2018. CC BY 4.0"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              94.985,
+              -33.58
+            ],
+            [
+              94.91,
+              -33.605
+            ],
+            [
+              94.825,
+              -33.53
+            ],
+            [
+              94.95,
+              -33.525
+            ],
+            [
+              94.945,
+              -33.56
+            ],
+            [
+              94.985,
+              -33.58
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "source": "auv",
+        "instrument": "AUV Side Scan Sonar",
+        "resolution": "5m",
+        "phase": "Phase 2",
+        "source_wms": "ausseabed:MH370_Phase_2_Sonar_Imagery_Backscatter_Inverse_Autonomous_Underwater_Vehicle__SSS__5m_2018",
+        "extracted_date": "2026-04-08",
+        "attribution": "Governments of Australia, Malaysia and PRC, 2018. CC BY 4.0"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              91.52,
+              -36.295
+            ],
+            [
+              91.49,
+              -36.265
+            ],
+            [
+              91.415,
+              -36.27
+            ],
+            [
+              91.4,
+              -36.155
+            ],
+            [
+              91.315,
+              -36.17
+            ],
+            [
+              91.37,
+              -36.125
+            ],
+            [
+              91.425,
+              -36.13
+            ],
+            [
+              91.375,
+              -36.05
+            ],
+            [
+              91.505,
+              -35.96
+            ],
+            [
+              91.495,
+              -35.93
+            ],
+            [
+              91.595,
+              -35.82
+            ],
+            [
+              91.495,
+              -35.78
+            ],
+            [
+              91.5,
+              -35.715
+            ],
+            [
+              91.425,
+              -35.72
+            ],
+            [
+              91.455,
+              -35.67
+            ],
+            [
+              91.43,
+              -35.625
+            ],
+            [
+              91.51,
+              -35.595
+            ],
+            [
+              91.57,
+              -35.625
+            ],
+            [
+              91.675,
+              -35.52
+            ],
+            [
+              91.655,
+              -35.49
+            ],
+            [
+              91.69,
+              -35.465
+            ],
+            [
+              91.76,
+              -35.475
+            ],
+            [
+              91.85,
+              -35.425
+            ],
+            [
+              91.98,
+              -35.445
+            ],
+            [
+              92.005,
+              -35.35
+            ],
+            [
+              91.965,
+              -35.31
+            ],
+            [
+              91.975,
+              -35.24
+            ],
+            [
+              92.06,
+              -35.225
+            ],
+            [
+              92.09,
+              -35.165
+            ],
+            [
+              92.255,
+              -35.19
+            ],
+            [
+              92.165,
+              -35.25
+            ],
+            [
+              92.165,
+              -35.31
+            ],
+            [
+              92.045,
+              -35.42
+            ],
+            [
+              92.08,
+              -35.455
+            ],
+            [
+              92.17,
+              -35.455
+            ],
+            [
+              92.29,
+              -35.395
+            ],
+            [
+              92.385,
+              -35.31
+            ],
+            [
+              92.305,
+              -35.24
+            ],
+            [
+              92.385,
+              -35.17
+            ],
+            [
+              92.375,
+              -35.09
+            ],
+            [
+              92.41,
+              -35.015
+            ],
+            [
+              92.46,
+              -35.025
+            ],
+            [
+              92.57,
+              -34.905
+            ],
+            [
+              92.61,
+              -34.925
+            ],
+            [
+              92.63,
+              -34.875
+            ],
+            [
+              92.66,
+              -34.895
+            ],
+            [
+              92.75,
+              -34.865
+            ],
+            [
+              92.785,
+              -34.76
+            ],
+            [
+              92.87,
+              -34.695
+            ],
+            [
+              92.905,
+              -34.7
+            ],
+            [
+              92.895,
+              -34.81
+            ],
+            [
+              92.815,
+              -34.9
+            ],
+            [
+              92.96,
+              -34.895
+            ],
+            [
+              92.99,
+              -34.955
+            ],
+            [
+              93.115,
+              -34.81
+            ],
+            [
+              93.005,
+              -34.75
+            ],
+            [
+              92.985,
+              -34.67
+            ],
+            [
+              93.1,
+              -34.665
+            ],
+            [
+              93.175,
+              -34.58
+            ],
+            [
+              93.135,
+              -34.55
+            ],
+            [
+              93.15,
+              -34.525
+            ],
+            [
+              93.17,
+              -34.555
+            ],
+            [
+              93.21,
+              -34.535
+            ],
+            [
+              93.27,
+              -34.565
+            ],
+            [
+              93.35,
+              -34.525
+            ],
+            [
+              93.39,
+              -34.555
+            ],
+            [
+              93.535,
+              -34.44
+            ],
+            [
+              93.53,
+              -34.375
+            ],
+            [
+              93.475,
+              -34.41
+            ],
+            [
+              93.51,
+              -34.355
+            ],
+            [
+              93.6,
+              -34.385
+            ],
+            [
+              93.82,
+              -34.225
+            ],
+            [
+              93.89,
+              -34.125
+            ],
+            [
+              93.925,
+              -34.14
+            ],
+            [
+              93.84,
+              -34.245
+            ],
+            [
+              93.585,
+              -34.43
+            ],
+            [
+              93.645,
+              -34.46
+            ],
+            [
+              93.64,
+              -34.515
+            ],
+            [
+              93.6,
+              -34.505
+            ],
+            [
+              93.535,
+              -34.54
+            ],
+            [
+              93.51,
+              -34.595
+            ],
+            [
+              93.465,
+              -34.59
+            ],
+            [
+              93.52,
+              -34.615
+            ],
+            [
+              93.635,
+              -34.6
+            ],
+            [
+              93.6,
+              -34.645
+            ],
+            [
+              93.51,
+              -34.645
+            ],
+            [
+              93.445,
+              -34.7
+            ],
+            [
+              93.47,
+              -34.765
+            ],
+            [
+              93.51,
+              -34.755
+            ],
+            [
+              93.595,
+              -34.82
+            ],
+            [
+              93.52,
+              -34.865
+            ],
+            [
+              93.39,
+              -34.835
+            ],
+            [
+              93.275,
+              -34.88
+            ],
+            [
+              93.29,
+              -34.905
+            ],
+            [
+              93.51,
+              -34.895
+            ],
+            [
+              93.59,
+              -34.925
+            ],
+            [
+              93.5,
+              -35.005
+            ],
+            [
+              93.47,
+              -34.995
+            ],
+            [
+              93.37,
+              -35.105
+            ],
+            [
+              93.12,
+              -35.085
+            ],
+            [
+              93.1,
+              -35.015
+            ],
+            [
+              93.06,
+              -35.045
+            ],
+            [
+              92.98,
+              -35.015
+            ],
+            [
+              92.955,
+              -35.08
+            ],
+            [
+              93.015,
+              -35.13
+            ],
+            [
+              93.0,
+              -35.145
+            ],
+            [
+              92.94,
+              -35.145
+            ],
+            [
+              92.91,
+              -35.195
+            ],
+            [
+              92.82,
+              -35.145
+            ],
+            [
+              92.775,
+              -35.21
+            ],
+            [
+              92.83,
+              -35.255
+            ],
+            [
+              92.86,
+              -35.215
+            ],
+            [
+              92.895,
+              -35.23
+            ],
+            [
+              92.925,
+              -35.34
+            ],
+            [
+              92.91,
+              -35.415
+            ],
+            [
+              93.045,
+              -35.26
+            ],
+            [
+              92.985,
+              -35.24
+            ],
+            [
+              93.05,
+              -35.225
+            ],
+            [
+              93.055,
+              -35.28
+            ],
+            [
+              92.975,
+              -35.4
+            ],
+            [
+              92.86,
+              -35.455
+            ],
+            [
+              92.845,
+              -35.43
+            ],
+            [
+              92.905,
+              -35.34
+            ],
+            [
+              92.87,
+              -35.275
+            ],
+            [
+              92.81,
+              -35.295
+            ],
+            [
+              92.8,
+              -35.265
+            ],
+            [
+              92.785,
+              -35.33
+            ],
+            [
+              92.705,
+              -35.4
+            ],
+            [
+              92.75,
+              -35.465
+            ],
+            [
+              92.6,
+              -35.445
+            ],
+            [
+              92.445,
+              -35.56
+            ],
+            [
+              92.48,
+              -35.615
+            ],
+            [
+              92.585,
+              -35.63
+            ],
+            [
+              92.56,
+              -35.685
+            ],
+            [
+              92.5,
+              -35.705
+            ],
+            [
+              92.535,
+              -35.64
+            ],
+            [
+              92.48,
+              -35.635
+            ],
+            [
+              92.44,
+              -35.595
+            ],
+            [
+              92.365,
+              -35.66
+            ],
+            [
+              92.41,
+              -35.705
+            ],
+            [
+              92.495,
+              -35.71
+            ],
+            [
+              92.475,
+              -35.78
+            ],
+            [
+              92.38,
+              -35.845
+            ],
+            [
+              92.33,
+              -35.805
+            ],
+            [
+              92.09,
+              -35.905
+            ],
+            [
+              92.085,
+              -35.86
+            ],
+            [
+              92.165,
+              -35.79
+            ],
+            [
+              92.165,
+              -35.74
+            ],
+            [
+              92.13,
+              -35.705
+            ],
+            [
+              92.08,
+              -35.725
+            ],
+            [
+              92.05,
+              -35.685
+            ],
+            [
+              91.95,
+              -35.745
+            ],
+            [
+              91.845,
+              -35.84
+            ],
+            [
+              91.905,
+              -35.89
+            ],
+            [
+              91.865,
+              -35.93
+            ],
+            [
+              91.89,
+              -35.955
+            ],
+            [
+              91.93,
+              -35.925
+            ],
+            [
+              91.98,
+              -35.965
+            ],
+            [
+              92.05,
+              -35.955
+            ],
+            [
+              92.105,
+              -36.04
+            ],
+            [
+              91.87,
+              -36.065
+            ],
+            [
+              91.825,
+              -36.18
+            ],
+            [
+              91.875,
+              -36.2
+            ],
+            [
+              91.85,
+              -36.225
+            ],
+            [
+              91.71,
+              -36.235
+            ],
+            [
+              91.715,
+              -36.17
+            ],
+            [
+              91.78,
+              -36.125
+            ],
+            [
+              91.735,
+              -36.18
+            ],
+            [
+              91.78,
+              -36.215
+            ],
+            [
+              91.85,
+              -36.045
+            ],
+            [
+              92.065,
+              -36.01
+            ],
+            [
+              91.92,
+              -35.955
+            ],
+            [
+              91.9,
+              -35.985
+            ],
+            [
+              91.86,
+              -35.965
+            ],
+            [
+              91.71,
+              -36.005
+            ],
+            [
+              91.865,
+              -35.89
+            ],
+            [
+              91.84,
+              -35.865
+            ],
+            [
+              91.81,
+              -35.855
+            ],
+            [
+              91.675,
+              -35.96
+            ],
+            [
+              91.705,
+              -36.12
+            ],
+            [
+              91.65,
+              -36.165
+            ],
+            [
+              91.605,
+              -36.15
+            ],
+            [
+              91.59,
+              -36.095
+            ],
+            [
+              91.525,
+              -36.08
+            ],
+            [
+              91.585,
+              -36.04
+            ],
+            [
+              91.57,
+              -36.025
+            ],
+            [
+              91.46,
+              -36.005
+            ],
+            [
+              91.405,
+              -36.06
+            ],
+            [
+              91.585,
+              -36.24
+            ],
+            [
+              91.52,
+              -36.295
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "source": "auv",
+        "instrument": "AUV Side Scan Sonar",
+        "resolution": "5m",
+        "phase": "Phase 2",
+        "source_wms": "ausseabed:MH370_Phase_2_Sonar_Imagery_Backscatter_Inverse_Autonomous_Underwater_Vehicle__SSS__5m_2018",
+        "extracted_date": "2026-04-08",
+        "attribution": "Governments of Australia, Malaysia and PRC, 2018. CC BY 4.0"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              93.7,
+              -34.525
+            ],
+            [
+              93.73,
+              -34.485
+            ],
+            [
+              93.85,
+              -34.485
+            ],
+            [
+              93.94,
+              -34.425
+            ],
+            [
+              93.99,
+              -34.455
+            ],
+            [
+              93.985,
+              -34.39
+            ],
+            [
+              93.915,
+              -34.32
+            ],
+            [
+              93.95,
+              -34.285
+            ],
+            [
+              94.01,
+              -34.295
+            ],
+            [
+              94.07,
+              -34.355
+            ],
+            [
+              94.1,
+              -34.315
+            ],
+            [
+              94.15,
+              -34.315
+            ],
+            [
+              94.175,
+              -34.24
+            ],
+            [
+              94.23,
+              -34.235
+            ],
+            [
+              94.25,
+              -34.185
+            ],
+            [
+              94.275,
+              -34.22
+            ],
+            [
+              94.25,
+              -34.275
+            ],
+            [
+              94.11,
+              -34.335
+            ],
+            [
+              94.09,
+              -34.385
+            ],
+            [
+              93.95,
+              -34.305
+            ],
+            [
+              93.935,
+              -34.32
+            ],
+            [
+              94.005,
+              -34.37
+            ],
+            [
+              94.01,
+              -34.475
+            ],
+            [
+              93.95,
+              -34.445
+            ],
+            [
+              93.86,
+              -34.495
+            ],
+            [
+              93.7,
+              -34.525
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "source": "auv",
+        "instrument": "AUV Side Scan Sonar",
+        "resolution": "5m",
+        "phase": "Phase 2",
+        "source_wms": "ausseabed:MH370_Phase_2_Sonar_Imagery_Backscatter_Inverse_Autonomous_Underwater_Vehicle__SSS__5m_2018",
+        "extracted_date": "2026-04-08",
+        "attribution": "Governments of Australia, Malaysia and PRC, 2018. CC BY 4.0"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              93.425,
+              -34.67
+            ],
+            [
+              93.485,
+              -34.64
+            ],
+            [
+              93.45,
+              -34.545
+            ],
+            [
+              93.385,
+              -34.59
+            ],
+            [
+              93.425,
+              -34.62
+            ],
+            [
+              93.425,
+              -34.67
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "source": "auv",
+        "instrument": "AUV Side Scan Sonar",
+        "resolution": "5m",
+        "phase": "Phase 2",
+        "source_wms": "ausseabed:MH370_Phase_2_Sonar_Imagery_Backscatter_Inverse_Autonomous_Underwater_Vehicle__SSS__5m_2018",
+        "extracted_date": "2026-04-08",
+        "attribution": "Governments of Australia, Malaysia and PRC, 2018. CC BY 4.0"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              93.325,
+              -34.84
+            ],
+            [
+              93.425,
+              -34.78
+            ],
+            [
+              93.35,
+              -34.745
+            ],
+            [
+              93.315,
+              -34.68
+            ],
+            [
+              93.37,
+              -34.675
+            ],
+            [
+              93.395,
+              -34.63
+            ],
+            [
+              93.37,
+              -34.605
+            ],
+            [
+              93.33,
+              -34.625
+            ],
+            [
+              93.32,
+              -34.555
+            ],
+            [
+              93.26,
+              -34.585
+            ],
+            [
+              93.21,
+              -34.555
+            ],
+            [
+              93.215,
+              -34.61
+            ],
+            [
+              93.16,
+              -34.625
+            ],
+            [
+              93.085,
+              -34.71
+            ],
+            [
+              93.18,
+              -34.695
+            ],
+            [
+              93.29,
+              -34.625
+            ],
+            [
+              93.125,
+              -34.77
+            ],
+            [
+              93.15,
+              -34.825
+            ],
+            [
+              93.325,
+              -34.84
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "source": "auv",
+        "instrument": "AUV Side Scan Sonar",
+        "resolution": "5m",
+        "phase": "Phase 2",
+        "source_wms": "ausseabed:MH370_Phase_2_Sonar_Imagery_Backscatter_Inverse_Autonomous_Underwater_Vehicle__SSS__5m_2018",
+        "extracted_date": "2026-04-08",
+        "attribution": "Governments of Australia, Malaysia and PRC, 2018. CC BY 4.0"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              92.775,
+              -34.99
+            ],
+            [
+              92.815,
+              -34.95
+            ],
+            [
+              92.775,
+              -34.94
+            ],
+            [
+              92.8,
+              -34.865
+            ],
+            [
+              92.635,
+              -34.93
+            ],
+            [
+              92.775,
+              -34.99
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "source": "auv",
+        "instrument": "AUV Side Scan Sonar",
+        "resolution": "5m",
+        "phase": "Phase 2",
+        "source_wms": "ausseabed:MH370_Phase_2_Sonar_Imagery_Backscatter_Inverse_Autonomous_Underwater_Vehicle__SSS__5m_2018",
+        "extracted_date": "2026-04-08",
+        "attribution": "Governments of Australia, Malaysia and PRC, 2018. CC BY 4.0"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              93.335,
+              -35.08
+            ],
+            [
+              93.435,
+              -35.02
+            ],
+            [
+              93.44,
+              -34.945
+            ],
+            [
+              93.52,
+              -34.955
+            ],
+            [
+              93.545,
+              -34.93
+            ],
+            [
+              93.48,
+              -34.905
+            ],
+            [
+              93.22,
+              -34.925
+            ],
+            [
+              93.22,
+              -34.875
+            ],
+            [
+              93.16,
+              -34.865
+            ],
+            [
+              93.07,
+              -34.915
+            ],
+            [
+              93.025,
+              -35.0
+            ],
+            [
+              93.05,
+              -35.025
+            ],
+            [
+              93.08,
+              -34.975
+            ],
+            [
+              93.14,
+              -34.985
+            ],
+            [
+              93.14,
+              -35.075
+            ],
+            [
+              93.335,
+              -35.08
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "source": "auv",
+        "instrument": "AUV Side Scan Sonar",
+        "resolution": "5m",
+        "phase": "Phase 2",
+        "source_wms": "ausseabed:MH370_Phase_2_Sonar_Imagery_Backscatter_Inverse_Autonomous_Underwater_Vehicle__SSS__5m_2018",
+        "extracted_date": "2026-04-08",
+        "attribution": "Governments of Australia, Malaysia and PRC, 2018. CC BY 4.0"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              92.625,
+              -35.06
+            ],
+            [
+              92.695,
+              -35.01
+            ],
+            [
+              92.59,
+              -34.945
+            ],
+            [
+              92.495,
+              -35.0
+            ],
+            [
+              92.625,
+              -35.06
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "source": "auv",
+        "instrument": "AUV Side Scan Sonar",
+        "resolution": "5m",
+        "phase": "Phase 2",
+        "source_wms": "ausseabed:MH370_Phase_2_Sonar_Imagery_Backscatter_Inverse_Autonomous_Underwater_Vehicle__SSS__5m_2018",
+        "extracted_date": "2026-04-08",
+        "attribution": "Governments of Australia, Malaysia and PRC, 2018. CC BY 4.0"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              92.595,
+              -35.17
+            ],
+            [
+              92.635,
+              -35.14
+            ],
+            [
+              92.63,
+              -35.105
+            ],
+            [
+              92.54,
+              -35.065
+            ],
+            [
+              92.485,
+              -35.11
+            ],
+            [
+              92.595,
+              -35.17
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "source": "auv",
+        "instrument": "AUV Side Scan Sonar",
+        "resolution": "5m",
+        "phase": "Phase 2",
+        "source_wms": "ausseabed:MH370_Phase_2_Sonar_Imagery_Backscatter_Inverse_Autonomous_Underwater_Vehicle__SSS__5m_2018",
+        "extracted_date": "2026-04-08",
+        "attribution": "Governments of Australia, Malaysia and PRC, 2018. CC BY 4.0"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              92.5,
+              -35.245
+            ],
+            [
+              92.605,
+              -35.24
+            ],
+            [
+              92.51,
+              -35.165
+            ],
+            [
+              92.485,
+              -35.19
+            ],
+            [
+              92.5,
+              -35.245
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "source": "auv",
+        "instrument": "AUV Side Scan Sonar",
+        "resolution": "5m",
+        "phase": "Phase 2",
+        "source_wms": "ausseabed:MH370_Phase_2_Sonar_Imagery_Backscatter_Inverse_Autonomous_Underwater_Vehicle__SSS__5m_2018",
+        "extracted_date": "2026-04-08",
+        "attribution": "Governments of Australia, Malaysia and PRC, 2018. CC BY 4.0"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              92.025,
+              -35.33
+            ],
+            [
+              92.075,
+              -35.3
+            ],
+            [
+              92.07,
+              -35.235
+            ],
+            [
+              91.995,
+              -35.28
+            ],
+            [
+              91.985,
+              -35.31
+            ],
+            [
+              92.025,
+              -35.33
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "source": "auv",
+        "instrument": "AUV Side Scan Sonar",
+        "resolution": "5m",
+        "phase": "Phase 2",
+        "source_wms": "ausseabed:MH370_Phase_2_Sonar_Imagery_Backscatter_Inverse_Autonomous_Underwater_Vehicle__SSS__5m_2018",
+        "extracted_date": "2026-04-08",
+        "attribution": "Governments of Australia, Malaysia and PRC, 2018. CC BY 4.0"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              92.665,
+              -35.44
+            ],
+            [
+              92.755,
+              -35.31
+            ],
+            [
+              92.75,
+              -35.245
+            ],
+            [
+              92.69,
+              -35.305
+            ],
+            [
+              92.62,
+              -35.265
+            ],
+            [
+              92.625,
+              -35.31
+            ],
+            [
+              92.57,
+              -35.335
+            ],
+            [
+              92.525,
+              -35.41
+            ],
+            [
+              92.54,
+              -35.435
+            ],
+            [
+              92.6,
+              -35.415
+            ],
+            [
+              92.665,
+              -35.44
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "source": "auv",
+        "instrument": "AUV Side Scan Sonar",
+        "resolution": "5m",
+        "phase": "Phase 2",
+        "source_wms": "ausseabed:MH370_Phase_2_Sonar_Imagery_Backscatter_Inverse_Autonomous_Underwater_Vehicle__SSS__5m_2018",
+        "extracted_date": "2026-04-08",
+        "attribution": "Governments of Australia, Malaysia and PRC, 2018. CC BY 4.0"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              92.455,
+              -35.41
+            ],
+            [
+              92.575,
+              -35.29
+            ],
+            [
+              92.56,
+              -35.265
+            ],
+            [
+              92.49,
+              -35.255
+            ],
+            [
+              92.335,
+              -35.39
+            ],
+            [
+              92.35,
+              -35.415
+            ],
+            [
+              92.42,
+              -35.375
+            ],
+            [
+              92.455,
+              -35.41
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "source": "auv",
+        "instrument": "AUV Side Scan Sonar",
+        "resolution": "5m",
+        "phase": "Phase 2",
+        "source_wms": "ausseabed:MH370_Phase_2_Sonar_Imagery_Backscatter_Inverse_Autonomous_Underwater_Vehicle__SSS__5m_2018",
+        "extracted_date": "2026-04-08",
+        "attribution": "Governments of Australia, Malaysia and PRC, 2018. CC BY 4.0"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              91.625,
+              -35.96
+            ],
+            [
+              91.815,
+              -35.82
+            ],
+            [
+              91.74,
+              -35.665
+            ],
+            [
+              91.685,
+              -35.71
+            ],
+            [
+              91.7,
+              -35.655
+            ],
+            [
+              91.775,
+              -35.64
+            ],
+            [
+              91.79,
+              -35.545
+            ],
+            [
+              91.85,
+              -35.585
+            ],
+            [
+              91.92,
+              -35.575
+            ],
+            [
+              91.96,
+              -35.515
+            ],
+            [
+              92.03,
+              -35.565
+            ],
+            [
+              92.085,
+              -35.56
+            ],
+            [
+              92.07,
+              -35.595
+            ],
+            [
+              92.0,
+              -35.595
+            ],
+            [
+              91.98,
+              -35.625
+            ],
+            [
+              91.93,
+              -35.585
+            ],
+            [
+              91.855,
+              -35.61
+            ],
+            [
+              91.89,
+              -35.765
+            ],
+            [
+              92.145,
+              -35.59
+            ],
+            [
+              92.115,
+              -35.53
+            ],
+            [
+              92.155,
+              -35.49
+            ],
+            [
+              92.09,
+              -35.465
+            ],
+            [
+              92.01,
+              -35.495
+            ],
+            [
+              91.97,
+              -35.455
+            ],
+            [
+              91.87,
+              -35.435
+            ],
+            [
+              91.76,
+              -35.515
+            ],
+            [
+              91.7,
+              -35.515
+            ],
+            [
+              91.59,
+              -35.635
+            ],
+            [
+              91.53,
+              -35.655
+            ],
+            [
+              91.5,
+              -35.615
+            ],
+            [
+              91.465,
+              -35.69
+            ],
+            [
+              91.575,
+              -35.72
+            ],
+            [
+              91.535,
+              -35.76
+            ],
+            [
+              91.55,
+              -35.795
+            ],
+            [
+              91.62,
+              -35.785
+            ],
+            [
+              91.645,
+              -35.73
+            ],
+            [
+              91.685,
+              -35.72
+            ],
+            [
+              91.655,
+              -35.78
+            ],
+            [
+              91.715,
+              -35.84
+            ],
+            [
+              91.66,
+              -35.895
+            ],
+            [
+              91.61,
+              -35.885
+            ],
+            [
+              91.575,
+              -35.92
+            ],
+            [
+              91.625,
+              -35.96
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "source": "auv",
+        "instrument": "AUV Side Scan Sonar",
+        "resolution": "5m",
+        "phase": "Phase 2",
+        "source_wms": "ausseabed:MH370_Phase_2_Sonar_Imagery_Backscatter_Inverse_Autonomous_Underwater_Vehicle__SSS__5m_2018",
+        "extracted_date": "2026-04-08",
+        "attribution": "Governments of Australia, Malaysia and PRC, 2018. CC BY 4.0"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              92.265,
+              -35.69
+            ],
+            [
+              92.27,
+              -35.645
+            ],
+            [
+              92.23,
+              -35.655
+            ],
+            [
+              92.16,
+              -35.615
+            ],
+            [
+              92.115,
+              -35.65
+            ],
+            [
+              92.265,
+              -35.69
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "source": "auv",
+        "instrument": "AUV Side Scan Sonar",
+        "resolution": "5m",
+        "phase": "Phase 2",
+        "source_wms": "ausseabed:MH370_Phase_2_Sonar_Imagery_Backscatter_Inverse_Autonomous_Underwater_Vehicle__SSS__5m_2018",
+        "extracted_date": "2026-04-08",
+        "attribution": "Governments of Australia, Malaysia and PRC, 2018. CC BY 4.0"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              92.125,
+              -35.86
+            ],
+            [
+              92.36,
+              -35.765
+            ],
+            [
+              92.355,
+              -35.69
+            ],
+            [
+              92.34,
+              -35.675
+            ],
+            [
+              92.26,
+              -35.755
+            ],
+            [
+              92.2,
+              -35.725
+            ],
+            [
+              92.215,
+              -35.79
+            ],
+            [
+              92.165,
+              -35.81
+            ],
+            [
+              92.125,
+              -35.86
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "source": "auv",
+        "instrument": "AUV Side Scan Sonar",
+        "resolution": "5m",
+        "phase": "Phase 2",
+        "source_wms": "ausseabed:MH370_Phase_2_Sonar_Imagery_Backscatter_Inverse_Autonomous_Underwater_Vehicle__SSS__5m_2018",
+        "extracted_date": "2026-04-08",
+        "attribution": "Governments of Australia, Malaysia and PRC, 2018. CC BY 4.0"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              86.69,
+              -39.665
+            ],
+            [
+              86.66,
+              -39.545
+            ],
+            [
+              86.75,
+              -39.535
+            ],
+            [
+              86.79,
+              -39.625
+            ],
+            [
+              86.93,
+              -39.525
+            ],
+            [
+              87.005,
+              -39.51
+            ],
+            [
+              86.97,
+              -39.475
+            ],
+            [
+              86.91,
+              -39.475
+            ],
+            [
+              86.87,
+              -39.405
+            ],
+            [
+              87.03,
+              -39.485
+            ],
+            [
+              87.115,
+              -39.45
+            ],
+            [
+              87.02,
+              -39.405
+            ],
+            [
+              87.03,
+              -39.365
+            ],
+            [
+              87.01,
+              -39.385
+            ],
+            [
+              86.955,
+              -39.34
+            ],
+            [
+              86.98,
+              -39.285
+            ],
+            [
+              87.06,
+              -39.375
+            ],
+            [
+              87.165,
+              -39.42
+            ],
+            [
+              87.18,
+              -39.385
+            ],
+            [
+              87.115,
+              -39.37
+            ],
+            [
+              87.165,
+              -39.33
+            ],
+            [
+              87.085,
+              -39.3
+            ],
+            [
+              87.095,
+              -39.15
+            ],
+            [
+              87.13,
+              -39.135
+            ],
+            [
+              87.21,
+              -39.225
+            ],
+            [
+              87.265,
+              -39.14
+            ],
+            [
+              87.24,
+              -39.095
+            ],
+            [
+              87.14,
+              -39.065
+            ],
+            [
+              87.13,
+              -39.025
+            ],
+            [
+              87.27,
+              -39.015
+            ],
+            [
+              87.34,
+              -39.085
+            ],
+            [
+              87.395,
+              -39.03
+            ],
+            [
+              87.02,
+              -38.875
+            ],
+            [
+              87.015,
+              -38.83
+            ],
+            [
+              87.075,
+              -38.81
+            ],
+            [
+              87.045,
+              -38.78
+            ],
+            [
+              87.095,
+              -38.75
+            ],
+            [
+              87.08,
+              -38.735
+            ],
+            [
+              86.76,
+              -38.905
+            ],
+            [
+              86.67,
+              -38.915
+            ],
+            [
+              86.65,
+              -38.855
+            ],
+            [
+              86.89,
+              -38.735
+            ],
+            [
+              86.905,
+              -38.72
+            ],
+            [
+              86.865,
+              -38.69
+            ],
+            [
+              86.975,
+              -38.65
+            ],
+            [
+              86.92,
+              -38.625
+            ],
+            [
+              86.97,
+              -38.615
+            ],
+            [
+              87.05,
+              -38.655
+            ],
+            [
+              87.5,
+              -38.425
+            ],
+            [
+              87.525,
+              -38.4
+            ],
+            [
+              87.505,
+              -38.36
+            ],
+            [
+              87.58,
+              -38.325
+            ],
+            [
+              87.715,
+              -38.4
+            ],
+            [
+              87.585,
+              -38.48
+            ],
+            [
+              87.595,
+              -38.6
+            ],
+            [
+              87.68,
+              -38.645
+            ],
+            [
+              87.815,
+              -38.51
+            ],
+            [
+              87.745,
+              -38.45
+            ],
+            [
+              87.755,
+              -38.39
+            ],
+            [
+              87.665,
+              -38.31
+            ],
+            [
+              87.785,
+              -38.22
+            ],
+            [
+              87.78,
+              -38.185
+            ],
+            [
+              87.82,
+              -38.215
+            ],
+            [
+              87.87,
+              -38.185
+            ],
+            [
+              87.905,
+              -38.2
+            ],
+            [
+              87.815,
+              -38.25
+            ],
+            [
+              87.785,
+              -38.29
+            ],
+            [
+              87.8,
+              -38.315
+            ],
+            [
+              87.89,
+              -38.335
+            ],
+            [
+              87.945,
+              -38.31
+            ],
+            [
+              87.925,
+              -38.24
+            ],
+            [
+              87.995,
+              -38.19
+            ],
+            [
+              87.955,
+              -38.14
+            ],
+            [
+              87.98,
+              -38.125
+            ],
+            [
+              88.02,
+              -38.155
+            ],
+            [
+              88.03,
+              -38.105
+            ],
+            [
+              88.11,
+              -38.095
+            ],
+            [
+              88.115,
+              -38.05
+            ],
+            [
+              88.215,
+              -37.97
+            ],
+            [
+              88.165,
+              -37.96
+            ],
+            [
+              88.255,
+              -37.9
+            ],
+            [
+              88.245,
+              -37.84
+            ],
+            [
+              88.3,
+              -37.855
+            ],
+            [
+              88.335,
+              -37.8
+            ],
+            [
+              88.315,
+              -37.76
+            ],
+            [
+              88.37,
+              -37.775
+            ],
+            [
+              88.475,
+              -37.64
+            ],
+            [
+              88.39,
+              -37.575
+            ],
+            [
+              88.47,
+              -37.525
+            ],
+            [
+              88.52,
+              -37.555
+            ],
+            [
+              88.545,
+              -37.53
+            ],
+            [
+              88.515,
+              -37.5
+            ],
+            [
+              88.63,
+              -37.405
+            ],
+            [
+              88.89,
+              -37.275
+            ],
+            [
+              88.93,
+              -37.425
+            ],
+            [
+              89.02,
+              -37.395
+            ],
+            [
+              89.065,
+              -37.43
+            ],
+            [
+              88.99,
+              -37.425
+            ],
+            [
+              88.96,
+              -37.455
+            ],
+            [
+              88.88,
+              -37.435
+            ],
+            [
+              88.875,
+              -37.33
+            ],
+            [
+              88.82,
+              -37.335
+            ],
+            [
+              88.805,
+              -37.4
+            ],
+            [
+              88.865,
+              -37.43
+            ],
+            [
+              88.745,
+              -37.46
+            ],
+            [
+              88.765,
+              -37.49
+            ],
+            [
+              88.72,
+              -37.505
+            ],
+            [
+              88.635,
+              -37.64
+            ],
+            [
+              88.545,
+              -37.71
+            ],
+            [
+              88.545,
+              -37.76
+            ],
+            [
+              88.7,
+              -37.755
+            ],
+            [
+              88.705,
+              -37.72
+            ],
+            [
+              88.665,
+              -37.69
+            ],
+            [
+              88.69,
+              -37.655
+            ],
+            [
+              88.79,
+              -37.615
+            ],
+            [
+              88.95,
+              -37.485
+            ],
+            [
+              89.0,
+              -37.485
+            ],
+            [
+              89.015,
+              -37.51
+            ],
+            [
+              88.895,
+              -37.64
+            ],
+            [
+              88.97,
+              -37.665
+            ],
+            [
+              89.115,
+              -37.57
+            ],
+            [
+              89.12,
+              -37.505
+            ],
+            [
+              89.2,
+              -37.515
+            ],
+            [
+              89.23,
+              -37.455
+            ],
+            [
+              89.27,
+              -37.475
+            ],
+            [
+              89.36,
+              -37.395
+            ],
+            [
+              89.415,
+              -37.39
+            ],
+            [
+              89.33,
+              -37.315
+            ],
+            [
+              89.41,
+              -37.305
+            ],
+            [
+              89.47,
+              -37.365
+            ],
+            [
+              89.515,
+              -37.31
+            ],
+            [
+              89.48,
+              -37.225
+            ],
+            [
+              89.56,
+              -37.285
+            ],
+            [
+              89.59,
+              -37.275
+            ],
+            [
+              89.57,
+              -37.175
+            ],
+            [
+              89.67,
+              -37.225
+            ],
+            [
+              89.87,
+              -37.125
+            ],
+            [
+              89.975,
+              -37.04
+            ],
+            [
+              89.94,
+              -36.995
+            ],
+            [
+              90.03,
+              -36.985
+            ],
+            [
+              90.12,
+              -36.875
+            ],
+            [
+              90.18,
+              -36.955
+            ],
+            [
+              90.25,
+              -36.955
+            ],
+            [
+              90.265,
+              -36.94
+            ],
+            [
+              90.185,
+              -36.88
+            ],
+            [
+              90.255,
+              -36.85
+            ],
+            [
+              90.225,
+              -36.83
+            ],
+            [
+              90.25,
+              -36.795
+            ],
+            [
+              90.31,
+              -36.805
+            ],
+            [
+              90.43,
+              -36.725
+            ],
+            [
+              90.45,
+              -36.615
+            ],
+            [
+              90.48,
+              -36.685
+            ],
+            [
+              90.55,
+              -36.645
+            ],
+            [
+              90.61,
+              -36.655
+            ],
+            [
+              90.715,
+              -36.58
+            ],
+            [
+              90.7,
+              -36.545
+            ],
+            [
+              90.75,
+              -36.565
+            ],
+            [
+              90.855,
+              -36.49
+            ],
+            [
+              90.85,
+              -36.445
+            ],
+            [
+              90.9,
+              -36.455
+            ],
+            [
+              91.075,
+              -36.34
+            ],
+            [
+              90.965,
+              -36.13
+            ],
+            [
+              91.01,
+              -36.085
+            ],
+            [
+              91.055,
+              -36.09
+            ],
+            [
+              91.005,
+              -36.15
+            ],
+            [
+              91.115,
+              -36.36
+            ],
+            [
+              91.2,
+              -36.395
+            ],
+            [
+              91.205,
+              -36.43
+            ],
+            [
+              91.03,
+              -36.625
+            ],
+            [
+              90.66,
+              -36.695
+            ],
+            [
+              90.62,
+              -36.675
+            ],
+            [
+              90.45,
+              -36.785
+            ],
+            [
+              90.4,
+              -36.765
+            ],
+            [
+              90.295,
+              -36.85
+            ],
+            [
+              90.345,
+              -36.93
+            ],
+            [
+              90.3,
+              -36.965
+            ],
+            [
+              90.21,
+              -36.995
+            ],
+            [
+              90.1,
+              -36.935
+            ],
+            [
+              90.065,
+              -36.98
+            ],
+            [
+              90.07,
+              -37.035
+            ],
+            [
+              90.02,
+              -37.025
+            ],
+            [
+              89.92,
+              -37.135
+            ],
+            [
+              89.6,
+              -37.285
+            ],
+            [
+              89.59,
+              -37.325
+            ],
+            [
+              89.505,
+              -37.38
+            ],
+            [
+              89.5,
+              -37.435
+            ],
+            [
+              89.34,
+              -37.455
+            ],
+            [
+              89.315,
+              -37.49
+            ],
+            [
+              89.355,
+              -37.52
+            ],
+            [
+              89.35,
+              -37.555
+            ],
+            [
+              89.26,
+              -37.515
+            ],
+            [
+              89.28,
+              -37.565
+            ],
+            [
+              89.355,
+              -37.6
+            ],
+            [
+              89.34,
+              -37.635
+            ],
+            [
+              89.28,
+              -37.605
+            ],
+            [
+              89.19,
+              -37.655
+            ],
+            [
+              89.195,
+              -37.6
+            ],
+            [
+              89.16,
+              -37.575
+            ],
+            [
+              88.905,
+              -37.72
+            ],
+            [
+              89.02,
+              -37.735
+            ],
+            [
+              89.09,
+              -37.685
+            ],
+            [
+              89.125,
+              -37.77
+            ],
+            [
+              89.095,
+              -37.85
+            ],
+            [
+              89.315,
+              -37.93
+            ],
+            [
+              89.25,
+              -37.975
+            ],
+            [
+              89.15,
+              -37.935
+            ],
+            [
+              89.11,
+              -37.965
+            ],
+            [
+              89.055,
+              -37.92
+            ],
+            [
+              89.085,
+              -37.89
+            ],
+            [
+              89.035,
+              -37.87
+            ],
+            [
+              89.075,
+              -37.83
+            ],
+            [
+              89.05,
+              -37.775
+            ],
+            [
+              89.01,
+              -37.745
+            ],
+            [
+              88.885,
+              -37.77
+            ],
+            [
+              89.005,
+              -37.84
+            ],
+            [
+              89.025,
+              -37.87
+            ],
+            [
+              88.965,
+              -37.92
+            ],
+            [
+              89.03,
+              -37.985
+            ],
+            [
+              89.07,
+              -37.995
+            ],
+            [
+              89.1,
+              -37.965
+            ],
+            [
+              89.115,
+              -37.99
+            ],
+            [
+              89.05,
+              -38.015
+            ],
+            [
+              88.96,
+              -37.955
+            ],
+            [
+              88.925,
+              -38.01
+            ],
+            [
+              88.96,
+              -38.105
+            ],
+            [
+              89.025,
+              -38.11
+            ],
+            [
+              88.975,
+              -38.15
+            ],
+            [
+              88.995,
+              -38.18
+            ],
+            [
+              88.93,
+              -38.185
+            ],
+            [
+              88.915,
+              -38.22
+            ],
+            [
+              88.96,
+              -38.215
+            ],
+            [
+              89.055,
+              -38.35
+            ],
+            [
+              88.97,
+              -38.315
+            ],
+            [
+              88.94,
+              -38.365
+            ],
+            [
+              88.865,
+              -38.39
+            ],
+            [
+              88.945,
+              -38.45
+            ],
+            [
+              88.88,
+              -38.565
+            ],
+            [
+              88.785,
+              -38.6
+            ],
+            [
+              88.735,
+              -38.5
+            ],
+            [
+              88.835,
+              -38.41
+            ],
+            [
+              88.785,
+              -38.39
+            ],
+            [
+              88.79,
+              -38.355
+            ],
+            [
+              88.69,
+              -38.315
+            ],
+            [
+              88.62,
+              -38.385
+            ],
+            [
+              88.525,
+              -38.4
+            ],
+            [
+              88.58,
+              -38.475
+            ],
+            [
+              88.625,
+              -38.48
+            ],
+            [
+              88.56,
+              -38.505
+            ],
+            [
+              88.52,
+              -38.575
+            ],
+            [
+              88.32,
+              -38.495
+            ],
+            [
+              88.335,
+              -38.53
+            ],
+            [
+              88.305,
+              -38.59
+            ],
+            [
+              88.245,
+              -38.61
+            ],
+            [
+              88.295,
+              -38.65
+            ],
+            [
+              88.25,
+              -38.695
+            ],
+            [
+              88.21,
+              -38.655
+            ],
+            [
+              88.145,
+              -38.78
+            ],
+            [
+              88.24,
+              -38.835
+            ],
+            [
+              88.29,
+              -38.835
+            ],
+            [
+              88.31,
+              -38.795
+            ],
+            [
+              88.36,
+              -38.795
+            ],
+            [
+              88.385,
+              -38.83
+            ],
+            [
+              88.24,
+              -38.855
+            ],
+            [
+              88.14,
+              -38.795
+            ],
+            [
+              88.02,
+              -38.825
+            ],
+            [
+              88.045,
+              -38.89
+            ],
+            [
+              87.905,
+              -39.01
+            ],
+            [
+              87.87,
+              -39.105
+            ],
+            [
+              87.825,
+              -39.09
+            ],
+            [
+              87.885,
+              -39.02
+            ],
+            [
+              87.85,
+              -38.995
+            ],
+            [
+              87.67,
+              -39.085
+            ],
+            [
+              87.65,
+              -39.125
+            ],
+            [
+              87.59,
+              -39.125
+            ],
+            [
+              87.6,
+              -39.065
+            ],
+            [
+              87.67,
+              -39.065
+            ],
+            [
+              87.7,
+              -38.995
+            ],
+            [
+              87.8,
+              -38.975
+            ],
+            [
+              87.855,
+              -38.91
+            ],
+            [
+              87.75,
+              -38.835
+            ],
+            [
+              87.705,
+              -38.86
+            ],
+            [
+              87.745,
+              -38.89
+            ],
+            [
+              87.69,
+              -38.925
+            ],
+            [
+              87.63,
+              -38.925
+            ],
+            [
+              87.57,
+              -38.865
+            ],
+            [
+              87.575,
+              -38.95
+            ],
+            [
+              87.645,
+              -38.95
+            ],
+            [
+              87.585,
+              -38.99
+            ],
+            [
+              87.665,
+              -39.0
+            ],
+            [
+              87.505,
+              -39.07
+            ],
+            [
+              87.495,
+              -39.1
+            ],
+            [
+              87.53,
+              -39.135
+            ],
+            [
+              87.585,
+              -39.13
+            ],
+            [
+              87.57,
+              -39.165
+            ],
+            [
+              87.54,
+              -39.155
+            ],
+            [
+              87.51,
+              -39.195
+            ],
+            [
+              87.505,
+              -39.15
+            ],
+            [
+              87.44,
+              -39.105
+            ],
+            [
+              87.435,
+              -39.15
+            ],
+            [
+              87.335,
+              -39.22
+            ],
+            [
+              87.315,
+              -39.3
+            ],
+            [
+              87.205,
+              -39.36
+            ],
+            [
+              87.22,
+              -39.385
+            ],
+            [
+              87.31,
+              -39.345
+            ],
+            [
+              87.33,
+              -39.405
+            ],
+            [
+              87.21,
+              -39.415
+            ],
+            [
+              87.17,
+              -39.475
+            ],
+            [
+              87.14,
+              -39.465
+            ],
+            [
+              87.0,
+              -39.565
+            ],
+            [
+              86.95,
+              -39.545
+            ],
+            [
+              86.89,
+              -39.615
+            ],
+            [
+              86.8,
+              -39.655
+            ],
+            [
+              86.72,
+              -39.595
+            ],
+            [
+              86.69,
+              -39.665
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "source": "auv",
+        "instrument": "AUV Side Scan Sonar",
+        "resolution": "5m",
+        "phase": "Phase 2",
+        "source_wms": "ausseabed:MH370_Phase_2_Sonar_Imagery_Backscatter_Inverse_Autonomous_Underwater_Vehicle__SSS__5m_2018",
+        "extracted_date": "2026-04-08",
+        "attribution": "Governments of Australia, Malaysia and PRC, 2018. CC BY 4.0"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              91.45,
+              -36.255
+            ],
+            [
+              91.555,
+              -36.24
+            ],
+            [
+              91.47,
+              -36.155
+            ],
+            [
+              91.425,
+              -36.19
+            ],
+            [
+              91.45,
+              -36.255
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "source": "auv",
+        "instrument": "AUV Side Scan Sonar",
+        "resolution": "5m",
+        "phase": "Phase 2",
+        "source_wms": "ausseabed:MH370_Phase_2_Sonar_Imagery_Backscatter_Inverse_Autonomous_Underwater_Vehicle__SSS__5m_2018",
+        "extracted_date": "2026-04-08",
+        "attribution": "Governments of Australia, Malaysia and PRC, 2018. CC BY 4.0"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              90.645,
+              -36.66
+            ],
+            [
+              90.98,
+              -36.635
+            ],
+            [
+              91.185,
+              -36.42
+            ],
+            [
+              91.08,
+              -36.365
+            ],
+            [
+              90.935,
+              -36.47
+            ],
+            [
+              91.02,
+              -36.545
+            ],
+            [
+              90.89,
+              -36.495
+            ],
+            [
+              90.645,
+              -36.66
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "source": "auv",
+        "instrument": "AUV Side Scan Sonar",
+        "resolution": "5m",
+        "phase": "Phase 2",
+        "source_wms": "ausseabed:MH370_Phase_2_Sonar_Imagery_Backscatter_Inverse_Autonomous_Underwater_Vehicle__SSS__5m_2018",
+        "extracted_date": "2026-04-08",
+        "attribution": "Governments of Australia, Malaysia and PRC, 2018. CC BY 4.0"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              89.44,
+              -37.175
+            ],
+            [
+              89.3,
+              -37.105
+            ],
+            [
+              89.17,
+              -37.115
+            ],
+            [
+              89.165,
+              -37.09
+            ],
+            [
+              89.36,
+              -36.965
+            ],
+            [
+              89.355,
+              -37.01
+            ],
+            [
+              89.245,
+              -37.08
+            ],
+            [
+              89.34,
+              -37.085
+            ],
+            [
+              89.37,
+              -37.035
+            ],
+            [
+              89.365,
+              -37.1
+            ],
+            [
+              89.44,
+              -37.175
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "source": "auv",
+        "instrument": "AUV Side Scan Sonar",
+        "resolution": "5m",
+        "phase": "Phase 2",
+        "source_wms": "ausseabed:MH370_Phase_2_Sonar_Imagery_Backscatter_Inverse_Autonomous_Underwater_Vehicle__SSS__5m_2018",
+        "extracted_date": "2026-04-08",
+        "attribution": "Governments of Australia, Malaysia and PRC, 2018. CC BY 4.0"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              89.09,
+              -37.445
+            ],
+            [
+              89.085,
+              -37.39
+            ],
+            [
+              89.155,
+              -37.33
+            ],
+            [
+              88.99,
+              -37.335
+            ],
+            [
+              89.015,
+              -37.28
+            ],
+            [
+              88.995,
+              -37.24
+            ],
+            [
+              89.09,
+              -37.225
+            ],
+            [
+              89.17,
+              -37.265
+            ],
+            [
+              89.22,
+              -37.255
+            ],
+            [
+              89.265,
+              -37.3
+            ],
+            [
+              89.21,
+              -37.295
+            ],
+            [
+              89.09,
+              -37.445
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "source": "auv",
+        "instrument": "AUV Side Scan Sonar",
+        "resolution": "5m",
+        "phase": "Phase 2",
+        "source_wms": "ausseabed:MH370_Phase_2_Sonar_Imagery_Backscatter_Inverse_Autonomous_Underwater_Vehicle__SSS__5m_2018",
+        "extracted_date": "2026-04-08",
+        "attribution": "Governments of Australia, Malaysia and PRC, 2018. CC BY 4.0"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              88.515,
+              -37.71
+            ],
+            [
+              88.585,
+              -37.64
+            ],
+            [
+              88.58,
+              -37.585
+            ],
+            [
+              88.465,
+              -37.69
+            ],
+            [
+              88.515,
+              -37.71
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "source": "auv",
+        "instrument": "AUV Side Scan Sonar",
+        "resolution": "5m",
+        "phase": "Phase 2",
+        "source_wms": "ausseabed:MH370_Phase_2_Sonar_Imagery_Backscatter_Inverse_Autonomous_Underwater_Vehicle__SSS__5m_2018",
+        "extracted_date": "2026-04-08",
+        "attribution": "Governments of Australia, Malaysia and PRC, 2018. CC BY 4.0"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              88.865,
+              -37.99
+            ],
+            [
+              88.945,
+              -37.94
+            ],
+            [
+              88.95,
+              -37.865
+            ],
+            [
+              88.83,
+              -37.885
+            ],
+            [
+              88.775,
+              -37.93
+            ],
+            [
+              88.865,
+              -37.99
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "source": "auv",
+        "instrument": "AUV Side Scan Sonar",
+        "resolution": "5m",
+        "phase": "Phase 2",
+        "source_wms": "ausseabed:MH370_Phase_2_Sonar_Imagery_Backscatter_Inverse_Autonomous_Underwater_Vehicle__SSS__5m_2018",
+        "extracted_date": "2026-04-08",
+        "attribution": "Governments of Australia, Malaysia and PRC, 2018. CC BY 4.0"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              88.505,
+              -38.55
+            ],
+            [
+              88.555,
+              -38.48
+            ],
+            [
+              88.485,
+              -38.41
+            ],
+            [
+              88.49,
+              -38.375
+            ],
+            [
+              88.56,
+              -38.375
+            ],
+            [
+              88.67,
+              -38.295
+            ],
+            [
+              88.82,
+              -38.355
+            ],
+            [
+              88.865,
+              -38.34
+            ],
+            [
+              88.875,
+              -38.28
+            ],
+            [
+              88.815,
+              -38.25
+            ],
+            [
+              88.875,
+              -38.22
+            ],
+            [
+              88.845,
+              -38.16
+            ],
+            [
+              88.875,
+              -38.13
+            ],
+            [
+              88.855,
+              -38.07
+            ],
+            [
+              88.905,
+              -38.06
+            ],
+            [
+              88.89,
+              -38.005
+            ],
+            [
+              88.85,
+              -38.015
+            ],
+            [
+              88.76,
+              -37.955
+            ],
+            [
+              88.68,
+              -37.985
+            ],
+            [
+              88.65,
+              -37.955
+            ],
+            [
+              88.655,
+              -38.02
+            ],
+            [
+              88.575,
+              -38.06
+            ],
+            [
+              88.585,
+              -38.13
+            ],
+            [
+              88.395,
+              -38.22
+            ],
+            [
+              88.46,
+              -38.245
+            ],
+            [
+              88.54,
+              -38.175
+            ],
+            [
+              88.595,
+              -38.21
+            ],
+            [
+              88.535,
+              -38.26
+            ],
+            [
+              88.57,
+              -38.305
+            ],
+            [
+              88.405,
+              -38.36
+            ],
+            [
+              88.44,
+              -38.435
+            ],
+            [
+              88.295,
+              -38.46
+            ],
+            [
+              88.505,
+              -38.55
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "source": "auv",
+        "instrument": "AUV Side Scan Sonar",
+        "resolution": "5m",
+        "phase": "Phase 2",
+        "source_wms": "ausseabed:MH370_Phase_2_Sonar_Imagery_Backscatter_Inverse_Autonomous_Underwater_Vehicle__SSS__5m_2018",
+        "extracted_date": "2026-04-08",
+        "attribution": "Governments of Australia, Malaysia and PRC, 2018. CC BY 4.0"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              88.225,
+              -38.16
+            ],
+            [
+              88.35,
+              -38.115
+            ],
+            [
+              88.375,
+              -38.09
+            ],
+            [
+              88.33,
+              -38.065
+            ],
+            [
+              88.225,
+              -38.16
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "source": "auv",
+        "instrument": "AUV Side Scan Sonar",
+        "resolution": "5m",
+        "phase": "Phase 2",
+        "source_wms": "ausseabed:MH370_Phase_2_Sonar_Imagery_Backscatter_Inverse_Autonomous_Underwater_Vehicle__SSS__5m_2018",
+        "extracted_date": "2026-04-08",
+        "attribution": "Governments of Australia, Malaysia and PRC, 2018. CC BY 4.0"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              87.995,
+              -38.49
+            ],
+            [
+              88.04,
+              -38.445
+            ],
+            [
+              88.14,
+              -38.485
+            ],
+            [
+              88.165,
+              -38.45
+            ],
+            [
+              88.105,
+              -38.38
+            ],
+            [
+              88.255,
+              -38.3
+            ],
+            [
+              88.19,
+              -38.255
+            ],
+            [
+              88.11,
+              -38.295
+            ],
+            [
+              87.955,
+              -38.43
+            ],
+            [
+              88.005,
+              -38.43
+            ],
+            [
+              87.965,
+              -38.47
+            ],
+            [
+              87.995,
+              -38.49
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "source": "auv",
+        "instrument": "AUV Side Scan Sonar",
+        "resolution": "5m",
+        "phase": "Phase 2",
+        "source_wms": "ausseabed:MH370_Phase_2_Sonar_Imagery_Backscatter_Inverse_Autonomous_Underwater_Vehicle__SSS__5m_2018",
+        "extracted_date": "2026-04-08",
+        "attribution": "Governments of Australia, Malaysia and PRC, 2018. CC BY 4.0"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              88.365,
+              -38.44
+            ],
+            [
+              88.37,
+              -38.365
+            ],
+            [
+              88.29,
+              -38.405
+            ],
+            [
+              88.265,
+              -38.4
+            ],
+            [
+              88.295,
+              -38.37
+            ],
+            [
+              88.28,
+              -38.345
+            ],
+            [
+              88.205,
+              -38.37
+            ],
+            [
+              88.27,
+              -38.435
+            ],
+            [
+              88.365,
+              -38.44
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "source": "auv",
+        "instrument": "AUV Side Scan Sonar",
+        "resolution": "5m",
+        "phase": "Phase 2",
+        "source_wms": "ausseabed:MH370_Phase_2_Sonar_Imagery_Backscatter_Inverse_Autonomous_Underwater_Vehicle__SSS__5m_2018",
+        "extracted_date": "2026-04-08",
+        "attribution": "Governments of Australia, Malaysia and PRC, 2018. CC BY 4.0"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              87.505,
+              -38.61
+            ],
+            [
+              87.585,
+              -38.58
+            ],
+            [
+              87.56,
+              -38.485
+            ],
+            [
+              87.435,
+              -38.56
+            ],
+            [
+              87.505,
+              -38.61
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "source": "auv",
+        "instrument": "AUV Side Scan Sonar",
+        "resolution": "5m",
+        "phase": "Phase 2",
+        "source_wms": "ausseabed:MH370_Phase_2_Sonar_Imagery_Backscatter_Inverse_Autonomous_Underwater_Vehicle__SSS__5m_2018",
+        "extracted_date": "2026-04-08",
+        "attribution": "Governments of Australia, Malaysia and PRC, 2018. CC BY 4.0"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              87.875,
+              -38.65
+            ],
+            [
+              87.92,
+              -38.605
+            ],
+            [
+              88.03,
+              -38.605
+            ],
+            [
+              88.06,
+              -38.555
+            ],
+            [
+              88.12,
+              -38.565
+            ],
+            [
+              88.145,
+              -38.51
+            ],
+            [
+              87.96,
+              -38.575
+            ],
+            [
+              87.94,
+              -38.505
+            ],
+            [
+              87.845,
+              -38.62
+            ],
+            [
+              87.875,
+              -38.65
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "source": "auv",
+        "instrument": "AUV Side Scan Sonar",
+        "resolution": "5m",
+        "phase": "Phase 2",
+        "source_wms": "ausseabed:MH370_Phase_2_Sonar_Imagery_Backscatter_Inverse_Autonomous_Underwater_Vehicle__SSS__5m_2018",
+        "extracted_date": "2026-04-08",
+        "attribution": "Governments of Australia, Malaysia and PRC, 2018. CC BY 4.0"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              87.52,
+              -38.795
+            ],
+            [
+              87.665,
+              -38.78
+            ],
+            [
+              87.585,
+              -38.76
+            ],
+            [
+              87.655,
+              -38.7
+            ],
+            [
+              87.65,
+              -38.645
+            ],
+            [
+              87.55,
+              -38.615
+            ],
+            [
+              87.555,
+              -38.66
+            ],
+            [
+              87.52,
+              -38.685
+            ],
+            [
+              87.45,
+              -38.625
+            ],
+            [
+              87.295,
+              -38.63
+            ],
+            [
+              87.365,
+              -38.68
+            ],
+            [
+              87.325,
+              -38.71
+            ],
+            [
+              87.42,
+              -38.785
+            ],
+            [
+              87.45,
+              -38.735
+            ],
+            [
+              87.49,
+              -38.735
+            ],
+            [
+              87.52,
+              -38.795
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "source": "auv",
+        "instrument": "AUV Side Scan Sonar",
+        "resolution": "5m",
+        "phase": "Phase 2",
+        "source_wms": "ausseabed:MH370_Phase_2_Sonar_Imagery_Backscatter_Inverse_Autonomous_Underwater_Vehicle__SSS__5m_2018",
+        "extracted_date": "2026-04-08",
+        "attribution": "Governments of Australia, Malaysia and PRC, 2018. CC BY 4.0"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              87.325,
+              -38.97
+            ],
+            [
+              87.41,
+              -38.885
+            ],
+            [
+              87.49,
+              -38.915
+            ],
+            [
+              87.555,
+              -38.84
+            ],
+            [
+              87.47,
+              -38.795
+            ],
+            [
+              87.4,
+              -38.825
+            ],
+            [
+              87.37,
+              -38.755
+            ],
+            [
+              87.24,
+              -38.725
+            ],
+            [
+              87.225,
+              -38.7
+            ],
+            [
+              87.305,
+              -38.66
+            ],
+            [
+              87.27,
+              -38.635
+            ],
+            [
+              87.135,
+              -38.72
+            ],
+            [
+              87.15,
+              -38.765
+            ],
+            [
+              87.085,
+              -38.78
+            ],
+            [
+              87.14,
+              -38.835
+            ],
+            [
+              87.035,
+              -38.85
+            ],
+            [
+              87.2,
+              -38.945
+            ],
+            [
+              87.25,
+              -38.925
+            ],
+            [
+              87.325,
+              -38.97
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "source": "auv",
+        "instrument": "AUV Side Scan Sonar",
+        "resolution": "5m",
+        "phase": "Phase 2",
+        "source_wms": "ausseabed:MH370_Phase_2_Sonar_Imagery_Backscatter_Inverse_Autonomous_Underwater_Vehicle__SSS__5m_2018",
+        "extracted_date": "2026-04-08",
+        "attribution": "Governments of Australia, Malaysia and PRC, 2018. CC BY 4.0"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              87.775,
+              -38.81
+            ],
+            [
+              87.81,
+              -38.755
+            ],
+            [
+              87.875,
+              -38.76
+            ],
+            [
+              87.89,
+              -38.665
+            ],
+            [
+              87.675,
+              -38.69
+            ],
+            [
+              87.68,
+              -38.745
+            ],
+            [
+              87.785,
+              -38.7
+            ],
+            [
+              87.785,
+              -38.75
+            ],
+            [
+              87.705,
+              -38.8
+            ],
+            [
+              87.775,
+              -38.81
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "source": "auv",
+        "instrument": "AUV Side Scan Sonar",
+        "resolution": "5m",
+        "phase": "Phase 2",
+        "source_wms": "ausseabed:MH370_Phase_2_Sonar_Imagery_Backscatter_Inverse_Autonomous_Underwater_Vehicle__SSS__5m_2018",
+        "extracted_date": "2026-04-08",
+        "attribution": "Governments of Australia, Malaysia and PRC, 2018. CC BY 4.0"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              87.955,
+              -38.87
+            ],
+            [
+              88.02,
+              -38.795
+            ],
+            [
+              88.07,
+              -38.805
+            ],
+            [
+              88.085,
+              -38.76
+            ],
+            [
+              88.0,
+              -38.775
+            ],
+            [
+              87.925,
+              -38.86
+            ],
+            [
+              87.955,
+              -38.87
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "source": "auv",
+        "instrument": "AUV Side Scan Sonar",
+        "resolution": "5m",
+        "phase": "Phase 2",
+        "source_wms": "ausseabed:MH370_Phase_2_Sonar_Imagery_Backscatter_Inverse_Autonomous_Underwater_Vehicle__SSS__5m_2018",
+        "extracted_date": "2026-04-08",
+        "attribution": "Governments of Australia, Malaysia and PRC, 2018. CC BY 4.0"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              87.485,
+              -39.01
+            ],
+            [
+              87.445,
+              -38.96
+            ],
+            [
+              87.45,
+              -38.915
+            ],
+            [
+              87.345,
+              -38.98
+            ],
+            [
+              87.485,
+              -39.01
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "source": "auv",
+        "instrument": "AUV Side Scan Sonar",
+        "resolution": "5m",
+        "phase": "Phase 2",
+        "source_wms": "ausseabed:MH370_Phase_2_Sonar_Imagery_Backscatter_Inverse_Autonomous_Underwater_Vehicle__SSS__5m_2018",
+        "extracted_date": "2026-04-08",
+        "attribution": "Governments of Australia, Malaysia and PRC, 2018. CC BY 4.0"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              86.22,
+              -39.335
+            ],
+            [
+              86.16,
+              -39.245
+            ],
+            [
+              86.04,
+              -39.245
+            ],
+            [
+              86.025,
+              -39.2
+            ],
+            [
+              86.04,
+              -39.135
+            ],
+            [
+              86.17,
+              -39.125
+            ],
+            [
+              86.19,
+              -39.055
+            ],
+            [
+              86.265,
+              -39.17
+            ],
+            [
+              86.2,
+              -39.125
+            ],
+            [
+              86.07,
+              -39.155
+            ],
+            [
+              86.055,
+              -39.21
+            ],
+            [
+              86.19,
+              -39.225
+            ],
+            [
+              86.24,
+              -39.305
+            ],
+            [
+              86.35,
+              -39.235
+            ],
+            [
+              86.375,
+              -39.27
+            ],
+            [
+              86.37,
+              -39.315
+            ],
+            [
+              86.33,
+              -39.265
+            ],
+            [
+              86.22,
+              -39.335
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "source": "auv",
+        "instrument": "AUV Side Scan Sonar",
+        "resolution": "5m",
+        "phase": "Phase 2",
+        "source_wms": "ausseabed:MH370_Phase_2_Sonar_Imagery_Backscatter_Inverse_Autonomous_Underwater_Vehicle__SSS__5m_2018",
+        "extracted_date": "2026-04-08",
+        "attribution": "Governments of Australia, Malaysia and PRC, 2018. CC BY 4.0"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              87.175,
+              -39.28
+            ],
+            [
+              87.215,
+              -39.25
+            ],
+            [
+              87.12,
+              -39.165
+            ],
+            [
+              87.105,
+              -39.27
+            ],
+            [
+              87.175,
+              -39.28
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "source": "auv",
+        "instrument": "AUV Side Scan Sonar",
+        "resolution": "5m",
+        "phase": "Phase 2",
+        "source_wms": "ausseabed:MH370_Phase_2_Sonar_Imagery_Backscatter_Inverse_Autonomous_Underwater_Vehicle__SSS__5m_2018",
+        "extracted_date": "2026-04-08",
+        "attribution": "Governments of Australia, Malaysia and PRC, 2018. CC BY 4.0"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              86.56,
+              -39.495
+            ],
+            [
+              86.42,
+              -39.445
+            ],
+            [
+              86.375,
+              -39.32
+            ],
+            [
+              86.47,
+              -39.455
+            ],
+            [
+              86.56,
+              -39.495
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "source": "auv",
+        "instrument": "AUV Side Scan Sonar",
+        "resolution": "5m",
+        "phase": "Phase 2",
+        "source_wms": "ausseabed:MH370_Phase_2_Sonar_Imagery_Backscatter_Inverse_Autonomous_Underwater_Vehicle__SSS__5m_2018",
+        "extracted_date": "2026-04-08",
+        "attribution": "Governments of Australia, Malaysia and PRC, 2018. CC BY 4.0"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              86.86,
+              -39.535
+            ],
+            [
+              86.765,
+              -39.51
+            ],
+            [
+              86.715,
+              -39.44
+            ],
+            [
+              86.765,
+              -39.4
+            ],
+            [
+              86.71,
+              -39.345
+            ],
+            [
+              86.695,
+              -39.41
+            ],
+            [
+              86.635,
+              -39.5
+            ],
+            [
+              86.605,
+              -39.51
+            ],
+            [
+              86.7,
+              -39.325
+            ],
+            [
+              86.805,
+              -39.4
+            ],
+            [
+              86.755,
+              -39.44
+            ],
+            [
+              86.765,
+              -39.47
+            ],
+            [
+              86.83,
+              -39.515
+            ],
+            [
+              86.87,
+              -39.505
+            ],
+            [
+              86.86,
+              -39.535
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "source": "auv",
+        "instrument": "AUV Side Scan Sonar",
+        "resolution": "5m",
+        "phase": "Phase 2",
+        "source_wms": "ausseabed:MH370_Phase_2_Sonar_Imagery_Backscatter_Inverse_Autonomous_Underwater_Vehicle__SSS__5m_2018",
+        "extracted_date": "2026-04-08",
+        "attribution": "Governments of Australia, Malaysia and PRC, 2018. CC BY 4.0"
+      }
+    }
+  ]
+}

@@ -92,7 +92,7 @@ Peak probability locations from the classifier:
 
 **The probability peak at 35.5°S, 91.0°E is within 0.4° of the BTO/BFO-derived
 impact zone (35.9°S, 90.8°E).** The entire high-probability band (>6%) runs
-from 88°E to 91°E at 35–37°S — west of all searched areas.
+from 88°E to 91°E at 35–37°S — outside the high-resolution sonar coverage, though the arc crossing area has bathymetry coverage at 150m resolution.
 
 The ASCII map shows a clear concentration at 35–37°S with the signal dropping
 sharply south of 38°S and north of 34°S. The ATSB corridor (93–98°E) shows

@@ -1,6 +1,6 @@
 # MH370 Analysis Tool — Roadmap
 
-**Last updated:** 2026-04-06
+**Last updated:** 2026-04-08
 
 ---
 
@@ -42,7 +42,7 @@
   heading (224.2° true) across all altitude scenarios. Impact longitude
   varies only 90.8–91.7°E. Heading is not a significant uncertainty.
 
-### Research Documentation (2026-04-06)
+### Research Documentation (2026-04-06, updated 2026-04-08)
 
 - `docs/bfo-reference-data.md` — Verified BFO values with full source
   attribution
@@ -51,6 +51,8 @@
   uncertainty envelope, open tensions, next steps
 - `docs/research-note-oscar-drift.md` — OSCAR drift comparison (impact
   zone vs ATSB corridor), methodology, weakly contradictory result
+- `knowledge/mh370_reference_data.xlsx` — Comprehensive reference dataset
+  with verification log (8 items verified, 4 lower-priority items remaining)
 
 ### Frontend Migration (2026-04-06)
 
@@ -87,10 +89,6 @@
   positive (1 Reunion hit from our zone, 0 from ATSB). At 1,000 particles
   the signal reversed. Documented as a cautionary example.
 
----
-
-## In Progress
-
 ### ERA5 Wind Drift Analysis (2026-04-07)
 
 - **ERA5 monthly mean wind** (0.25°, 18 months) replaces synthetic wind climatology
@@ -99,6 +97,41 @@
   synthetic wind). Best origin at 35.8°S, 90.9°E (8.0% rate). Our zone
   produces 1.88× the ATSB corridor's Reunion timed hit rate.
 - See `docs/research-note-era5-drift.md` for full methodology and results.
+
+### BFO Sigma Sensitivity Sweep (2026-04-08)
+
+- Swept BFO noise sigma from 4.3 Hz (DSTG empirical) to 7.0 Hz (DSTG
+  accident flight model), with intermediate values at 5.0 and 6.0 Hz.
+- **Result:** Peak latitude shifts by <0.3° (35.94°S → 35.71°S). The 95%
+  CI widens from 2.7° to 3.4° but remains centered on ~35.7°S.
+- **Key finding:** The DSTG posterior peak (~37-38°S) falls outside the 95%
+  CI at all sigma values. The latitude disagreement is structural (path
+  priors / OU maneuver model vs beam search), not parametric.
+- Resolves the most important open question from the paper.
+- Tool: `cargo run --release --bin compare_bfo_sigma`
+
+### 17:07 BFO Residual Resolution (2026-04-08)
+
+- The -12.8 Hz residual at the 17:07 ACARS point was traced to an
+  approximate position (5.5°N, 103.5°E). Using the ACARS-reported position
+  (5.27°N, 102.79°E), the residual drops to +1.1 Hz.
+- Position-dependent, not indicative of systematic model error.
+- Updated `research-summary.md` and `research-note-bfo-validation-known-positions.md`.
+
+### Research Summary Revision (2026-04-08)
+
+- Added BFO sigma sensitivity result to BTO Geometry and DSTG Comparison sections
+- Updated 17:07 ACARS discussion with corrected residual
+- Added "Related Evidence Not Modeled Here" section (debris damage, CSIRO,
+  hydroacoustic)
+- Language audit: softened absolute claims throughout ("frequently" → "in
+  approximately half of trials", "clearly" → specific geographic qualifier,
+  "definitive" → "most rigorous available", etc.)
+- Moved BFO sigma from Open Questions to resolved
+
+---
+
+## In Progress
 
 ### HYCOM Drift Modeling
 

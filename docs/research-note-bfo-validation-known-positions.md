@@ -52,13 +52,17 @@ not at the gate position with rotation speed).
 **These points cannot validate or invalidate the model** due to measurement
 uncertainty.
 
-### ACARS point (17:07:55): marginal
+### ACARS point (17:07:55): position-dependent, likely within noise
 
-This is the most reliable pre-handshake BFO measurement. The -12.8 Hz residual
-is outside the DSTG empirical sigma (4.3 Hz) but within their inflated
-modeling sigma (7 Hz × ~2). However, the position used (5.5°N, 103.5°E) is
-an approximation — the actual ACARS-reported position is needed for a definitive
-test. The heading (25°) and speed (471 kts) are reasonable cruise assumptions
+**Update 2026-04-07:** The -12.8 Hz residual reported above used an approximate
+position (5.5°N, 103.5°E). Using the ACARS-reported position (5.27°N, 102.79°E)
+from the dataset, the residual drops to +1.1 Hz — well within the 4.3 Hz noise
+floor. The true FMS coordinates were never publicly released, so neither position
+is exact, but the residual is position-dependent rather than indicative of a
+systematic model error. Additionally, no per-arc δf_sat + δf_AFC correction is
+tabulated for 17:07 (those begin at Arc 1), adding further uncertainty.
+
+The heading (25°) and speed (471 kts) are reasonable cruise assumptions
 but not independently verified at this exact moment.
 
 ---

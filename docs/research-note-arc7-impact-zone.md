@@ -15,8 +15,13 @@ the 7th BTO arc at approximately 34.8°S, 92.2°E, which is itself just outside
 the searched corridor. The westward displacement from the arc to the impact
 point is produced by an unpowered glide of 55–79 NM after engine flameout,
 along the aircraft's final heading of approximately 200° true. The entire
-plausible impact longitude range (90.4–91.8°E) lies west of any area searched
-to date.
+plausible impact longitude range (90.4–91.8°E) was not covered by high-resolution
+sonar. The arc crossing at ~92.2°E falls within the Phase 1 bathymetry survey
+footprint (150m resolution) but was not scanned by the Phase 2 high-resolution
+sonar (5m). Parts of the glide zone overlap with the deep tow sonar coverage.
+The relationship between the impact zone and the existing search coverage is
+more nuanced than a simple "searched vs unsearched" distinction — see the
+Sonar Coverage section below.
 
 ---
 
@@ -105,14 +110,14 @@ and how fast the aircraft was descending during that interval.
 
 The impact latitude is approximately 35.5–36.5°S across this range.
 
-**The entire longitude range (90.4–91.8°E) is west of any area searched by
-ATSB Phase 2 (93–98°E), Ocean Infinity 2018 (93.5–97°E), or Ocean Infinity
-2025–2026 (95–100°E).**
-
-The arc crossing point at 92.2°E is also just west of the ATSB Phase 2
-boundary (93°E), so even if the glide model is completely wrong and the
-aircraft impacted at the arc crossing, it would still be outside the primary
-searched corridor.
+**The impact longitude range (90.4–91.8°E) was not covered by Phase 2 high-resolution
+sonar (ATSB 93–98°E, OI 2018 93.5–97°E, OI 2025–2026 ~95–100°E).** However, the
+arc crossing at 92.2°E falls within the Phase 1 bathymetry survey footprint (150m
+resolution), meaning this area has been mapped but not scanned at the 5m resolution
+needed to identify wreckage. Parts of the glide zone to the west overlap with
+deep tow sonar coverage. Whether any of the impact zone has been effectively
+"searched" depends on the resolution threshold — bathymetry at 150m can detect
+large terrain features but would likely miss aircraft debris on the seafloor.
 
 ### Heading sensitivity (quantified)
 
@@ -132,8 +137,9 @@ rotate the displacement vector but don't dramatically change the east-west
 projection.
 
 **The entire heading × altitude parameter space places the impact at
-90.8–91.7°E, which is 1.3–2.2° west of the ATSB Phase 2 search boundary
-(93°E).** No reasonable combination puts the impact inside any searched area.
+90.8–91.7°E, which is 1.3–2.2° west of the ATSB Phase 2 high-resolution sonar
+boundary (93°E).** The arc crossing itself at ~92.2°E has bathymetry coverage
+but not sonar. Some of the glide zone overlaps with deep tow coverage.
 
 ### Other uncertainties
 

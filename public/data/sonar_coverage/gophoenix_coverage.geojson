@@ -1,0 +1,534 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              95.385,
+              -33.33
+            ],
+            [
+              94.985,
+              -33.36
+            ],
+            [
+              94.955,
+              -33.05
+            ],
+            [
+              95.35,
+              -33.025
+            ],
+            [
+              95.385,
+              -33.33
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "source": "gophoenix",
+        "instrument": "Go Phoenix / Dong Hai Jiu Synthetic Aperture Sonar",
+        "resolution": "5m",
+        "phase": "Phase 2",
+        "source_wms": "ausseabed:MH370_Phase_2_Sonar_Imagery_Backscatter_Wide_DHJ__SAS__5m_2018",
+        "extracted_date": "2026-04-08",
+        "attribution": "Governments of Australia, Malaysia and PRC, 2018. CC BY 4.0"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              95.035,
+              -33.34
+            ],
+            [
+              95.34,
+              -33.315
+            ],
+            [
+              95.335,
+              -33.09
+            ],
+            [
+              95.28,
+              -33.105
+            ],
+            [
+              95.08,
+              -33.285
+            ],
+            [
+              95.055,
+              -33.27
+            ],
+            [
+              95.305,
+              -33.06
+            ],
+            [
+              94.99,
+              -33.065
+            ],
+            [
+              94.995,
+              -33.29
+            ],
+            [
+              95.035,
+              -33.34
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "source": "gophoenix",
+        "instrument": "Go Phoenix / Dong Hai Jiu Synthetic Aperture Sonar",
+        "resolution": "5m",
+        "phase": "Phase 2",
+        "source_wms": "ausseabed:MH370_Phase_2_Sonar_Imagery_Backscatter_Wide_DHJ__SAS__5m_2018",
+        "extracted_date": "2026-04-08",
+        "attribution": "Governments of Australia, Malaysia and PRC, 2018. CC BY 4.0"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              92.81,
+              -35.755
+            ],
+            [
+              92.07,
+              -35.795
+            ],
+            [
+              92.055,
+              -35.76
+            ],
+            [
+              92.03,
+              -35.195
+            ],
+            [
+              92.775,
+              -35.17
+            ],
+            [
+              92.81,
+              -35.755
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "source": "gophoenix",
+        "instrument": "Go Phoenix / Dong Hai Jiu Synthetic Aperture Sonar",
+        "resolution": "5m",
+        "phase": "Phase 2",
+        "source_wms": "ausseabed:MH370_Phase_2_Sonar_Imagery_Backscatter_Wide_DHJ__SAS__5m_2018",
+        "extracted_date": "2026-04-08",
+        "attribution": "Governments of Australia, Malaysia and PRC, 2018. CC BY 4.0"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              92.135,
+              -35.77
+            ],
+            [
+              92.78,
+              -35.745
+            ],
+            [
+              92.755,
+              -35.2
+            ],
+            [
+              92.06,
+              -35.215
+            ],
+            [
+              92.075,
+              -35.75
+            ],
+            [
+              92.135,
+              -35.77
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "source": "gophoenix",
+        "instrument": "Go Phoenix / Dong Hai Jiu Synthetic Aperture Sonar",
+        "resolution": "5m",
+        "phase": "Phase 2",
+        "source_wms": "ausseabed:MH370_Phase_2_Sonar_Imagery_Backscatter_Wide_DHJ__SAS__5m_2018",
+        "extracted_date": "2026-04-08",
+        "attribution": "Governments of Australia, Malaysia and PRC, 2018. CC BY 4.0"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              92.19,
+              -35.655
+            ],
+            [
+              92.155,
+              -35.64
+            ],
+            [
+              92.59,
+              -35.325
+            ],
+            [
+              92.625,
+              -35.33
+            ],
+            [
+              92.19,
+              -35.655
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "source": "gophoenix",
+        "instrument": "Go Phoenix / Dong Hai Jiu Synthetic Aperture Sonar",
+        "resolution": "5m",
+        "phase": "Phase 2",
+        "source_wms": "ausseabed:MH370_Phase_2_Sonar_Imagery_Backscatter_Wide_DHJ__SAS__5m_2018",
+        "extracted_date": "2026-04-08",
+        "attribution": "Governments of Australia, Malaysia and PRC, 2018. CC BY 4.0"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              92.24,
+              -37.655
+            ],
+            [
+              89.675,
+              -37.73
+            ],
+            [
+              89.63,
+              -36.235
+            ],
+            [
+              92.145,
+              -36.16
+            ],
+            [
+              92.24,
+              -37.655
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "source": "gophoenix",
+        "instrument": "Go Phoenix / Dong Hai Jiu Synthetic Aperture Sonar",
+        "resolution": "5m",
+        "phase": "Phase 2",
+        "source_wms": "ausseabed:MH370_Phase_2_Sonar_Imagery_Backscatter_Wide_DHJ__SAS__5m_2018",
+        "extracted_date": "2026-04-08",
+        "attribution": "Governments of Australia, Malaysia and PRC, 2018. CC BY 4.0"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              90.085,
+              -37.71
+            ],
+            [
+              92.21,
+              -37.635
+            ],
+            [
+              92.125,
+              -36.19
+            ],
+            [
+              91.93,
+              -36.175
+            ],
+            [
+              89.66,
+              -36.255
+            ],
+            [
+              89.695,
+              -37.7
+            ],
+            [
+              90.085,
+              -37.71
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "source": "gophoenix",
+        "instrument": "Go Phoenix / Dong Hai Jiu Synthetic Aperture Sonar",
+        "resolution": "5m",
+        "phase": "Phase 2",
+        "source_wms": "ausseabed:MH370_Phase_2_Sonar_Imagery_Backscatter_Wide_DHJ__SAS__5m_2018",
+        "extracted_date": "2026-04-08",
+        "attribution": "Governments of Australia, Malaysia and PRC, 2018. CC BY 4.0"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              89.89,
+              -37.635
+            ],
+            [
+              89.875,
+              -37.62
+            ],
+            [
+              89.96,
+              -37.545
+            ],
+            [
+              90.135,
+              -37.43
+            ],
+            [
+              90.075,
+              -37.4
+            ],
+            [
+              90.12,
+              -37.345
+            ],
+            [
+              90.86,
+              -36.885
+            ],
+            [
+              91.76,
+              -36.265
+            ],
+            [
+              91.8,
+              -36.285
+            ],
+            [
+              91.865,
+              -36.26
+            ],
+            [
+              91.855,
+              -36.34
+            ],
+            [
+              91.65,
+              -36.505
+            ],
+            [
+              89.89,
+              -37.635
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "source": "gophoenix",
+        "instrument": "Go Phoenix / Dong Hai Jiu Synthetic Aperture Sonar",
+        "resolution": "5m",
+        "phase": "Phase 2",
+        "source_wms": "ausseabed:MH370_Phase_2_Sonar_Imagery_Backscatter_Wide_DHJ__SAS__5m_2018",
+        "extracted_date": "2026-04-08",
+        "attribution": "Governments of Australia, Malaysia and PRC, 2018. CC BY 4.0"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              91.12,
+              -36.975
+            ],
+            [
+              91.105,
+              -36.95
+            ],
+            [
+              91.16,
+              -36.905
+            ],
+            [
+              92.075,
+              -36.31
+            ],
+            [
+              91.12,
+              -36.975
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "source": "gophoenix",
+        "instrument": "Go Phoenix / Dong Hai Jiu Synthetic Aperture Sonar",
+        "resolution": "5m",
+        "phase": "Phase 2",
+        "source_wms": "ausseabed:MH370_Phase_2_Sonar_Imagery_Backscatter_Wide_DHJ__SAS__5m_2018",
+        "extracted_date": "2026-04-08",
+        "attribution": "Governments of Australia, Malaysia and PRC, 2018. CC BY 4.0"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              89.54,
+              -37.885
+            ],
+            [
+              88.675,
+              -37.9
+            ],
+            [
+              88.67,
+              -37.345
+            ],
+            [
+              89.525,
+              -37.34
+            ],
+            [
+              89.54,
+              -37.885
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "source": "gophoenix",
+        "instrument": "Go Phoenix / Dong Hai Jiu Synthetic Aperture Sonar",
+        "resolution": "5m",
+        "phase": "Phase 2",
+        "source_wms": "ausseabed:MH370_Phase_2_Sonar_Imagery_Backscatter_Wide_DHJ__SAS__5m_2018",
+        "extracted_date": "2026-04-08",
+        "attribution": "Governments of Australia, Malaysia and PRC, 2018. CC BY 4.0"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              88.71,
+              -37.885
+            ],
+            [
+              89.085,
+              -37.86
+            ],
+            [
+              89.08,
+              -37.665
+            ],
+            [
+              89.105,
+              -37.67
+            ],
+            [
+              89.13,
+              -37.875
+            ],
+            [
+              89.525,
+              -37.86
+            ],
+            [
+              89.49,
+              -37.355
+            ],
+            [
+              88.685,
+              -37.38
+            ],
+            [
+              88.71,
+              -37.795
+            ],
+            [
+              89.14,
+              -37.545
+            ],
+            [
+              89.175,
+              -37.56
+            ],
+            [
+              88.695,
+              -37.83
+            ],
+            [
+              88.71,
+              -37.885
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "source": "gophoenix",
+        "instrument": "Go Phoenix / Dong Hai Jiu Synthetic Aperture Sonar",
+        "resolution": "5m",
+        "phase": "Phase 2",
+        "source_wms": "ausseabed:MH370_Phase_2_Sonar_Imagery_Backscatter_Wide_DHJ__SAS__5m_2018",
+        "extracted_date": "2026-04-08",
+        "attribution": "Governments of Australia, Malaysia and PRC, 2018. CC BY 4.0"
+      }
+    }
+  ]
+}

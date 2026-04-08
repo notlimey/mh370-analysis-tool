@@ -14,7 +14,9 @@ The author is a computer scientist with no background in aviation accident inves
 
 ## The Core Finding
 
-The BTO arc crossing places the aircraft at **34.81S, 92.21E** on the 7th arc — just outside the ATSB Phase 2 western boundary (93E). Combined with a physics-based post-Arc-7 glide model (FL308 starting altitude, 15:1 L/D, 76 NM range along the solver's best-fit heading of 224.2 true), the projected impact zone is **35.9S, 90.8E**. A sweep of the full heading (+/-15 deg) and altitude (FL202-FL321) parameter space produces impact longitudes of 90.8-91.7E — the entire uncertainty envelope is west of all searched areas: ATSB Phase 2 (93-98E), Ocean Infinity 2018 (93.5-97E), and Ocean Infinity 2025-2026 (95-100E). The rest of this document explains how this was derived and why it might be wrong.
+The BTO arc crossing places the aircraft at **34.81S, 92.21E** on the 7th arc — just outside the ATSB Phase 2 western boundary (93E). The 7th arc ring itself is a hard geometric constraint — every point on the ring is equally consistent with the BTO measurement. The specific crossing point at 34.81S, 92.21E is a soft result: it is where the BFO-scored path solver intersects the arc ring given its speed, heading, and maneuver assumptions through arcs 2-6. Other crossing latitudes along the same arc are not geometrically excluded — they would require different path solver outputs. The DSTG's particle filter, using the same BTO data, concentrated probability at a different latitude (~37-38S) on the same arc.
+
+Depending on post-Arc-7 flight dynamics, the projected impact zone spans **90.8-92.2E** — from the maximum glide envelope (FL308, 15:1 L/D, 76 NM along the solver's best-fit heading of 224.2 true) to a spiral dive near the arc crossing. The entire range is west of the ATSB Phase 2 high-resolution sonar boundary (93E). However, the relationship to existing search coverage is more nuanced than "searched vs unsearched": the arc crossing at ~92.2E falls within the Phase 1 bathymetry survey footprint (150m resolution) but was not scanned by Phase 2 sonar (5m resolution). Parts of the glide zone overlap with deep tow sonar coverage. Bathymetry at 150m can map terrain but would likely miss aircraft debris. The rest of this document explains how this was derived and why it might be wrong.
 
 ---
 
@@ -32,10 +34,12 @@ The 7th arc (00:19:29 UTC) is the final constraint. The path solver, working for
 | BFO noise sigma | 4.3 Hz | DSTG empirical (20 prior flights of 9M-MRO) |
 | BFO bias | 150 Hz (fixed) | ATSB / Holland 2017 |
 | Uplink frequency | 1,646.6525 MHz | Holland 2017 / Ashton et al. 2014 |
-| AES satellite altitude | 36,210 km | DSTG Book p. 29 |
+| AES compensation altitude | 36,210 km (the SDU compensates using an altitude 422 km above the nominal geostationary altitude of 35,788 km; DSTG Book Chapter 5, p. 29) | DSTG Book p. 29 |
 | Perth GES | 31.802S, 115.889E | DSTG Table 2.1 |
 
-The 7th arc crossing at 92.2E is itself just outside the ATSB Phase 2 search boundary (93E). Even without any glide model, the arc crossing is in unsearched territory.
+The path solver's Arc 7 crossing at 92.2E is just outside the ATSB Phase 2 western boundary — but this crossing latitude is a solver output, not a geometric inevitability.
+
+**Note on BFO noise sigma:** The DSTG used a wider 7 Hz BFO noise sigma for the accident flight (DSTG Book, p. 31) to account for potential variation in the bias term. This analysis uses the tighter 4.3 Hz empirical sigma from 20 prior flights of 9M-MRO (Table 5.1). A sensitivity sweep from 4.3 Hz to 7.0 Hz shifts the heatmap peak by less than 0.3 degrees latitude (35.94S to 35.71S); the 95% credible interval widens from 2.7 degrees to 3.4 degrees but remains centered on approximately 35.7S. The DSTG posterior peak at approximately 37-38S falls outside the 95% CI at all sigma values tested. The sigma choice therefore does not explain the latitude disagreement — see "Comparison to DSTG Posterior" below.
 
 ---
 
@@ -53,15 +57,17 @@ On level-flight arcs (2-5 and 6b), the path solver achieves ~4 Hz RMS BFO residu
 
 **The critical caveat:** The path solver (beam search) evaluates hundreds of candidate positions on each arc, scoring by BFO residual among other criteria, and keeps the top-scoring candidates. The ~4 Hz result means the solver found positions where BFO predictions closely match measurements. The solver was designed to find these positions. This is analogous to reporting R-squared on a fitted regression — it demonstrates internal consistency, not predictive accuracy at positions the solver did not optimize for.
 
-Independent validation against known MH370 positions is not possible from public data. The pre-flight BFO values (gate logon, takeoff) suffer from data quality issues in SU log processing (+/-15 Hz across analysts). The ACARS point at 17:07:55 shows a -12.8 Hz residual but uses an approximate position (the actual FMS-reported coordinates were never publicly released). The 18:28 handshake positions are Kalman filter predictions from 18:01, not radar fixes. There are no published data points where both position and BFO are independently known and reliable for MH370 after departure.
+Independent validation against known MH370 positions is not possible from public data. The pre-flight BFO values (gate logon, takeoff) suffer from data quality issues in SU log processing (+/-15 Hz across analysts). The 18:28 handshake positions are Kalman filter predictions from 18:01, not radar fixes. There are no published data points where both position and BFO are independently known and reliable for MH370 after departure.
 
-The DSTG validated their implementation of the same BFO decomposition against 20 prior flights of 9M-MRO where ACARS provided known positions — achieving 0.18 Hz mean, 4.3 Hz sigma. That validation dataset is the definitive test, but it is not publicly available. We adopt the DSTG's 4.3 Hz sigma on the basis of their validation, not ours.
+The ACARS point at 17:07:55 provides the only semi-independent cross-check available from public data. The -12.8 Hz residual reported in earlier versions used an approximate position (5.5N, 103.5E). Using the ACARS-reported position (5.27N, 102.79E), the residual drops to +1.1 Hz — well within the 4.3 Hz noise floor. The true FMS coordinates were never publicly released, so neither position is exact, but the residual is position-dependent rather than indicative of a systematic model error. Additionally, no per-arc delta_f_sat + delta_f_AFC correction is tabulated for 17:07 (those begin at Arc 1), adding further uncertainty to any cross-check at this time. The residual is disclosed as a known limitation.
+
+The DSTG validated their implementation of the same BFO decomposition against 20 prior flights of 9M-MRO where ACARS provided known positions — achieving 0.18 Hz mean, 4.3 Hz sigma. That validation dataset is the most rigorous available test, but it is not publicly available. This analysis adopts the DSTG's 4.3 Hz sigma on the basis of their validation, not independent verification.
 
 ---
 
 ## Post-Arc-7 Glide Model
 
-At Arc 7 (00:19:29 UTC), the aircraft's SDU rebooted — proving engine flameout, since the SDU is powered by the left main AC bus and would only reboot via APU auto-start after both engines lost fuel. The measured BFO of 182 Hz at Arc 7 implies a descent rate between 2,900 and 14,800 fpm (Holland 2017, Tables IV and VII), spanning the range from best-glide clean configuration to high-speed steep spiral.
+At Arc 7 (00:19:29 UTC), the aircraft's SDU rebooted — strongly implying engine flameout, since the SDU is powered by the left main AC bus and would only reboot via APU auto-start after loss of engine-driven power. An electrical fault could theoretically produce the same signature, but fuel exhaustion is the near-universal interpretation among investigators. The measured BFO of 182 Hz at Arc 7 implies a descent rate between 2,900 and 14,800 fpm (Holland 2017, Tables IV and VII), spanning the range from best-glide clean configuration to high-speed steep spiral.
 
 The glide model parameters:
 
@@ -80,7 +86,11 @@ The heading x altitude sensitivity:
 
 Impact longitude is insensitive to heading — +/-15 deg changes it by only +/-0.3 deg — because at 224 true (roughly southwest), heading variations rotate the displacement vector without dramatically changing the east-west projection.
 
-**This is the weakest link in the chain.** The DSTG explicitly chose not to model a directional post-Arc-7 glide. They applied a radially symmetric descent kernel (15 NM uniform disc + 30 NM sigma Gaussian falloff) centered on Arc 7 particle positions — acknowledging that the post-flameout trajectory is too uncertain for directional modeling. The ATSB's Boeing 777 simulator studies showed that uncontrolled 777s frequently enter spiral dives rather than stable glides. A spiral dive would collapse the impact point back toward the arc crossing at ~92E — still outside the primary searched corridor, but by a much smaller margin.
+**This is the weakest link in the chain.** The DSTG explicitly chose not to model a directional post-Arc-7 glide. They applied a radially symmetric descent kernel (15 NM uniform disc + 30 NM sigma Gaussian falloff) centered on Arc 7 particle positions — acknowledging that the post-flameout trajectory is too uncertain for directional modeling. The ATSB's Boeing 777 simulator studies showed that uncontrolled 777s entered spiral dives in approximately half of trials (ATSB, November 2016) rather than stable glides. A spiral dive would collapse the impact point back toward the arc crossing at ~92E — within the bathymetry survey footprint, though not within the high-resolution sonar coverage.
+
+### End-of-flight scenario range
+
+The post-Arc-7 outcome spans two bookend scenarios. In a spiral dive or rapid uncontrolled descent — consistent with 5 of 10 Boeing 777 end-of-flight simulations (ATSB, November 2016) where descent rates exceeded 15,000 fpm and impact occurred within ~15 NM of the arc — the impact site would be near the arc crossing at approximately 92E, within the bathymetry survey footprint but not within the high-resolution sonar coverage. In a controlled or semi-stable glide — requiring either an active pilot or a favorable autopilot/trim state at flameout — the impact extends to 90.8E along the solver's best-fit heading. The full range is therefore approximately **90.8-92.2E**. Neither end has been covered by high-resolution (5m) sonar, though the arc crossing has been mapped by bathymetry at 150m resolution and parts of the glide zone overlap with deep tow sonar coverage.
 
 ---
 
@@ -95,12 +105,14 @@ The drift analysis progressed through two stages, and the progression matters.
 - **113,842 timing-matched Reunion hits** across all particles (2.28% rate)
 - The synthetic wind model produced **zero** from the same particle count
 - Best-performing origin: **35.8S, 90.9E** (8.0% timed hit rate) — within 0.1 deg of the BTO/BFO-derived impact zone
-- Our zone (90-92E, 34-37S) produces **1.88x the Reunion timed hit rate** of the ATSB corridor (93-98E)
+- The present zone (90-92E, 34-37S) produces **1.88x the Reunion timed hit rate** of the ATSB corridor (93-98E)
 
 | Zone | Origins | Avg timed hits/origin | Best origin | Best rate |
 |------|---------|----------------------|-------------|-----------|
-| Our zone (90-92E, 34-37S) | 7 | 2,863 | 35.8S, 90.9E | 8.0% |
+| Present zone (90-92E, 34-37S) | 7 | 2,863 | 35.8S, 90.9E | 8.0% |
 | ATSB corridor (93-98E) | 24 | 1,519 | 30.8S, 96.8E | 4.5% |
+
+This comparison is not latitude-matched: the ATSB corridor spans 24 origins across a wider latitude range (including latitudes where drift performance to Reunion is expected to be low), while the present zone covers 7 origins in a narrower band. A fair zone-for-zone comparison at matched latitudes has not been performed and would likely reduce the ratio. The comparison demonstrates that the impact zone produces competitive drift performance, not that it is proven superior.
 
 The single change — monthly ERA5 spatial structure replacing synthetic climatology — was sufficient. Even at monthly resolution (not capturing individual storms), real east-west wind gradients across the Indian Ocean route debris from 35.8S to Reunion within the observed 508-day timeframe.
 
@@ -108,9 +120,40 @@ The single change — monthly ERA5 spatial structure replacing synthetic climato
 
 ---
 
+## Related Evidence Not Modeled Here
+
+**Debris damage patterns.** Multiple recovered debris items have been analyzed for damage patterns by the ATSB and French BEA. Some analysts have argued the damage is more consistent with a high-energy impact (spiral dive) than a controlled ditching; others dispute this interpretation. The debris evidence does not definitively distinguish between these scenarios and is treated here as consistent with both ends of the spiral-dive-to-glide range presented above.
+
+**CSIRO drift analysis.** Griffin, Oke, and Jones (2017) performed the most rigorous published drift analysis using HYCOM at 1/12 deg daily resolution, concluding that approximately 35.6S, 92.8E was the most likely origin for Reunion debris. The present impact zone (35.9S, 90.8E at the glide end) is approximately 2 deg of longitude west of the CSIRO result. The CSIRO study used substantially higher-resolution ocean currents than the OSCAR dataset used here. Whether HYCOM-resolution currents would shift the present drift result toward or away from the CSIRO finding is an open question (see HYCOM item in Open Questions below).
+
+**Hydroacoustic data.** Several studies examined hydroacoustic recordings from underwater listening stations for signals consistent with an ocean impact. No confirmed impact signal was identified. The non-detection does not strongly constrain the impact location but is noted for completeness.
+
+---
+
+## Comparison to DSTG Posterior
+
+The following values are visual estimates read from the published contour plot (Figure 10.10, Davey et al. 2016, p. 97) and should be treated as approximate. The DSTG did not publish tabulated credible intervals for the 2D posterior at 00:19.
+
+The DSTG posterior PDF for the aircraft's position at 00:19 UTC provides the most rigorous published probabilistic estimate of the 7th arc crossing location. Comparing the present result against this distribution:
+
+- **DSTG posterior peak:** Approximately 37-38S, 88-89E. The peak is itself west of the ATSB Phase 2 high-resolution sonar corridor (93-98E). The DSTG applied a radially symmetric descent kernel that spread probability eastward into the search zone, but the underlying particle filter appears to have concentrated probability further west than the high-resolution sonar coverage (based on visual reading of Figure 10.10).
+- **DSTG 90% credible region:** Approximately 35-40S, 85-93E.
+- **DSTG 99% credible region:** Extends to approximately 33-34S, 92-94E at its northern extent.
+- **Arc 7 crossing derived here (34.81S, 92.21E):** Falls within the DSTG 99% credible region, in the tail of their distribution — not near the peak.
+
+This result is not inconsistent with the DSTG posterior, but it occupies a low-probability region of their distribution. Being within the 99% credible region of the gold-standard Bayesian analysis means the result is not a fringe outlier — it is geometrically reachable under the DSTG's own model assumptions. However, this is not strong validation: a 99% region is broad by definition, and the DSTG posterior assigns substantially more weight to latitudes 2-3 degrees further south.
+
+The observation that the DSTG posterior peak is also west of the high-resolution sonar coverage is independently significant. It means that even the most rigorous published analysis placed its highest-probability region outside the corridors that were scanned at the resolution needed to identify wreckage — the symmetric descent kernel redistributed probability eastward into the search zone, but the raw posterior favored longitudes of 88-89E. The directional glide model used here produces westward displacement from a different Arc 7 crossing latitude, but the resulting impact longitude (90.8E) is directionally consistent with where the DSTG's underlying distribution concentrated probability.
+
+The primary disagreement between the present result and the DSTG posterior is in latitude (34.8S vs approximately 37-38S at peak), not longitude. A sensitivity sweep of BFO noise sigma from 4.3 Hz (DSTG empirical, prior flights) to 7.0 Hz (DSTG accident flight model) shifts the peak latitude by less than 0.3 degrees (35.94S to 35.71S). The 95% credible interval widens from 2.7 degrees to 3.4 degrees but remains centered on approximately 35.7S. The DSTG posterior peak at approximately 37-38S falls outside the 95% CI at all sigma values tested. The latitude disagreement is therefore attributable to differences in path prior structure — the DSTG particle filter uses an Ornstein-Uhlenbeck maneuver process that produces smoother, more southerly trajectories, while the beam search used here permits heading changes at each arc and explores a wider speed range — rather than BFO noise parameterization. This is a structural modeling difference, not a tuning disagreement.
+
+*Source: Davey, S., Gordon, N., Holland, I., Rutten, M., Williams, J. (2016), "Bayesian Methods in the Search for MH370", Figure 10.10, p. 97.*
+
+---
+
 ## Honest Caveats
 
-1. **The glide model is the load-bearing assumption.** The claim that the impact zone is in unsearched territory depends on the directional glide displacing the impact 1.3-2.2 deg west of the arc crossing. Remove the glide and the result converges to ~92E — at the ATSB Phase 2 boundary, not deep within it, but no longer clearly unsearched. The DSTG used a symmetric descent kernel instead of a directional glide for exactly this reason. Boeing 777 simulator studies show uncontrolled aircraft frequently enter spiral dives, not stable glides. A controlled glide requires either an active pilot or a particularly favorable autopilot/trim state at flameout.
+1. **The glide model is the load-bearing assumption.** The claim that the impact zone was not covered by high-resolution sonar depends on the directional glide displacing the impact 1.3-2.2 deg west of the arc crossing. Remove the glide and the result converges to ~92E — within the bathymetry survey footprint but still outside the high-resolution sonar corridor. The DSTG used a symmetric descent kernel instead of a directional glide for exactly this reason. Boeing 777 simulator studies show uncontrolled aircraft entered spiral dives in approximately half of trials (ATSB, November 2016). A controlled glide requires either an active pilot or a particularly favorable autopilot/trim state at flameout.
 
 2. **BFO validation is in-sample.** The path solver optimizes position, heading, and speed on each arc to minimize BFO residuals. The ~4 Hz RMS result demonstrates that the solver can find internally consistent solutions — it does not demonstrate that the BFO model produces accurate predictions at arbitrary positions. Independent validation against known MH370 positions is not possible from publicly available data. The DSTG's 4.3 Hz sigma (from their 20-flight study) is adopted on trust.
 
@@ -128,6 +171,10 @@ The single change — monthly ERA5 spatial structure replacing synthetic climato
 
 - **What do the barnacle temperature constraints imply?** The impact zone at 35.9S is at the lower bound of Lepas anatifera colonization temperature (SST ~17-19C at 35S in March 2014). Debris from 30-33S would encounter 20-22C water immediately, more naturally consistent with the observed biofouling. This is a 2-5 deg latitude tension that the current model does not resolve.
 
+- **BFO sigma sensitivity (RESOLVED):** A sweep from 4.3 Hz to 7.0 Hz shifts the peak by <0.3 degrees latitude and does not bring the result into agreement with the DSTG posterior. The latitude disagreement is structural (path priors/maneuver model), not parametric.
+
+- **BFO bias: 150 Hz vs 152.5 Hz.** This analysis uses 150 Hz (Holland 2017). The joewragg/ATSB appendix data uses 152.5 Hz (Ashton et al. 2014). The 2.5 Hz difference is within the 4.3 Hz noise floor and does not materially change the ~4 Hz RMS residuals, but it is a systematic offset present in every arc. The DSTG does not fix the bias at all — they estimate it via Rao-Blackwellised particle filter with a prior from the tarmac calibration. The sensitivity of the Arc 7 crossing latitude to this choice has not been tested.
+
 ---
 
 ## Interactive Tool and Reproducibility
@@ -138,9 +185,9 @@ The analysis is implemented in an open-source desktop application built with Tau
 
 ## Data Sources and Attribution
 
-- **BFO measured values:** joewragg/MH370 FinalData.csv (R-Channel processed); Holland 2017 Table III (Arc 7 values)
+- **BFO measured values:** joewragg/MH370 FinalData.csv (R-Channel processed); Holland 2017 Table III (Arc 7 values). Input BTO/BFO values verified against Inmarsat SU logs (vincentclee/GitHub), Ashton et al. 2014 Table 6, and Holland 2017 Table III. Values are consistent across all sources.
 - **BFO model:** Holland 2017, arXiv:1702.02432, Equations (1)-(6)
-- **BFO bias:** ATSB published constant, 150 Hz (Holland 2017; DSTG Book)
+- **BFO bias:** 150 Hz fixed constant (Holland 2017). Note: Ashton et al. 2014 / joewragg use 152.5 Hz; the DSTG estimates the bias dynamically. See Open Questions.
 - **BFO noise:** DSTG Book (Davey et al. 2016), Table 5.1: sigma = 4.3 Hz empirical
 - **BTO noise:** DSTG Book, Table 10.1: sigma = 29 us (R1200)
 - **Descent rate bounds:** Holland 2017, Tables IV, VI, VII

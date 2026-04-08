@@ -66,10 +66,10 @@ const BfoPanel: Component = () => {
         class="info-text"
         style="background: var(--surface-raised); border-left: 3px solid var(--accent); padding: 10px 12px; margin-bottom: 14px; font-size: 12px; line-height: 1.5"
       >
-        BFO residuals of ~4 Hz on arcs 2-5 reflect <strong>in-sample solver fit</strong> — the path solver
-        optimizes aircraft position to minimize these residuals. This is not independent validation. The DSTG's
-        4.3 Hz sigma was derived from 20 historical flights of 9M-MRO with known radar positions, a dataset not
-        publicly available. Independent validation against known positions is not possible from public data.
+        BFO residuals of ~4 Hz on arcs 2-5 reflect <strong>in-sample solver fit</strong> — the path solver optimizes
+        aircraft position to minimize these residuals. This is not independent validation. The DSTG's 4.3 Hz sigma was
+        derived from 20 historical flights of 9M-MRO with known radar positions, a dataset not publicly available.
+        Independent validation against known positions is not possible from public data.
       </div>
 
       <Show

@@ -1,0 +1,20 @@
+# MH370 BFO/BTO Model Constants — Verified Against Primary Sources
+# Compiled: 2026-04-07 | CC BY 4.0
+#
+parameter,value,unit,source,notes,verified
+uplink_frequency,1646.6525,MHz,Holland 2017; Ashton 2014,L-band aircraft-to-satellite,yes
+downlink_frequency,3615.1525,MHz,Ashton 2014; joewragg,C-band satellite-to-GES,yes
+bfo_bias_holland,150.0,Hz,Holland 2017,SDU oscillator offset from 20 prior 9M-MRO flights,yes
+bfo_bias_ashton,152.5,Hz,Ashton et al. 2014,Earlier calibration. 2.5 Hz difference from Holland is within noise,yes
+bfo_noise_sigma_empirical,4.3,Hz,DSTG Book Table 5.1,In-flight only and outliers excluded. Mean=0.18 Hz,yes
+bfo_noise_sigma_dstg_accident,7.0,Hz,DSTG Book p.31,DSTG widened sigma for accident flight to account for potential bias drift,yes
+bto_noise_sigma_r1200,29,us,DSTG Book Table 10.1,R1200 channel messages,yes
+bto_noise_sigma_r600,62,us,DSTG Book Table 10.1,R600 channel messages (log-on events),yes
+bto_bias,-495679,us,ATSB,Calibrated from pre-departure BTO at KLIA gate,yes
+logon_bto_correction,-4600,us,Ashton 2014 Table 6 note (1),Applied to AES-initiated log-on messages at 18:25 and 00:19,yes
+aes_compensation_altitude,36210.12,km,DSTG Book Ch.5 p.29,SDU uses 35788.12 + 422 = 36210.12 km (deliberate design choice),yes
+nominal_geostationary_altitude,35788.12,km,DSTG Book Ch.5 p.29,Standard geostationary altitude above surface,yes
+satellite_nominal_longitude,64.5,deg_E,DSTG Book; Ashton 2014,Inmarsat-3F1. Actual position drifts per orbit,yes
+ges_latitude,-31.802,deg,DSTG Book Table 2.1,Perth Ground Earth Station,yes
+ges_longitude,115.889,deg_E,DSTG Book Table 2.1,Perth Ground Earth Station,yes
+speed_of_light,299792.458,km/s,NIST,Used for BTO range and Doppler calculations,yes

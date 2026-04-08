@@ -511,6 +511,18 @@ pub fn run() {
     tauri::Builder::default()
         .setup(|app| {
             log_startup("booting Tauri backend");
+
+            // Cap rayon thread pool at 50% of available CPU cores.
+            let total_cores = num_cpus::get();
+            let thread_count = (total_cores / 2).max(1);
+            rayon::ThreadPoolBuilder::new()
+                .num_threads(thread_count)
+                .build_global()
+                .ok(); // Ignore error if pool was already initialized (e.g. in tests).
+            log_startup(&format!(
+                "rayon thread pool: {thread_count} threads ({total_cores} cores detected)"
+            ));
+
             log_startup("loading embedded satellite model");
             let satellite = SatelliteModel::load().expect("failed to load embedded I3F1 ephemeris");
             let mut roots = Vec::new();

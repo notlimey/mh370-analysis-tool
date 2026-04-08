@@ -328,6 +328,20 @@ body.browser-mode #map {
   height: 14px;
 }
 
+.toggle-row-indent {
+  padding-left: 12px;
+}
+
+.layer-group-heading {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  margin-top: 12px;
+  margin-bottom: 6px;
+}
+
 /* Model info */
 .model-info {
   display: grid;
@@ -2302,4 +2316,299 @@ body.browser-mode #map {
   padding: 4px 6px;
   border-bottom: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.05));
   font-variant-numeric: tabular-nums;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   Interactive Report
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Layout: report mode replaces the tool grid with a simple panel + map */
+body.report-mode #app {
+  display: grid;
+  grid-template-columns: 420px 1fr;
+  grid-template-rows: 1fr;
+}
+
+body.report-mode #map {
+  grid-column: 2;
+  grid-row: 1;
+  top: 0;
+}
+
+/* Report panel (left sidebar) */
+.report-panel {
+  grid-column: 1;
+  grid-row: 1;
+  background: var(--bg-primary);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+  position: relative;
+  z-index: 10;
+}
+
+/* Navigation strip at top */
+.report-nav-strip {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 24px;
+  border-bottom: 1px solid var(--border);
+}
+
+.report-nav-toggle {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.report-nav-hamburger {
+  display: block;
+  width: 18px;
+  height: 2px;
+  background: var(--text-secondary);
+  position: relative;
+}
+
+.report-nav-hamburger::before,
+.report-nav-hamburger::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  width: 18px;
+  height: 2px;
+  background: var(--text-secondary);
+}
+
+.report-nav-hamburger::before {
+  top: -6px;
+}
+
+.report-nav-hamburger::after {
+  top: 6px;
+}
+
+.report-nav-dots {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.report-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--text-muted);
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition:
+    background 0.2s,
+    transform 0.2s;
+}
+
+.report-dot.active {
+  background: var(--accent);
+  transform: scale(1.3);
+}
+
+.report-dot:hover:not(.active) {
+  background: var(--text-secondary);
+}
+
+/* Chapter list dropdown */
+.report-chapter-list {
+  position: absolute;
+  top: 52px;
+  left: 0;
+  right: 0;
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border);
+  z-index: 20;
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+.report-chapter-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 12px 24px;
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.15s;
+}
+
+.report-chapter-item:hover {
+  background: var(--bg-tertiary);
+}
+
+.report-chapter-item.active {
+  color: var(--text-primary);
+  background: var(--bg-tertiary);
+}
+
+.report-chapter-num {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-muted);
+  min-width: 18px;
+  text-align: center;
+}
+
+.report-chapter-title {
+  font-size: 14px;
+}
+
+/* Narrative content area */
+.report-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 32px 28px;
+}
+
+.report-subtitle {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+
+.report-title {
+  font-family: "Georgia", "Times New Roman", serif;
+  font-size: 26px;
+  font-weight: 400;
+  line-height: 1.3;
+  color: var(--text-primary);
+  margin-bottom: 24px;
+}
+
+.report-body {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.report-body p {
+  font-family: "Georgia", "Times New Roman", serif;
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--text-secondary);
+}
+
+/* Navigation controls at bottom */
+.report-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 24px;
+  border-top: 1px solid var(--border);
+}
+
+.report-btn {
+  padding: 8px 20px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  cursor: pointer;
+  font-size: 13px;
+  transition:
+    background 0.15s,
+    border-color 0.15s;
+}
+
+.report-btn:hover:not(:disabled) {
+  background: var(--bg-tertiary);
+  border-color: var(--text-muted);
+}
+
+.report-btn:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+.report-btn-next,
+.report-btn-explore {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #000;
+  font-weight: 500;
+}
+
+.report-btn-next:hover:not(:disabled),
+.report-btn-explore:hover:not(:disabled) {
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
+}
+
+.report-progress {
+  font-size: 12px;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Skip link */
+.report-skip {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  background: none;
+  border: none;
+  border-top: 1px solid var(--border);
+  color: var(--text-muted);
+  font-size: 12px;
+  cursor: pointer;
+  transition: color 0.15s;
+}
+
+.report-skip:hover {
+  color: var(--text-secondary);
+}
+
+/* ── Mobile responsive ───────────────────────────────────────────────────── */
+
+@media (max-width: 768px) {
+  body.report-mode #app {
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr auto;
+  }
+
+  body.report-mode #map {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .report-panel {
+    grid-column: 1;
+    grid-row: 2;
+    height: auto;
+    max-height: 45vh;
+    border-right: none;
+    border-top: 1px solid var(--border);
+    border-radius: 16px 16px 0 0;
+  }
+
+  .report-content {
+    padding: 20px 20px;
+  }
+
+  .report-title {
+    font-size: 22px;
+  }
+
+  .report-body p {
+    font-size: 14px;
+  }
 }

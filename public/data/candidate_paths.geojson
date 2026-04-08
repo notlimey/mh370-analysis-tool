@@ -12,12 +12,16 @@
     "dataset_path": "",
     "debris_weight_max_lat": -32.0,
     "debris_weight_min_lat": -38.0,
+    "descent_before_arc7_minutes": 1.0,
+    "descent_rate_fpm": 4200.0,
+    "endpoint_mode": "glide",
     "fuel_baseline_altitude_ft": 35000.0,
     "fuel_baseline_kg_per_hr": 6500.0,
     "fuel_baseline_speed_kts": 471.0,
     "fuel_low_altitude_penalty_per_10kft": 0.12,
     "fuel_remaining_at_arc1_kg": 34500.0,
     "fuel_speed_exponent": 1.35,
+    "glide_wind_correction_kts": 0.0,
     "heading_change_sigma_deg": 80.0,
     "max_post_arc7_minutes": 57.0,
     "max_speed_kts": 520.0,
@@ -5798,7 +5802,7 @@
       "type": "Feature"
     }
   ],
-  "generated_at": "2026-04-06T17:26:45.033814Z",
+  "generated_at": "2026-04-08T07:03:37.860198Z",
   "summary": {
     "best_family": "perpendicular",
     "best_score": 1.0,

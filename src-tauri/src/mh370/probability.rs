@@ -1,3 +1,4 @@
+use rayon::prelude::*;
 use serde::Serialize;
 
 use super::data::{load_dataset, resolve_config, AnalysisConfig, Mh370Dataset};
@@ -56,64 +57,68 @@ pub fn generate_probability_heatmap_from_dataset(
         return Ok(Vec::new());
     }
 
-    let mut raw_points = Vec::new();
-    for point in arc7_points {
-        let point_latlon = LatLon::new(point[1], point[0]);
-        let path_density = fuel_paths
-            .iter()
-            .map(|path| {
-                let anchor = if use_symmetric {
-                    arc7_endpoint(path)
-                } else {
-                    projected_endpoint(path)
-                };
-                let Some(anchor) = anchor else {
-                    return 0.0;
-                };
-                let distance_km = haversine(point_latlon, anchor);
-                if use_symmetric {
-                    // DSTG descent kernel: 15 NM (~28 km) uniform disc +
-                    // Gaussian falloff with σ = 30 NM (~56 km) beyond.
-                    // Source: DSTG Book, Davey et al. 2016.
-                    dstg_descent_kernel(distance_km) * path.score.max(0.1)
-                } else {
-                    (-distance_km.powi(2) / (2.0 * 75.0_f64.powi(2))).exp() * path.score.max(0.1)
-                }
-            })
-            .sum::<f64>();
+    let raw_points: Vec<_> = arc7_points
+        .par_iter()
+        .map(|point| {
+            let point_latlon = LatLon::new(point[1], point[0]);
+            let path_density = fuel_paths
+                .iter()
+                .map(|path| {
+                    let anchor = if use_symmetric {
+                        arc7_endpoint(path)
+                    } else {
+                        projected_endpoint(path)
+                    };
+                    let Some(anchor) = anchor else {
+                        return 0.0;
+                    };
+                    let distance_km = haversine(point_latlon, anchor);
+                    if use_symmetric {
+                        // DSTG descent kernel: 15 NM (~28 km) uniform disc +
+                        // Gaussian falloff with σ = 30 NM (~56 km) beyond.
+                        // Source: DSTG Book, Davey et al. 2016.
+                        dstg_descent_kernel(distance_km) * path.score.max(0.1)
+                    } else {
+                        (-distance_km.powi(2) / (2.0 * 75.0_f64.powi(2))).exp()
+                            * path.score.max(0.1)
+                    }
+                })
+                .sum::<f64>();
 
-        let fuel_weight = fuel_paths
-            .iter()
-            .map(|path| {
-                let anchor = if use_symmetric {
-                    arc7_endpoint(path)
-                } else {
-                    projected_endpoint(path)
-                };
-                let Some(anchor) = anchor else {
-                    return 0.0;
-                };
-                let distance_km = haversine(point_latlon, anchor);
-                let closeness = if use_symmetric {
-                    dstg_descent_kernel(distance_km)
-                } else {
-                    (-distance_km.powi(2) / (2.0 * 90.0_f64.powi(2))).exp()
-                };
-                let continuation = if !use_symmetric && config.max_post_arc7_minutes > 0.0 {
-                    (path.extra_endurance_minutes / config.max_post_arc7_minutes).clamp(0.0, 1.0)
-                } else {
-                    0.0
-                };
-                closeness * (0.5 + 0.5 * continuation)
-            })
-            .sum::<f64>();
+            let fuel_weight = fuel_paths
+                .iter()
+                .map(|path| {
+                    let anchor = if use_symmetric {
+                        arc7_endpoint(path)
+                    } else {
+                        projected_endpoint(path)
+                    };
+                    let Some(anchor) = anchor else {
+                        return 0.0;
+                    };
+                    let distance_km = haversine(point_latlon, anchor);
+                    let closeness = if use_symmetric {
+                        dstg_descent_kernel(distance_km)
+                    } else {
+                        (-distance_km.powi(2) / (2.0 * 90.0_f64.powi(2))).exp()
+                    };
+                    let continuation = if !use_symmetric && config.max_post_arc7_minutes > 0.0 {
+                        (path.extra_endurance_minutes / config.max_post_arc7_minutes)
+                            .clamp(0.0, 1.0)
+                    } else {
+                        0.0
+                    };
+                    closeness * (0.5 + 0.5 * continuation)
+                })
+                .sum::<f64>();
 
-        // Keep the heatmap anchored to the sampled path family rather than a
-        // separate southern prior so the map agrees with the candidate paths.
-        let debris_weight = 0.0;
-        let raw_score = path_density + fuel_weight;
-        raw_points.push((point, raw_score, path_density, fuel_weight, debris_weight));
-    }
+            // Keep the heatmap anchored to the sampled path family rather than a
+            // separate southern prior so the map agrees with the candidate paths.
+            let debris_weight = 0.0;
+            let raw_score = path_density + fuel_weight;
+            (*point, raw_score, path_density, fuel_weight, debris_weight)
+        })
+        .collect();
 
     let total_score: f64 = raw_points
         .iter()

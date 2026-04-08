@@ -36,7 +36,7 @@ export function loadPointsLayer(map: MapboxMap): void {
     type: "circle",
     source: "points-source",
     paint: {
-      "circle-radius": 7,
+      "circle-radius": ["interpolate", ["linear"], ["zoom"], 2, 5, 5, 8, 8, 10],
       "circle-color": ["get", "color"],
       "circle-stroke-color": "#ffffff",
       "circle-stroke-width": 2,

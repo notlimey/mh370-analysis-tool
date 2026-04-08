@@ -20,10 +20,12 @@ import { applyUrlStateFromHash, scheduleUrlStateSync } from "./lib/urlState";
 import { markWorkspaceInputsChanged } from "./lib/workspaceState";
 import { analysisConfig, initAnalysisConfig } from "./stores/analysis-config";
 import { layerVisibility } from "./stores/layer-visibility";
+import { appMode, setAppMode } from "./stores/report";
 import { activeScenarioId } from "./stores/scenario";
 import { methodologyOpen, setActivePanel, setMethodologyOpen } from "./stores/ui";
 
 const MethodologyView = lazy(() => import("./components/methodology/MethodologyView"));
+const ReportView = lazy(() => import("./components/report/ReportView"));
 
 const App: Component = () => {
   // Initialize config before render
@@ -34,11 +36,25 @@ const App: Component = () => {
     if (!IS_TAURI) {
       document.body.classList.add("browser-mode");
     }
+
+    // Tauri desktop app goes straight to explore mode
+    if (IS_TAURI) {
+      setAppMode("explore");
+    }
+  });
+
+  // Sync body class with app mode
+  createEffect(() => {
+    const mode = appMode();
+    if (mode === "report") {
+      document.body.classList.add("report-mode");
+    } else {
+      document.body.classList.remove("report-mode");
+    }
   });
 
   // Sync URL and auto-save on state changes
   createEffect(() => {
-    // Track reactive dependencies
     void JSON.stringify(analysisConfig);
     scheduleUrlStateSync();
     markWorkspaceInputsChanged({ ...analysisConfig } as Parameters<typeof markWorkspaceInputsChanged>[0]);
@@ -88,22 +104,37 @@ const App: Component = () => {
     window.removeEventListener("beforeunload", persistSessionSnapshot);
   });
 
+  const inReport = () => appMode() === "report";
+  const inExplore = () => appMode() === "explore";
+
   return (
     <MapProvider>
-      <div style={{ display: methodologyOpen() ? "none" : "contents" }}>
-        <IconRail />
-        <FlyoutShell />
-        <MapContainer />
-        <Loader />
-        <BrowserBanner />
-        <EvidencePanel />
-        <Timeline />
-      </div>
-      <Show when={methodologyOpen()}>
+      {/* Report mode: narrative panel alongside the map */}
+      <Show when={inReport()}>
         <Suspense>
-          <MethodologyView />
+          <ReportView />
         </Suspense>
       </Show>
+
+      {/* Explore mode: full tool UI */}
+      <Show when={inExplore()}>
+        <div style={{ display: methodologyOpen() ? "none" : "contents" }}>
+          <IconRail />
+          <FlyoutShell />
+          <BrowserBanner />
+          <EvidencePanel />
+          <Timeline />
+        </div>
+        <Show when={methodologyOpen()}>
+          <Suspense>
+            <MethodologyView />
+          </Suspense>
+        </Show>
+      </Show>
+
+      {/* Map and loader are always present */}
+      <MapContainer />
+      <Loader />
     </MapProvider>
   );
 };

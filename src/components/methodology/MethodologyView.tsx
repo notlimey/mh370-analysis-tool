@@ -1,6 +1,6 @@
 import "katex/dist/katex.min.css";
 import type { Component } from "solid-js";
-import { For, Show, Suspense, createSignal } from "solid-js";
+import { createSignal, For, Show, Suspense } from "solid-js";
 import { Dynamic } from "solid-js/web";
 import { chapters } from "../../content/methodology/chapters";
 import { setMethodologyOpen } from "../../stores/ui";
@@ -28,7 +28,15 @@ const MethodologyView: Component = () => {
             type="button"
             aria-label="Close methodology view"
           >
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 16 16"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round"
+            >
               <path d="M4 4l8 8M12 4l-8 8" />
             </svg>
           </button>

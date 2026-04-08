@@ -7,6 +7,7 @@ import { loadAirspacesLayer } from "../../layers/airspaces";
 import { loadAnomaliesLayer, setSelectedAnomaly } from "../../layers/anomalies";
 // Layer imports
 import { loadArcsLayer } from "../../layers/arcs";
+import { loadBestPathLayer } from "../../layers/best-path";
 import { loadDebrisLayer } from "../../layers/debris";
 import { initDriftCloudsLayer } from "../../layers/drift-clouds";
 import { hasEofComparisonOverlays, loadEofComparisonOverlay } from "../../layers/eof-comparison";
@@ -14,11 +15,14 @@ import { loadFlightPathLayer } from "../../layers/flightpath";
 import { loadHeatmapLayer } from "../../layers/heatmap";
 import { loadHolidaysLayer } from "../../layers/holidays";
 import { loadMagneticLayer } from "../../layers/magnetic";
+import { loadNorthRouteLayer } from "../../layers/north-route";
 import type { FlightPath, PathAnnotation } from "../../layers/paths";
 import { annotatePaths, fetchCandidatePaths, loadPathsLayer } from "../../layers/paths";
 import { loadPinsLayer } from "../../layers/pins";
 import { loadPointsLayer } from "../../layers/points";
 import { loadPriorityGapsLayer } from "../../layers/priority";
+import { loadRadarTrackLayer } from "../../layers/radar-track";
+import { loadSonarCoverageLayer } from "../../layers/sonar-coverage";
 import { loadSonarLayers } from "../../layers/sonar";
 import type { BackendProbPoint } from "../../lib/backend";
 import { getProbabilityHeatmap } from "../../lib/backend";
@@ -51,14 +55,14 @@ import {
   setResultSummary,
   setRunStatus,
 } from "../../stores/model-run";
-import { setLoaderText, setLoaderVisible } from "../../stores/ui";
+import { appMode } from "../../stores/report";
+import { setLoaderText, setLoaderVisible, setMapReady } from "../../stores/ui";
 
 const LAYER_PREFIXES = [
   "arcs-",
   "anomalies-",
   "airspaces-",
   "magnetic-",
-  "sonar-",
   "holidays-",
   "paths-",
   "heatmap-",
@@ -70,6 +74,9 @@ const LAYER_PREFIXES = [
   "eof-compare-",
   "flightpath-",
   "drift-clouds-",
+  "radar-track-",
+  "best-path-",
+  "north-route-",
 ];
 
 function removeAllLayers(map: mapboxgl.Map): void {
@@ -243,6 +250,10 @@ async function loadAllLayers(
   if (sel.kind === "anomaly" && sel.id) setSelectedAnomaly(map, sel.id);
 
   loadFlightPathLayer(map);
+  loadRadarTrackLayer(map);
+  loadBestPathLayer(map, paths);
+  await loadNorthRouteLayer(map);
+  await loadSonarCoverageLayer(map);
   applyLayerVisibility(map);
 
   // Update stores with results
@@ -308,6 +319,11 @@ const MapContainer: Component = () => {
 
     mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_TOKEN;
 
+    // In report mode, start at KLIA (Chapter 0). In explore mode, use default center.
+    const inReport = appMode() === "report";
+    const initialCenter: [number, number] = inReport ? [101.71, 2.75] : MAP_CENTER;
+    const initialZoom = inReport ? 7 : MAP_ZOOM;
+
     const map = new mapboxgl.Map({
       container: containerRef,
       style: "mapbox://styles/mapbox/standard-satellite",
@@ -317,8 +333,8 @@ const MapContainer: Component = () => {
           show3dObjects: false,
         },
       },
-      center: MAP_CENTER,
-      zoom: MAP_ZOOM,
+      center: initialCenter,
+      zoom: initialZoom,
       projection: "mercator",
     });
 
@@ -362,6 +378,7 @@ const MapContainer: Component = () => {
         });
       }
       setLoaderVisible(false);
+      setMapReady(true);
     });
 
     // Sync URL and auto-save on map viewport changes

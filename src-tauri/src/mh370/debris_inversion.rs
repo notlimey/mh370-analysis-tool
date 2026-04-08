@@ -1,3 +1,6 @@
+use std::sync::atomic::{AtomicUsize, Ordering};
+
+use rayon::prelude::*;
 use serde::{Deserialize, Serialize};
 
 use super::arcs::{build_arc_ring, calibrate_bto_offset_from_dataset};
@@ -103,10 +106,10 @@ pub fn run_joint_inversion_with_progress<F>(
     items: &[DebrisItem],
     arc_points: &[(f64, f64)],
     satellite_peak_lat: f64,
-    mut progress: F,
+    progress: F,
 ) -> InversionResult
 where
-    F: FnMut(u8),
+    F: Fn(u8) + Send + Sync,
 {
     let usable_items: Vec<&DebrisItem> = items
         .iter()
@@ -114,9 +117,12 @@ where
         .collect();
     let items_excluded = items.len().saturating_sub(usable_items.len()) as u32;
 
-    let mut candidates: Vec<OriginCandidate> = Vec::with_capacity(arc_points.len());
-    for (index, &(lat, lon)) in arc_points.iter().enumerate() {
-        candidates.push({
+    let completed = AtomicUsize::new(0);
+    let total = arc_points.len();
+
+    let mut candidates: Vec<OriginCandidate> = arc_points
+        .par_iter()
+        .map(|&(lat, lon)| {
             let mut log_likelihood = 0.0;
             let mut contributing_items = 0_u32;
             for item in &usable_items {
@@ -137,6 +143,12 @@ where
             }
             log_likelihood += gaussian_lat_prior_log(lat, -34.0, 5.5);
 
+            let done = completed.fetch_add(1, Ordering::Relaxed) + 1;
+            if done % 10 == 0 || done == total {
+                let pct = ((done as f64 / total.max(1) as f64) * 100.0).round() as u8;
+                progress(pct.min(100));
+            }
+
             OriginCandidate {
                 lat,
                 lon,
@@ -144,13 +156,8 @@ where
                 normalized_prob: 0.0,
                 contributing_items,
             }
-        });
-
-        if (index + 1) % 10 == 0 || index + 1 == arc_points.len() {
-            let pct = (((index + 1) as f64 / arc_points.len().max(1) as f64) * 100.0).round() as u8;
-            progress(pct.min(100));
-        }
-    }
+        })
+        .collect();
 
     normalize_candidates(&mut candidates);
     candidates.sort_by(|left, right| left.lat.partial_cmp(&right.lat).unwrap());

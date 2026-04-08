@@ -327,7 +327,7 @@ fn interpolate_atsb_correction(time_s: f64) -> f64 {
 /// BFO = Δf_up + Δf_comp + Δf_down + δf_sat + δf_AFC + δf_bias
 ///
 /// Where δf_sat + δf_AFC are interpolated from ATSB tabulated values
-/// and δf_bias is the ATSB constant (152.5 Hz).
+/// and δf_bias is the ATSB constant (150 Hz; Holland 2017).
 ///
 /// Source: Holland 2017, arXiv:1702.02432, Eq. (1)-(4);
 ///         ATSB correction data via joewragg/MH370.

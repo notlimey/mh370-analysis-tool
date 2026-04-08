@@ -5,6 +5,7 @@
 
 use std::path::Path;
 
+use mh370_lib::mh370::arcs::generate_arc_rings;
 use mh370_lib::mh370::data::{load_dataset, resolve_config};
 use mh370_lib::mh370::export::{
     export_debris_inversion_snapshot, export_paths_geojson, export_probability_geojson,
@@ -42,7 +43,39 @@ fn main() {
     std::fs::write(output_dir.join("handshakes.json"), handshakes_json).unwrap();
     eprintln!("{} handshakes", handshakes.len());
 
-    // 2. Candidate paths
+    // 2. Arc rings
+    eprint!("Exporting arc_rings.geojson... ");
+    match generate_arc_rings(&satellite, Some(config.clone())) {
+        Ok(rings) => {
+            let features: Vec<serde_json::Value> = rings
+                .iter()
+                .map(|ring| {
+                    serde_json::json!({
+                        "type": "Feature",
+                        "properties": {
+                            "arc": ring.arc,
+                            "time": ring.time_utc,
+                            "range_km": ring.range_km,
+                        },
+                        "geometry": {
+                            "type": "LineString",
+                            "coordinates": ring.points,
+                        }
+                    })
+                })
+                .collect();
+            let geojson = serde_json::json!({
+                "type": "FeatureCollection",
+                "features": features,
+            });
+            let json_str = serde_json::to_string_pretty(&geojson).unwrap();
+            std::fs::write(output_dir.join("arc_rings.geojson"), json_str).unwrap();
+            eprintln!("{} arcs", rings.len());
+        }
+        Err(err) => eprintln!("FAILED: {err}"),
+    }
+
+    // 3. Candidate paths
     eprint!("Exporting candidate_paths.geojson... ");
     let result = export_paths_geojson(
         &satellite,

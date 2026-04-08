@@ -1,0 +1,23 @@
+# MH370 Satellite Communication Data — Verified Reference Dataset
+# Compiled: 2026-04-07 | CC BY 4.0
+# Sources: Inmarsat SU Logs (CNN release May 2014); Ashton et al. 2014 J.Navigation Table 6; Holland 2017 arXiv:1702.02432; DSTG Book (Davey et al. 2016)
+# BTO corrected: Arcs 1 and 7 have -4600 us applied per Ashton 2014 Table 6 note (1)
+# BFO bias used in this project: 150.0 Hz (Holland 2017). Ashton 2014 used 152.5 Hz. Difference is within noise (4.3 Hz sigma).
+# BFO noise sigma: 4.3 Hz (DSTG Table 5.1, in-flight, outliers excluded). DSTG used 7 Hz for accident flight model.
+# AES compensation altitude: 36210.12 km (= 35788.12 + 422 km, DSTG Book Ch.5 p.29)
+#
+arc,event,time_utc,bto_raw_us,bto_corrected_us,bfo_hz,channel,bto_usable,bfo_usable,bto_sigma_us,dfsat_afc_hz,source
+-,gate_logon,16:00:13,14820,,87,R1200,Y_calibration,Y,29,,Inmarsat SU Log
+-,last_acars,17:07:29,,,,,N,N,,,DSTG Book
+1,aes_logon,18:25:27,17120,12520,142,R1200,Y,Y_logon_request_only,29,10.8,Inmarsat SU Log; Ashton 2014 Table 6; Holland 2017
+-,aes_access_request,18:28:15,51700,,143,R1200,Y,Y,29,,Inmarsat SU Log; Ashton 2014 Table 6
+-,phone_call_1,18:39:55,,,88,C-channel,N,Y,,,Inmarsat SU Log; Ashton 2014 (avg of 51 values 86-90 Hz)
+2,ges_handshake,19:41:03,11500,11500,111,R1200,Y,Y,29,-1.2,Inmarsat SU Log; joewragg; Holland 2017
+3,ges_handshake,20:41:05,11740,11740,141,R1200,Y,Y,29,-1.3,Inmarsat SU Log; joewragg; Holland 2017
+4,ges_handshake,21:41:27,12780,12780,168,R1200,Y,Y,29,-17.9,Inmarsat SU Log; joewragg; Holland 2017
+5,ges_handshake,22:41:22,14540,14540,204,R1200,Y,Y,29,-28.5,Inmarsat SU Log; joewragg; Holland 2017
+-,phone_call_2,23:15:02,,,217,C-channel,N,Y,,,Inmarsat SU Log; Ashton 2014 (avg of 29 values 216-222 Hz)
+6,ges_handshake,00:10:60,18040,18040,252,R1200,Y,Y,29,-37.7,Inmarsat SU Log; joewragg; Holland 2017
+7,aes_logon,00:19:29,23000,18400,182,R1200,Y,Y_logon_request_only,29,-38.0,Inmarsat SU Log; Holland 2017 Tables IV VI VII
+7,aes_logon_2nd,00:19:37,,,-2,R1200,N,Y_with_warmup_caveat,,,Holland 2017
+-,no_response,01:15:56,,,,,,N,,,DSTG Book
