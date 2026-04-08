@@ -1,6 +1,6 @@
 # MH370 Analysis Tool — Roadmap
 
-**Last updated:** 2026-04-08
+**Last updated:** 2026-04-08 (search effectiveness analysis)
 
 ---
 
@@ -109,6 +109,24 @@
   priors / OU maneuver model vs beam search), not parametric.
 - Resolves the most important open question from the paper.
 - Tool: `cargo run --release --bin compare_bfo_sigma`
+
+### Search Effectiveness Analysis (2026-04-08)
+
+- **P(detect) = 39.2%.** The existing sonar search covered ~50% of the
+  predicted impact zone's probability mass, but not the highest-probability
+  half. There is a sharp coverage boundary at ~91°E: the deep tow strip
+  covers 90.4–91°E (far glide zone) while 91–92°E (central glide zone,
+  peak probability) and 92–93°E (arc crossing) were not searched at
+  debris-detection resolution.
+- **Best-estimate location unsearched.** Heatmap points at 91.127°E and
+  91.450°E (peak scores) fall outside all 5m-resolution sonar coverage.
+  Non-detection provides no constraint on the most probable impact location.
+- **Bayes update is mild.** The posterior shifts the probability mass slightly
+  toward the uncovered 91–93°E zone, but the full predicted zone is not
+  ruled out.
+- Tooling: `src-tauri/src/mh370/search_effectiveness.rs` (module) and
+  `src-tauri/src/bin/search_effectiveness.rs` (CLI binary).
+- See `docs/research-note-search-effectiveness.md` for full results.
 
 ### 17:07 BFO Residual Resolution (2026-04-08)
 
