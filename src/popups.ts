@@ -151,7 +151,7 @@ export function setupPopups(map: MapboxMap): void {
         map,
         e,
         `<strong>Priority gap</strong><br/>
-         Probability: ${(Number(props.probability) * 100).toFixed(2)}%<br/>
+         Path density: ${(Number(props.path_density_score) * 100).toFixed(2)}%<br/>
          ${props.label}`,
       );
     });

@@ -9,6 +9,7 @@ const LayersPanel = lazy(() => import("../panels/LayersPanel"));
 const EvidenceBrowsePanel = lazy(() => import("../panels/EvidenceBrowsePanel"));
 const ExportPanel = lazy(() => import("../panels/ExportPanel"));
 const SensitivityPanel = lazy(() => import("../panels/SensitivityPanel"));
+const BfoPanel = lazy(() => import("../panels/BfoPanel"));
 
 function panelTitle(id: PanelId): string {
   switch (id) {
@@ -24,6 +25,8 @@ function panelTitle(id: PanelId): string {
       return "Export & History";
     case "sensitivity":
       return "Sensitivity Analysis";
+    case "bfo":
+      return "BFO Model Transparency";
   }
 }
 
@@ -58,6 +61,9 @@ const FlyoutShell: Component = () => {
                 </Match>
                 <Match when={panel() === "sensitivity"}>
                   <SensitivityPanel />
+                </Match>
+                <Match when={panel() === "bfo"}>
+                  <BfoPanel />
                 </Match>
               </Switch>
             </div>

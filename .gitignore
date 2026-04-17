@@ -7,3 +7,7 @@ pnpm-debug.log*
 .DS_Store
 src-tauri/target
 config/analysis.local.toml
+knowledge/papers/raw/
+knowledge/papers/parsed/
+knowledge/extracted/
+knowledge/.venv/

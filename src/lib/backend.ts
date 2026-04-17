@@ -47,6 +47,10 @@ const BROWSER_FALLBACK_CONFIG: AnalysisConfig = {
   debris_weight_max_lat: -32,
   slow_family_max_speed_kts: 390,
   perpendicular_family_tolerance_deg: 20,
+  endpoint_mode: "glide",
+  descent_before_arc7_minutes: 1.0,
+  descent_rate_fpm: 4200,
+  glide_wind_correction_kts: 0,
 };
 
 function compiledDefaultSources(): Record<string, ConfigSource> {
@@ -102,10 +106,26 @@ export interface BackendBfoDiagnostic {
 
 export interface BackendProbPoint {
   position: [number, number];
-  probability: number;
+  /** Relative path density score — NOT a calibrated probability. */
+  path_density_score: number;
   path_density: number;
   fuel_weight: number;
   debris_weight: number;
+}
+
+export interface BackendBfoStepthrough {
+  arc: number;
+  arc_time: string;
+  measured_bfo_hz: number | null;
+  uplink_doppler_hz: number;
+  aes_compensation_hz: number;
+  downlink_doppler_hz: number;
+  afc_correction_hz: number;
+  bias_hz: number;
+  predicted_bfo_hz: number;
+  residual_hz: number | null;
+  is_in_sample: boolean;
+  validation_note: string;
 }
 
 export interface BackendDebrisLogItem {
@@ -211,7 +231,7 @@ export interface SweepTrial {
   delta_from_base: number;
   peak_lat: number | null;
   peak_lon: number | null;
-  peak_probability: number | null;
+  peak_density_score: number | null;
   fuel_feasible_count: number;
   total_path_count: number;
   distance_from_base_km: number;
@@ -312,7 +332,7 @@ export async function getProbabilityHeatmap(config?: AnalysisConfig): Promise<Ba
   const geojson = await fetchSnapshot<GeoJSON.FeatureCollection>("probability_heatmap.geojson");
   return geojson.features.map((feature) => ({
     position: (feature.geometry as GeoJSON.Point).coordinates as [number, number],
-    probability: Number(feature.properties?.probability ?? 0),
+    path_density_score: Number(feature.properties?.path_density_score ?? 0),
     path_density: Number(feature.properties?.path_density ?? 0),
     fuel_weight: Number(feature.properties?.fuel_weight ?? 0),
     debris_weight: Number(feature.properties?.debris_weight ?? 0),
@@ -376,6 +396,11 @@ export async function exportProbabilityGeojson(path: string, config?: AnalysisCo
 export async function exportPathsGeojson(path: string, config?: AnalysisConfig) {
   if (!IS_TAURI) return;
   return tauriInvoke("export_paths_geojson", config ? { path, config } : { path });
+}
+
+export async function getBfoStepthroughs(config?: AnalysisConfig): Promise<BackendBfoStepthrough[]> {
+  if (!IS_TAURI) return [];
+  return tauriInvoke("get_bfo_stepthroughs", config ? { config } : undefined);
 }
 
 export async function runDebrisInversion(config?: AnalysisConfig): Promise<InversionResult> {

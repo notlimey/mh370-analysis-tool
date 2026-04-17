@@ -259,7 +259,7 @@ This is the "slow" family in the path classifier. The scenario drops the speed r
 
 A controlled ditching or low-energy fuel-exhaustion entry would produce a much quieter acoustic signature, potentially consistent with the detected levels.
 
-This scenario enables the anomaly layer and highlights the hydroacoustic detections. The config is left close to baseline — the value here is in overlaying the acoustic bearing lines against the probability heatmap to see if there's a plausible intersection.
+This scenario enables the anomaly layer and highlights the hydroacoustic detections. The config is left close to baseline — the value here is in overlaying the acoustic bearing lines against the path-density heatmap to see if there's a plausible intersection.
 
 The Java Anomaly is an uncatalogued hydroacoustic event near the 7th arc that has never been fully investigated.`,
     configOverrides: {
@@ -298,7 +298,7 @@ The Java Anomaly is an uncatalogued hydroacoustic event near the 7th arc that ha
     shortDescription: "Lets debris drift evidence dominate over BTO-only analysis.",
     narrative: `43 pieces of confirmed and suspected MH370 debris have been found across the Indian Ocean — from R\u00E9union to Mozambique to South Africa. Reverse-drift modelling of these finds constrains the origin latitude independently of the satellite data.
 
-This scenario narrows the debris latitude weighting window and enables both the debris layer and the heatmap, so you can see how the debris-derived origin compares to the satellite-derived probability peak.
+This scenario narrows the debris latitude weighting window and enables both the debris layer and the heatmap, so you can see how the debris-derived origin compares to the satellite-derived path-density peak.
 
 The barnacle evidence is particularly interesting here: growth rings on the flaperon encode the water temperature history of the debris during its drift, potentially constraining not just where it started but what path it took. The largest barnacle specimens were withheld from the official French analysis — their age estimates could shift the drift timeline.
 
@@ -340,7 +340,7 @@ Watch for the gap between the satellite peak and debris peak — that tension is
       "Focused view on debris drift modelling \u2014 particle clouds, find locations, and reverse-drift corridors.",
     narrative: `This view strips away the satellite/BTO layers and focuses entirely on what the debris tells us.
 
-The Monte Carlo drift model runs particle ensembles from candidate origin points along the 7th arc, simulating ocean currents and wind-driven leeway with randomised perturbations. Each particle cloud shows the probability envelope of where debris from that origin would end up after N days adrift.
+The Monte Carlo drift model runs particle ensembles from candidate origin points along the 7th arc, simulating ocean currents and wind-driven leeway with randomised perturbations. Each particle cloud shows the dispersion envelope of where debris from that origin would end up after N days adrift.
 
 What to look for:
 \u2022 Do the particle clouds actually reach the debris find locations?

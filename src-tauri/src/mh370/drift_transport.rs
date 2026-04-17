@@ -2,7 +2,9 @@ use rand::rngs::SmallRng;
 use rand::{Rng, SeedableRng};
 use serde::Serialize;
 
+use super::era5_wind::era5_wind_at;
 use super::hycom_currents::hycom_current_at;
+use super::oscar::oscar_current_at;
 
 pub const DEGREES_PER_KM_LAT: f64 = 1.0 / 111.32;
 const CURRENT_NOISE_MPS: f64 = 0.07;
@@ -57,6 +59,59 @@ impl FieldProvider for HybridFieldProvider {
         let (u_current, v_current) = hycom_current_at(state.day_index, state.lat, state.lon)
             .unwrap_or_else(|| synthetic_current_field_at(state.lat, state.lon, state.month));
         let (u_wind, v_wind) = wind_field_at(state.lat, state.lon, state.leeway_coeff, state.month);
+        DriftVector {
+            u_current,
+            v_current,
+            u_wind,
+            v_wind,
+        }
+    }
+}
+
+/// Uses OSCAR 5-day surface currents (1/3° resolution) from CoastWatch ERDDAP.
+/// Falls back to synthetic currents outside the OSCAR domain (50-100°E, 45-10°S)
+/// or time range (March 2014 – April 2015).
+#[derive(Debug, Default, Clone, Copy)]
+pub struct OscarFieldProvider;
+
+impl FieldProvider for OscarFieldProvider {
+    fn forcing(&self, state: DriftState) -> DriftVector {
+        let (u_current, v_current) = oscar_current_at(state.day_index, state.lat, state.lon)
+            .unwrap_or_else(|| synthetic_current_field_at(state.lat, state.lon, state.month));
+        let (u_wind, v_wind) = wind_field_at(state.lat, state.lon, state.leeway_coeff, state.month);
+        DriftVector {
+            u_current,
+            v_current,
+            u_wind,
+            v_wind,
+        }
+    }
+}
+
+/// Uses HYCOM/OSCAR/synthetic currents with ERA5 reanalysis wind.
+/// Falls back to synthetic wind outside the ERA5 domain or time range.
+///
+/// This is the highest-fidelity provider currently available:
+/// - Currents: HYCOM (1/12°, daily) > OSCAR (1/3°, 5-day) > synthetic
+/// - Wind: ERA5 monthly mean (0.25°) > synthetic climatology
+#[derive(Debug, Default, Clone, Copy)]
+pub struct Era5FieldProvider;
+
+impl FieldProvider for Era5FieldProvider {
+    fn forcing(&self, state: DriftState) -> DriftVector {
+        let (u_current, v_current) = hycom_current_at(state.day_index, state.lat, state.lon)
+            .or_else(|| oscar_current_at(state.day_index, state.lat, state.lon))
+            .unwrap_or_else(|| synthetic_current_field_at(state.lat, state.lon, state.month));
+
+        // ERA5 wind: raw 10m wind (m/s), apply leeway coefficient
+        let (u_wind, v_wind) = if let Some((u10, v10)) =
+            era5_wind_at(state.day_index, state.lat, state.lon)
+        {
+            (u10 * state.leeway_coeff, v10 * state.leeway_coeff)
+        } else {
+            wind_field_at(state.lat, state.lon, state.leeway_coeff, state.month)
+        };
+
         DriftVector {
             u_current,
             v_current,

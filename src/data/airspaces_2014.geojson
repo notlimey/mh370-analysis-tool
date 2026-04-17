@@ -380,7 +380,7 @@
         "radar_coverage": "No radar coverage over the southern Indian Ocean. Australia's radar extends only a few hundred NM from the coast.",
         "mh370_notes": "The entire MH370 underwater search zone lies within this FIR. Australia assumed responsibility for coordinating the search precisely because this FIR is Australian-administered. The 7th arc from approximately 20°S to 45°S is within this FIR.",
         "detection_status": "NO DETECTION — beyond all radar coverage",
-        "analytical_importance": "HIGH — the search zone. The debris drift corridor, all BTO arcs from arc 3 onward, and the probability heatmap all fall within this FIR."
+        "analytical_importance": "HIGH — the search zone. The debris drift corridor, all BTO arcs from arc 3 onward, and the path-density heatmap all fall within this FIR."
       },
       "geometry": {
         "type": "Polygon",

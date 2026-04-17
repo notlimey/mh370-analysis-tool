@@ -124,8 +124,8 @@ const ExportPanel: Component = () => {
         const [paths, heatmap] = await Promise.all([getCandidatePaths(120, config), getProbabilityHeatmap(config)]);
         const bestPath = paths[0];
         const peak = heatmap
-          .filter((p) => Number.isFinite(p.probability))
-          .sort((a, b) => b.probability - a.probability)[0];
+          .filter((p) => Number.isFinite(p.path_density_score))
+          .sort((a, b) => b.path_density_score - a.path_density_score)[0];
         const fuelFeasibleCount = paths.filter((p) => p.fuel_feasible).length;
         const fuelFeasiblePercent = paths.length > 0 ? (fuelFeasibleCount / paths.length) * 100 : undefined;
         const searchPolygons = [SEARCHED_2014_2017, SEARCHED_2018, SEARCHED_2025_2026];

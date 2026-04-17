@@ -3,6 +3,25 @@ import { type BackendArcRing, getArcRings } from "../lib/backend";
 
 let latestArcRings: BackendArcRing[] = [];
 
+/**
+ * Interpolate extra points between sparse arc vertices so the ring
+ * looks smooth at high zoom. Uses great-circle midpoint subdivision.
+ */
+function densifyRing(points: [number, number][], subdivisions = 3): [number, number][] {
+  if (points.length < 2) return points;
+  const result: [number, number][] = [];
+  for (let i = 0; i < points.length; i++) {
+    const a = points[i];
+    const b = points[(i + 1) % points.length];
+    result.push(a);
+    for (let s = 1; s <= subdivisions; s++) {
+      const t = s / (subdivisions + 1);
+      result.push([a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t]);
+    }
+  }
+  return result;
+}
+
 /** Draw BTO arc rings on the map */
 export async function loadArcsLayer(map: MapboxMap): Promise<void> {
   const rings: BackendArcRing[] = await getArcRings();
@@ -12,21 +31,24 @@ export async function loadArcsLayer(map: MapboxMap): Promise<void> {
     type: "geojson",
     data: {
       type: "FeatureCollection",
-      features: rings.map((ring) => ({
-        type: "Feature" as const,
-        properties: {
-          arc: ring.arc,
-          time: ring.time_utc,
-          range_km: Math.round(ring.range_km),
-          bfo_residual_hz: null,
-          bfo_weight: null,
-          bfo_fit_label: null,
-        },
-        geometry: {
-          type: "LineString" as const,
-          coordinates: [...ring.points, ring.points[0]], // close the ring
-        },
-      })),
+      features: rings.map((ring) => {
+        const dense = densifyRing(ring.points, 9);
+        return {
+          type: "Feature" as const,
+          properties: {
+            arc: ring.arc,
+            time: ring.time_utc,
+            range_km: Math.round(ring.range_km),
+            bfo_residual_hz: null,
+            bfo_weight: null,
+            bfo_fit_label: null,
+          },
+          geometry: {
+            type: "LineString" as const,
+            coordinates: [...dense, dense[0]], // close the ring
+          },
+        };
+      }),
     },
   });
 

@@ -35,6 +35,9 @@ cd src-tauri && cargo test
 cd src-tauri && cargo test -- --nocapture          # with stdout
 cd src-tauri && cargo test mh370::paths::tests::classifies_slow_arc67_family  # single test
 
+# Export web snapshot data (run after model changes)
+cd src-tauri && cargo run --bin export_snapshot
+
 # Rust format
 cd src-tauri && cargo fmt
 cd src-tauri && cargo fmt --check
@@ -52,8 +55,8 @@ TypeScript correctness is enforced by `tsc` via `pnpm build`. Biome handles lint
 - `data.rs` — Inmarsat handshake records, `AnalysisConfig`, dataset loading
 - `satellite.rs` — I3F1 ephemeris interpolation (cubic Hermite spline on embedded JSON), sinusoidal fallback outside range
 - `arcs.rs` — BTO calibration from known-position pings, BTO-to-slant-range-to-surface-distance, arc ring generation
-- `bfo.rs` — BFO scoring (soft weight, not yet integrated for path scoring)
-- `paths.rs` — Candidate path sampling through arc crossings, fuel model, path family classification (slow/perpendicular/mixed/other)
+- `bfo.rs` — BFO Doppler model (Holland/DSTG decomposition), ATSB bias (150 Hz), ~4 Hz RMS on level-flight arcs
+- `paths.rs` — Candidate path sampling through arc crossings, BFO scoring (4.3 Hz sigma), Arc 7 descent envelope constraint, unpowered glide model, fuel model, path family classification
 - `probability.rs` — Bayesian heatmap along 7th arc
 - `drift.rs` — Debris reverse drift model
 - `debris_inversion.rs` — Joint debris origin inversion with drift validation
@@ -114,5 +117,5 @@ This is a research tool — traceability matters. Every externally-sourced const
 
 - `docs/bfo-reference-data.md` — Verified BFO values, sources, attribution, and the bug that was found (wrong BFO values in dataset). Consult this before modifying BFO-related code.
 - `docs/dstg-validation.md` — DSTG model assumptions (speed, altitude, BFO/BTO sigmas, maneuver model) and comparison with our tool. Use this to verify our model reproduces known results.
-- `docs/research-note-arc7-impact-zone.md` — Preliminary finding: impact zone at ~35.9°S, 90.8°E, west of all searched areas. Includes uncertainty envelope, open tensions (barnacles, HYCOM), and next steps.
+- `docs/research-note-arc7-impact-zone.md` — Preliminary finding: impact zone at ~35.9°S, 90.8°E, outside high-resolution sonar coverage but within bathymetry survey footprint. Includes uncertainty envelope, open tensions (barnacles, HYCOM), and next steps.
 - `docs/roadmap.md` — Project roadmap: completed work, in-progress items, future constraints, and current model output.

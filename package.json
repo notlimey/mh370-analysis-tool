@@ -19,12 +19,17 @@
     "@tauri-apps/api": "^2",
     "@tauri-apps/plugin-opener": "^2",
     "geotiff": "^3.0.5",
+    "katex": "^0.16.45",
     "mapbox-gl": "^3.9.4",
     "solid-js": "^1.9.12"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.4.10",
+    "@mdx-js/rollup": "^3.1.1",
     "@tauri-apps/cli": "^2",
+    "rehype-katex": "^7.0.1",
+    "remark-gfm": "^4.0.1",
+    "remark-math": "^6.0.0",
     "typescript": "~5.6.2",
     "vite": "^6.0.3",
     "vite-plugin-solid": "^2.11.12"

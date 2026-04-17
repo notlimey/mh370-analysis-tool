@@ -43,6 +43,22 @@ pub struct AnalysisConfig {
     pub debris_weight_max_lat: f64,
     pub slow_family_max_speed_kts: f64,
     pub perpendicular_family_tolerance_deg: f64,
+    /// Post-Arc-7 endpoint projection mode.
+    /// "glide" = directional unpowered glide along final heading (default).
+    /// "symmetric" = DSTG-style radially symmetric kernel (15 NM uniform + 30 NM Gaussian).
+    pub endpoint_mode: String,
+    /// Pre-Arc-7 descent duration (minutes). Time between engine flameout and
+    /// the Arc 7 handshake at 00:19:29. Holland 2017 Sec VI-A: "about one minute"
+    /// under fuel exhaustion hypothesis. Range: 0.5–8.5 minutes.
+    pub descent_before_arc7_minutes: f64,
+    /// Descent rate during pre-Arc-7 descent (fpm).
+    /// Holland 2017 central estimate: ~4,200 fpm.
+    pub descent_rate_fpm: f64,
+    /// Wind correction applied to the glide ground track (kts, headwind positive).
+    /// ERA5 climatological mean at 300 hPa, March, 35°S, 90°E: ~35 kts westerly.
+    /// Decomposed along heading 224° true: ~25 kts headwind component.
+    /// Default: 0.0 (no wind correction — opt-in).
+    pub glide_wind_correction_kts: f64,
 }
 
 impl Default for AnalysisConfig {
@@ -83,6 +99,10 @@ impl Default for AnalysisConfig {
             debris_weight_max_lat: -32.0,
             slow_family_max_speed_kts: 390.0,
             perpendicular_family_tolerance_deg: 20.0,
+            endpoint_mode: "glide".to_string(),
+            descent_before_arc7_minutes: 1.0,
+            descent_rate_fpm: 4200.0,
+            glide_wind_correction_kts: 0.0,
         }
     }
 }

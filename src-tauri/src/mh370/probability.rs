@@ -1,3 +1,4 @@
+use rayon::prelude::*;
 use serde::Serialize;
 
 use super::data::{load_dataset, resolve_config, AnalysisConfig, Mh370Dataset};
@@ -8,7 +9,11 @@ use super::satellite::SatelliteModel;
 #[derive(Debug, Clone, Serialize)]
 pub struct ProbPoint {
     pub position: [f64; 2],
-    pub probability: f64,
+    /// Relative path density score (normalized to sum to 1.0).
+    /// This is NOT a calibrated probability — it is the relative density
+    /// of heuristic beam-search endpoints, useful for comparing regions
+    /// but not for interpreting as a Bayesian posterior.
+    pub path_density_score: f64,
     pub path_density: f64,
     pub fuel_weight: f64,
     pub debris_weight: f64,
@@ -36,49 +41,84 @@ pub fn generate_probability_heatmap_from_dataset(
         fuel_summary.paths
     };
 
-    let arc7_points = endpoint_heatmap_points(&fuel_paths, config.arc7_grid_points);
+    let use_symmetric = config.endpoint_mode == "symmetric";
+
+    let arc7_points = if use_symmetric {
+        // In symmetric mode, generate grid points around arc-7 crossings
+        // using the DSTG kernel (15 NM uniform disc + 30 NM σ Gaussian falloff).
+        // Grid points are the arc-7 crossings themselves — the kernel is applied
+        // during scoring, not during grid generation.
+        endpoint_heatmap_points_arc7(&fuel_paths, config.arc7_grid_points)
+    } else {
+        endpoint_heatmap_points(&fuel_paths, config.arc7_grid_points)
+    };
 
     if arc7_points.is_empty() {
         return Ok(Vec::new());
     }
 
-    let mut raw_points = Vec::new();
-    for point in arc7_points {
-        let point_latlon = LatLon::new(point[1], point[0]);
-        let path_density = fuel_paths
-            .iter()
-            .map(|path| {
-                let Some(anchor) = projected_endpoint(path) else {
-                    return 0.0;
-                };
-                let distance_km = haversine(point_latlon, anchor);
-                (-distance_km.powi(2) / (2.0 * 75.0_f64.powi(2))).exp() * path.score.max(0.1)
-            })
-            .sum::<f64>();
+    let raw_points: Vec<_> = arc7_points
+        .par_iter()
+        .map(|point| {
+            let point_latlon = LatLon::new(point[1], point[0]);
+            let path_density = fuel_paths
+                .iter()
+                .map(|path| {
+                    let anchor = if use_symmetric {
+                        arc7_endpoint(path)
+                    } else {
+                        projected_endpoint(path)
+                    };
+                    let Some(anchor) = anchor else {
+                        return 0.0;
+                    };
+                    let distance_km = haversine(point_latlon, anchor);
+                    if use_symmetric {
+                        // DSTG descent kernel: 15 NM (~28 km) uniform disc +
+                        // Gaussian falloff with σ = 30 NM (~56 km) beyond.
+                        // Source: DSTG Book, Davey et al. 2016.
+                        dstg_descent_kernel(distance_km) * path.score.max(0.1)
+                    } else {
+                        (-distance_km.powi(2) / (2.0 * 75.0_f64.powi(2))).exp()
+                            * path.score.max(0.1)
+                    }
+                })
+                .sum::<f64>();
 
-        let fuel_weight = fuel_paths
-            .iter()
-            .map(|path| {
-                let Some(anchor) = projected_endpoint(path) else {
-                    return 0.0;
-                };
-                let distance_km = haversine(point_latlon, anchor);
-                let closeness = (-distance_km.powi(2) / (2.0 * 90.0_f64.powi(2))).exp();
-                let continuation = if config.max_post_arc7_minutes > 0.0 {
-                    (path.extra_endurance_minutes / config.max_post_arc7_minutes).clamp(0.0, 1.0)
-                } else {
-                    0.0
-                };
-                closeness * (0.5 + 0.5 * continuation)
-            })
-            .sum::<f64>();
+            let fuel_weight = fuel_paths
+                .iter()
+                .map(|path| {
+                    let anchor = if use_symmetric {
+                        arc7_endpoint(path)
+                    } else {
+                        projected_endpoint(path)
+                    };
+                    let Some(anchor) = anchor else {
+                        return 0.0;
+                    };
+                    let distance_km = haversine(point_latlon, anchor);
+                    let closeness = if use_symmetric {
+                        dstg_descent_kernel(distance_km)
+                    } else {
+                        (-distance_km.powi(2) / (2.0 * 90.0_f64.powi(2))).exp()
+                    };
+                    let continuation = if !use_symmetric && config.max_post_arc7_minutes > 0.0 {
+                        (path.extra_endurance_minutes / config.max_post_arc7_minutes)
+                            .clamp(0.0, 1.0)
+                    } else {
+                        0.0
+                    };
+                    closeness * (0.5 + 0.5 * continuation)
+                })
+                .sum::<f64>();
 
-        // Keep the heatmap anchored to the sampled path family rather than a
-        // separate southern prior so the map agrees with the candidate paths.
-        let debris_weight = 0.0;
-        let raw_score = path_density + fuel_weight;
-        raw_points.push((point, raw_score, path_density, fuel_weight, debris_weight));
-    }
+            // Keep the heatmap anchored to the sampled path family rather than a
+            // separate southern prior so the map agrees with the candidate paths.
+            let debris_weight = 0.0;
+            let raw_score = path_density + fuel_weight;
+            (*point, raw_score, path_density, fuel_weight, debris_weight)
+        })
+        .collect();
 
     let total_score: f64 = raw_points
         .iter()
@@ -93,7 +133,7 @@ pub fn generate_probability_heatmap_from_dataset(
         .map(
             |(position, raw_score, path_density, fuel_weight, debris_weight)| ProbPoint {
                 position,
-                probability: raw_score / total_score,
+                path_density_score: raw_score / total_score,
                 path_density,
                 fuel_weight,
                 debris_weight,
@@ -109,6 +149,57 @@ fn endpoint_heatmap_points(
     let mut endpoints: Vec<[f64; 2]> = paths
         .iter()
         .filter_map(|path| projected_endpoint(path).map(|point| [point.lon, point.lat]))
+        .collect();
+
+    endpoints.sort_by(|left, right| left[1].partial_cmp(&right[1]).unwrap());
+
+    if endpoints.len() <= target_points.max(2) {
+        return endpoints;
+    }
+
+    let step = endpoints.len() as f64 / target_points.max(2) as f64;
+    let mut result = Vec::new();
+    let mut index = 0.0_f64;
+    while (index as usize) < endpoints.len() {
+        result.push(endpoints[index as usize]);
+        index += step;
+    }
+    result
+}
+
+/// DSTG descent kernel: 15 NM uniform disc + Gaussian falloff (σ = 30 NM).
+///
+/// Within 15 NM (~28 km) of the arc crossing, the kernel returns 1.0.
+/// Beyond that, it falls off as a Gaussian with σ = 30 NM (~56 km).
+/// This is radially symmetric — it does not assume a heading.
+///
+/// Source: DSTG Book (Davey et al. 2016), Section 10.2.
+/// "High likelihood of reaching zero altitude within 15 nm of beginning of descent."
+fn dstg_descent_kernel(distance_km: f64) -> f64 {
+    const UNIFORM_RADIUS_KM: f64 = 15.0 * 1.852; // 15 NM
+    const GAUSSIAN_SIGMA_KM: f64 = 30.0 * 1.852; // 30 NM
+    if distance_km <= UNIFORM_RADIUS_KM {
+        1.0
+    } else {
+        let excess = distance_km - UNIFORM_RADIUS_KM;
+        (-excess.powi(2) / (2.0 * GAUSSIAN_SIGMA_KM.powi(2))).exp()
+    }
+}
+
+/// Get the Arc 7 crossing point (last point in the path, no glide projection).
+fn arc7_endpoint(path: &super::paths::FlightPath) -> Option<LatLon> {
+    let last = path.points.last().copied()?;
+    Some(LatLon::new(last[1], last[0]))
+}
+
+/// Generate grid points centered on arc-7 crossings (for symmetric kernel mode).
+fn endpoint_heatmap_points_arc7(
+    paths: &[super::paths::FlightPath],
+    target_points: usize,
+) -> Vec<[f64; 2]> {
+    let mut endpoints: Vec<[f64; 2]> = paths
+        .iter()
+        .filter_map(|path| path.points.last().copied())
         .collect();
 
     endpoints.sort_by(|left, right| left[1].partial_cmp(&right[1]).unwrap());

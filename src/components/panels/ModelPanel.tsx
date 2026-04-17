@@ -112,7 +112,7 @@ const ModelPanel: Component = () => {
         </div>
         <div class="model-info">
           <div id="confidence-display">
-            <span class="label">Highest probability zone</span>
+            <span class="label">Peak path-density zone</span>
             <span class="value">{summary().confidence}</span>
           </div>
           <div id="assumptions-display">

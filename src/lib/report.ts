@@ -30,7 +30,7 @@ export function generateRunReport(label: string, config: AnalysisConfig, summary
     summary.scenarioLabel ? `Scenario: ${summary.scenarioLabel}` : undefined,
     `Best family: ${summary.bestFamily ?? "No viable path"}`,
     `Best score: ${summary.bestScore?.toFixed(3) ?? "--"}`,
-    `Peak probability: ${formatPeak(summary.peakLat, summary.peakLon)}`,
+    `Peak path density: ${formatPeak(summary.peakLat, summary.peakLon)}`,
     `Path count: ${summary.pathCount}`,
     `Heatmap points: ${summary.heatmapCount}`,
     summary.fuelFeasibleCount != null

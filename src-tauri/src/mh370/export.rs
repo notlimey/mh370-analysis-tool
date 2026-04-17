@@ -23,7 +23,7 @@ pub fn export_probability_geojson(
         .map_err(|err| format!("serialization failed: {err}"))?;
     std::fs::write(&path, serialized).map_err(|err| format!("write failed: {err}"))?;
     Ok(format!(
-        "Exported {} probability points to {}",
+        "Exported {} path-density points to {}",
         points.len(),
         path
     ))
@@ -77,8 +77,8 @@ pub fn probability_to_geojson(points: &[ProbPoint], config: &AnalysisConfig) -> 
                     "coordinates": point.position,
                 },
                 "properties": {
-                    "probability": point.probability,
-                    "probability_pct": point.probability * 100.0,
+                    "path_density_score": point.path_density_score,
+                    "path_density_score_pct": point.path_density_score * 100.0,
                     "path_density": point.path_density,
                     "fuel_weight": point.fuel_weight,
                     "debris_weight": point.debris_weight,
@@ -87,7 +87,7 @@ pub fn probability_to_geojson(points: &[ProbPoint], config: &AnalysisConfig) -> 
         }).collect::<Vec<_>>(),
         "metadata": {
             "total_points": points.len(),
-            "sum_check": points.iter().map(|point| point.probability).sum::<f64>(),
+            "sum_check": points.iter().map(|point| point.path_density_score).sum::<f64>(),
         }
     })
 }
@@ -127,11 +127,11 @@ pub fn paths_to_geojson(paths: &[FlightPath], config: &AnalysisConfig) -> serde_
 fn probability_summary(points: &[ProbPoint]) -> serde_json::Value {
     let peak = points
         .iter()
-        .max_by(|left, right| left.probability.partial_cmp(&right.probability).unwrap());
+        .max_by(|left, right| left.path_density_score.partial_cmp(&right.path_density_score).unwrap());
 
     json!({
-        "peak_probability_lat": peak.map(|point| point.position[1]),
-        "peak_probability_lon": peak.map(|point| point.position[0]),
+        "peak_density_lat": peak.map(|point| point.position[1]),
+        "peak_density_lon": peak.map(|point| point.position[0]),
         "point_count": points.len(),
     })
 }
@@ -162,14 +162,14 @@ mod tests {
         let points = vec![
             ProbPoint {
                 position: [92.0, -35.0],
-                probability: 0.05,
+                path_density_score: 0.05,
                 path_density: 1.0,
                 fuel_weight: 0.5,
                 debris_weight: 0.25,
             },
             ProbPoint {
                 position: [93.0, -36.0],
-                probability: 0.03,
+                path_density_score: 0.03,
                 path_density: 0.8,
                 fuel_weight: 0.4,
                 debris_weight: 0.2,
@@ -181,6 +181,6 @@ mod tests {
         assert!(json["config"].is_object());
         assert!(json["summary"].is_object());
         assert_eq!(json["features"].as_array().unwrap().len(), 2);
-        assert!(json["features"][0]["properties"]["probability"].is_number());
+        assert!(json["features"][0]["properties"]["path_density_score"].is_number());
     }
 }

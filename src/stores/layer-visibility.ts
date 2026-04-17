@@ -6,7 +6,6 @@ export const DEFAULT_LAYER_VISIBILITY: Record<string, boolean> = {
   anomalies: false,
   airspaces: false,
   magnetic: false,
-  sonar: true,
   holidays: false,
   priority: false,
   arcs: true,
@@ -18,9 +17,16 @@ export const DEFAULT_LAYER_VISIBILITY: Record<string, boolean> = {
   searched: true,
   "eof-compare": false,
   "drift-clouds": false,
+  "best-path": false,
+  "north-route": false,
+  "radar-track": false,
 };
 
-const initial = { ...DEFAULT_LAYER_VISIBILITY, ...(getStoredLayerVisibility() ?? {}) };
+// Only restore stored keys that exist in defaults — prevents stale keys (e.g. "sonar")
+// from leaking back in after being removed from the group system.
+const stored = getStoredLayerVisibility() ?? {};
+const filtered = Object.fromEntries(Object.entries(stored).filter(([key]) => key in DEFAULT_LAYER_VISIBILITY));
+const initial = { ...DEFAULT_LAYER_VISIBILITY, ...filtered };
 const [layerVisibility, setLayerVisibility] = createStore<Record<string, boolean>>(initial);
 
 export { layerVisibility };
@@ -35,4 +41,43 @@ export function resetLayerVisibilityDefaults(): void {
     setLayerVisibility(group, visible);
   }
   setStoredLayerVisibility({ ...layerVisibility });
+}
+
+/** BFO inspection preset: arcs + paths + points only. */
+const BFO_INSPECTION_LAYERS: Record<string, boolean> = {
+  flightpath: false,
+  anomalies: false,
+  airspaces: false,
+  magnetic: false,
+  holidays: false,
+  priority: false,
+  arcs: true,
+  paths: true,
+  heatmap: false,
+  debris: false,
+  points: true,
+  pins: false,
+  searched: false,
+  "eof-compare": false,
+  "drift-clouds": false,
+  "best-path": false,
+  "north-route": false,
+  "radar-track": false,
+};
+
+let savedBeforeBfo: Record<string, boolean> | null = null;
+
+export function applyBfoInspectionPreset(): void {
+  savedBeforeBfo = { ...layerVisibility };
+  for (const [group, visible] of Object.entries(BFO_INSPECTION_LAYERS)) {
+    setLayerVisibility(group, visible);
+  }
+}
+
+export function restorePreviousLayerVisibility(): void {
+  if (!savedBeforeBfo) return;
+  for (const [group, visible] of Object.entries(savedBeforeBfo)) {
+    setLayerVisibility(group, visible);
+  }
+  savedBeforeBfo = null;
 }

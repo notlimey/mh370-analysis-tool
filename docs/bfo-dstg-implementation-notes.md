@@ -104,9 +104,9 @@ These values were provided by Inmarsat to the Flight Path Reconstruction Group. 
 | 6b | 00:10:58 | -37.7 |
 | 7 | 00:19:29 | -38.0 |
 
-ATSB constant bias (δf_bias): **152.5 Hz**
+ATSB constant bias (δf_bias): **150 Hz** (Holland 2017). Note: joewragg/ATSB appendix data uses 152.5 Hz (Ashton et al. 2014). The code uses 150 Hz.
 
-**Source**: ATSB via Holland 2017; joewragg/MH370 GitHub (ATSB appendix data)
+**Source**: Holland 2017, arXiv:1702.02432; Ashton et al. 2014, Table 6
 
 ---
 

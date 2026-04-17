@@ -17,6 +17,8 @@
 
 use std::f64::consts::PI;
 
+use serde::Serialize;
+
 use super::data::{load_dataset, parse_time_utc_seconds, AnalysisConfig};
 use super::geometry::LatLon;
 use super::satellite::{sat_state_at_time_s, SatelliteModel};
@@ -86,7 +88,14 @@ fn to_rad(deg: f64) -> f64 {
     deg * PI / 180.0
 }
 
-/// Convert geodetic (lat, lon, altitude) to ECEF (km).
+/// Convert geodetic (lat, lon, altitude) to ECEF (km) using spherical Earth.
+///
+/// NOTE: WGS84 was attempted but reverted. The satellite module's
+/// ecef_to_geodetic uses spherical Earth (R=6371 km), so converting
+/// back to ECEF with WGS84 creates a ~14 km inconsistency at 35°S
+/// that degraded BFO residuals from ~4 Hz to ~21.5 Hz. A proper fix
+/// requires either passing satellite ECEF coordinates directly (avoiding
+/// the geodetic round-trip) or converting everything to WGS84 together.
 fn to_ecef(lat_deg: f64, lon_deg: f64, alt_km: f64) -> Vec3 {
     let lat = to_rad(lat_deg);
     let lon = to_rad(lon_deg);
@@ -318,7 +327,7 @@ fn interpolate_atsb_correction(time_s: f64) -> f64 {
 /// BFO = Δf_up + Δf_comp + Δf_down + δf_sat + δf_AFC + δf_bias
 ///
 /// Where δf_sat + δf_AFC are interpolated from ATSB tabulated values
-/// and δf_bias is the ATSB constant (152.5 Hz).
+/// and δf_bias is the ATSB constant (150 Hz; Holland 2017).
 ///
 /// Source: Holland 2017, arXiv:1702.02432, Eq. (1)-(4);
 ///         ATSB correction data via joewragg/MH370.
@@ -415,6 +424,65 @@ impl BfoModel {
             - measured_bfo)
     }
 
+    /// Compute a full BFO stepthrough with component breakdown.
+    ///
+    /// Returns every intermediate value in the BFO prediction chain so it can
+    /// be displayed transparently in the UI.
+    pub fn stepthrough(
+        &self,
+        satellite: &SatelliteModel,
+        pos: LatLon,
+        heading_deg: f64,
+        speed_kts: f64,
+        time_s: f64,
+        config: &AnalysisConfig,
+        vertical_speed_fpm: f64,
+        measured_bfo: Option<f64>,
+        arc: u8,
+        time_utc: &str,
+    ) -> Result<BfoStepthrough, String> {
+        let speed_km_s = speed_kts * 1.852 / 3600.0;
+        let vertical_speed_km_s = vertical_speed_fpm * 0.0003048 / 60.0;
+
+        let ac_pos = to_ecef(pos.lat, pos.lon, AIRCRAFT_ALT_KM);
+        let ac_vel = aircraft_velocity_ecef(
+            pos.lat, pos.lon, heading_deg, speed_km_s, vertical_speed_km_s,
+        );
+        let (sat_pos, sat_vel) = satellite_ecef(satellite, time_s, config)?;
+
+        let uplink_hz = uplink_doppler_hz(sat_pos, sat_vel, ac_pos, ac_vel);
+        let comp_hz = aes_compensation_hz(
+            pos.lat,
+            pos.lon,
+            heading_deg,
+            speed_km_s,
+            config.satellite_nominal_lat_deg,
+            config.satellite_nominal_lon_deg,
+        );
+        let downlink_hz = downlink_doppler_hz(sat_pos, sat_vel);
+        let afc_correction_hz = interpolate_atsb_correction(time_s);
+        let predicted = uplink_hz + comp_hz + downlink_hz + afc_correction_hz + self.bias;
+
+        let residual_hz = measured_bfo.map(|m| predicted - m);
+
+        let (is_in_sample, validation_note) = validation_note_for_arc(arc);
+
+        Ok(BfoStepthrough {
+            arc,
+            arc_time: time_utc.to_string(),
+            measured_bfo_hz: measured_bfo,
+            uplink_doppler_hz: uplink_hz,
+            aes_compensation_hz: comp_hz,
+            downlink_doppler_hz: downlink_hz,
+            afc_correction_hz,
+            bias_hz: self.bias,
+            predicted_bfo_hz: predicted,
+            residual_hz,
+            is_in_sample,
+            validation_note: validation_note.to_string(),
+        })
+    }
+
     /// Score a candidate point on the 7th arc by finding the best-matching heading.
     pub fn score_7th_arc_point(
         &self,
@@ -441,5 +509,52 @@ impl BfoModel {
 
         let sigma = config.bfo_sigma_hz;
         Ok((-best_residual.powi(2) / (2.0 * sigma * sigma)).exp())
+    }
+}
+
+// ---------------------------------------------------------------------------
+// BFO Stepthrough — full component breakdown for transparency
+// ---------------------------------------------------------------------------
+
+/// Full BFO prediction broken into every intermediate component.
+///
+/// Designed for display in the UI so researchers can inspect each term
+/// in the Holland/DSTG decomposition and understand exactly what drives
+/// the predicted value.
+#[derive(Debug, Clone, Serialize)]
+pub struct BfoStepthrough {
+    pub arc: u8,
+    pub arc_time: String,
+    pub measured_bfo_hz: Option<f64>,
+    /// Holland Eq (3): Doppler from satellite-aircraft relative motion
+    pub uplink_doppler_hz: f64,
+    /// Holland Eq (4): SDU frequency pre-compensation using nominal sat position
+    pub aes_compensation_hz: f64,
+    /// Downlink Doppler: satellite orbital motion → Perth GES
+    pub downlink_doppler_hz: f64,
+    /// δf_sat + δf_AFC: Inmarsat-provided per-arc correction
+    /// Source: ATSB via Holland 2017 Section III
+    pub afc_correction_hz: f64,
+    /// δf_bias: SDU oscillator offset (150 Hz)
+    /// Source: ATSB; confirmed by DSTG, Duncan Steel, Richard Godfrey
+    pub bias_hz: f64,
+    /// Sum of all components
+    pub predicted_bfo_hz: f64,
+    /// predicted - measured (None if no measured value)
+    pub residual_hz: Option<f64>,
+    /// True if the path solver optimized position to minimize this residual
+    pub is_in_sample: bool,
+    /// Human-readable note on the validation status of this arc
+    pub validation_note: String,
+}
+
+fn validation_note_for_arc(arc: u8) -> (bool, &'static str) {
+    match arc {
+        0 => (false, "Pre-flight — BFO data quality poor (raw SU log processing varies ±15 Hz across analysts). Not used in path scoring."),
+        1 => (false, "SDU reboot — OCXO oscillator settling produces transient BFO. Flagged unreliable by SATCOM working group (Holland 2017 Sec V-A). Not used in path scoring."),
+        2 | 3 | 4 | 5 => (true, "In-sample — solver optimized aircraft position, heading, and speed to minimize this residual. The ~4 Hz fit reflects optimization, not independent validation."),
+        6 => (true, "In-sample (C-channel) — uses ATSB channel correction. Solver optimized position for this arc."),
+        7 => (true, "In-sample — large residual expected under level-flight assumption. Aircraft was descending after engine flameout. Scored via descent envelope constraint, not absolute BFO fit."),
+        _ => (true, "In-sample — solver optimized position to minimize this residual."),
     }
 }
