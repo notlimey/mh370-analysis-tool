@@ -7,7 +7,7 @@ const BrowserBanner: Component = () => {
     <Show when={!IS_TAURI}>
       <div class="browser-banner">
         Read-only snapshot — download the desktop app to adjust model parameters and recompute{" "}
-        <a href="https://github.com/notlimey/mh370-analysis-tool" target="_blank" rel="noreferrer">
+        <a href="https://github.com/mkmyhre/mh370-analysis-tool" target="_blank" rel="noreferrer">
           GitHub repo
         </a>
       </div>

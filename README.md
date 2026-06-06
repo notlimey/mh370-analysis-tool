@@ -156,7 +156,7 @@ Sonar data is streamed live from the Geoscience Australia WMS server — no down
 ### Setup
 
 ```bash
-git clone https://github.com/notlimey/mh370-analysis-tool
+git clone https://github.com/mkmyhre/mh370-analysis-tool
 cd mh370-analysis-tool
 cp .env.example .env
 # Add your Mapbox token to .env

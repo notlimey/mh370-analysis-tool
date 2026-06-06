@@ -174,7 +174,7 @@ Full verification log: `knowledge/mh370_reference_data.xlsx` (Verification Log s
 
 If you use this data in published work:
 
-> MH370 Analysis Tool reference dataset. Compiled 2026-04-07. Sources: Inmarsat SU logs (Malaysian Government, 2014), Ashton et al. 2014, Holland 2017, Davey et al. 2016. Available at: [github.com/notlimey/mh370-analysis-tool](https://github.com/notlimey/mh370-analysis-tool)
+> MH370 Analysis Tool reference dataset. Compiled 2026-04-07. Sources: Inmarsat SU logs (Malaysian Government, 2014), Ashton et al. 2014, Holland 2017, Davey et al. 2016. Available at: [github.com/mkmyhre/mh370-analysis-tool](https://github.com/mkmyhre/mh370-analysis-tool)
 
 ---
 

@@ -2,7 +2,7 @@
 
 **Date:** 2026-04-07
 **Author:** Computer scientist, no aviation investigation background
-**Tool:** [github.com/notlimey/mh370-analysis-tool](https://github.com/notlimey/mh370-analysis-tool)
+**Tool:** [github.com/mkmyhre/mh370-analysis-tool](https://github.com/mkmyhre/mh370-analysis-tool)
 
 ---
 
@@ -179,7 +179,7 @@ The primary disagreement between the present result and the DSTG posterior is in
 
 ## Interactive Tool and Reproducibility
 
-The analysis is implemented in an open-source desktop application built with Tauri 2 (Rust backend, SolidJS frontend, Mapbox GL visualization). Every parameter — BFO bias, noise sigma, glide ratio, descent envelope, speed range, fuel load — is configurable through the interface. The BFO stepthrough panel displays each Doppler component and its source for any candidate path. The drift simulation is reproducible with the commands documented in `docs/research-note-era5-drift.md` (requires a Copernicus CDS account for ERA5 data). Reviewers can change any assumption and recompute. The tool is available at [github.com/notlimey/mh370-analysis-tool](https://github.com/notlimey/mh370-analysis-tool).
+The analysis is implemented in an open-source desktop application built with Tauri 2 (Rust backend, SolidJS frontend, Mapbox GL visualization). Every parameter — BFO bias, noise sigma, glide ratio, descent envelope, speed range, fuel load — is configurable through the interface. The BFO stepthrough panel displays each Doppler component and its source for any candidate path. The drift simulation is reproducible with the commands documented in `docs/research-note-era5-drift.md` (requires a Copernicus CDS account for ERA5 data). Reviewers can change any assumption and recompute. The tool is available at [github.com/mkmyhre/mh370-analysis-tool](https://github.com/mkmyhre/mh370-analysis-tool).
 
 ---
 
